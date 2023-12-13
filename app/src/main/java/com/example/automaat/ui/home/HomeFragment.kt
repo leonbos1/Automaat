@@ -4,9 +4,11 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.automaat.R
 import com.example.automaat.models.Car.CarDbHelper
 import com.example.automaat.databinding.FragmentHomeBinding
 import com.example.automaat.models.Car.CarsAdapter
@@ -32,7 +34,7 @@ private var _binding: FragmentHomeBinding? = null
     val root: View = binding.root
 
         dbHelper = CarDbHelper(requireContext())
-        carsAdapter = CarsAdapter(dbHelper.getAllCars(), requireContext())
+        carsAdapter = CarsAdapter(dbHelper.getAllCars(), requireContext(), dbHelper)
 
         binding.carsRecyclerView.layoutManager = LinearLayoutManager(requireContext())
         binding.carsRecyclerView.adapter = carsAdapter
@@ -43,5 +45,19 @@ private var _binding: FragmentHomeBinding? = null
 override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    super.onViewCreated(view, savedInstanceState)
+
+    // Find the button and set a click listener
+    val addCarButton: Button = view.findViewById(R.id.addRandomCarButton)
+    addCarButton.setOnClickListener {
+        // Call your method to add a random car
+        dbHelper.insertDummyCars()
+
+        // Update your adapter data and refresh the RecyclerView
+        carsAdapter.updateCarsList()
+        }
     }
 }
