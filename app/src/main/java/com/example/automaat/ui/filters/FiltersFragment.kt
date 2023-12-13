@@ -1,26 +1,26 @@
-package com.example.automaat.ui.home
+package com.example.automaat.ui.filters
 
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.Navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.automaat.R
+import com.example.automaat.databinding.FragmentFiltersBinding
 import com.example.automaat.models.Car.CarDbHelper
 import com.example.automaat.databinding.FragmentHomeBinding
 import com.example.automaat.models.Car.CarsAdapter
+import com.example.automaat.ui.filters.FilterViewModel
 
-class HomeFragment : Fragment() {
+class FiltersFragment : Fragment() {
 
-    private var _binding: FragmentHomeBinding? = null
+    private var _binding: FragmentFiltersBinding? = null
 
-    // This property is only valid between onCreateView and
-    // onDestroyView.
     private val binding get() = _binding!!
     private lateinit var dbHelper: CarDbHelper
     private lateinit var carsAdapter: CarsAdapter
@@ -30,22 +30,22 @@ class HomeFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        val homeViewModel =
-            ViewModelProvider(this).get(HomeViewModel::class.java)
+        val filterViewModel =
+            ViewModelProvider(this).get(FilterViewModel::class.java)
 
-        _binding = FragmentHomeBinding.inflate(inflater, container, false)
+        _binding = FragmentFiltersBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
         dbHelper = CarDbHelper(requireContext())
         carsAdapter = CarsAdapter(dbHelper.getAllCars(), requireContext(), dbHelper)
 
-        binding.carsRecyclerView.layoutManager = LinearLayoutManager(requireContext())
-        binding.carsRecyclerView.adapter = carsAdapter
 
-        binding.filterButton.setOnClickListener {
-            val navController = findNavController()
-            navController.navigate(R.id.action_navigation_home_to_navigation_filters)
-        }
+//        binding.root.getViewById(R.id.filterButton).setOnClickListener {
+//            val filter = binding.root.getViewById(R.id) as Button
+//            filter.setOnClickListener {
+//                println("Filter button clicked")
+//            }
+//        }
 
         return root
     }

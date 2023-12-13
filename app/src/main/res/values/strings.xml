@@ -5,4 +5,10 @@
     <string name="title_notifications">Notifications</string>
     <string name="brand">Brand</string>
     <string name="model">Model</string>
+    <string name="price">100</string>
+    <string name="filter">Filter</string>
+    <string name="filters">filters</string>
+    <string name="filter_price"><![CDATA[Price & Payment]]></string>
+    <string name="min_price">From</string>
+    <string name="max_price">To</string>
 </resources>
