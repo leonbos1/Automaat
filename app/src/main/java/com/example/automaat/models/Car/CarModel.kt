@@ -1,4 +1,4 @@
-package com.example.automaat
+package com.example.automaat.models.Car
 
 data class CarModel(
     val id: Int,

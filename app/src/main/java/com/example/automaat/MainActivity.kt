@@ -12,7 +12,6 @@ import com.example.automaat.databinding.ActivityMainBinding
 class MainActivity : AppCompatActivity() {
 
 private lateinit var binding: ActivityMainBinding
-private lateinit var dbHelper: CarDbHelper
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,19 +31,5 @@ private lateinit var dbHelper: CarDbHelper
         )
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
-
-        dbHelper = CarDbHelper(this)
-
-        dbHelper.insertDummyCars()
-
-        val cars = dbHelper.getAllCars()
-
-        for (car in cars) {
-            log("Car: ${car.id} ${car.brand} ${car.model}")
-        }
-    }
-
-    private fun log(message: String) {
-        println("MainActivity: $message")
     }
 }

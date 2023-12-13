@@ -1,4 +1,4 @@
-package com.example.automaat
+package com.example.automaat.models.Car
 
 import android.annotation.SuppressLint
 import android.content.ContentValues
@@ -6,7 +6,7 @@ import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import android.provider.BaseColumns
-import com.example.automaat.CarDbHelper.FeedReaderContract.FeedEntry
+import com.example.automaat.models.Car.CarDbHelper.FeedReaderContract.FeedEntry
 
 class CarDbHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION) {
     object FeedReaderContract {
