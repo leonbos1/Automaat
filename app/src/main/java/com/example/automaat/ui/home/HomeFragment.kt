@@ -42,9 +42,18 @@ class HomeFragment : Fragment() {
         binding.carsRecyclerView.layoutManager = LinearLayoutManager(requireContext())
         binding.carsRecyclerView.adapter = carsAdapter
 
+        val navController = findNavController()
+
+        //when clicked on a car_item in the list, navigate to the car details fragment
+        carsAdapter.onItemClick = { car ->
+            val bundle = Bundle().apply {
+                putParcelable("car", car)
+            }
+            navController.navigate(R.id.action_navigation_home_to_car_details, bundle)
+        }
+
         binding.filterButton.setOnClickListener {
-            val navController = findNavController()
-            navController.navigate(R.id.action_navigation_home_to_navigation_filters)
+            navController.navigate(R.id.action_navigation_home_to_filtersFragment)
         }
 
         return root

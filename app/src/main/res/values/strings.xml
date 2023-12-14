@@ -11,4 +11,7 @@
     <string name="filter_price"><![CDATA[Price & Payment]]></string>
     <string name="min_price">From</string>
     <string name="max_price">To</string>
+    <string name="car_details">Car Details</string>
+    <string name="engine"><![CDATA[" 3.0 L B58 turbo I6 & electric motor"]]></string>
+    <string name="options">Head-up display, LED lighting, Seat heating, Blind spot detection, Adaptive Cruise Control, Lumbar support, Keyless Entry, Navigation system</string>
 </resources>

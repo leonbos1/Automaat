@@ -1,10 +1,8 @@
 package com.example.automaat.models.Car
 
 import android.content.Context
-import android.content.Intent
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.automaat.R
@@ -14,8 +12,10 @@ class CarsAdapter(
     private var cars: List<CarModel>,
     context: Context,
     private val dbHelper: CarDbHelper
-) : RecyclerView.Adapter<CarsAdapter.CarViewHolder>()
-{
+) : RecyclerView.Adapter<CarsAdapter.CarViewHolder>() {
+
+    var onItemClick: ((CarModel) -> Unit)? = null
+
     class CarViewHolder(val view: View) : RecyclerView.ViewHolder(view) {
         var titleTextView: TextView = view.findViewById(R.id.titleTextView)
         var contentTextView: TextView = view.findViewById(R.id.contentTextView)
@@ -34,6 +34,11 @@ class CarsAdapter(
         val car = cars[position]
         holder.titleTextView.text = car.brand
         holder.contentTextView.text = car.model
+
+        // Set the click listener
+        holder.itemView.setOnClickListener {
+            onItemClick?.invoke(car)
+        }
     }
 
     public fun updateCarsList() {
