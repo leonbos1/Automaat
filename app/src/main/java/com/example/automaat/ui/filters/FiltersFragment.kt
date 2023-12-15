@@ -42,6 +42,8 @@ class FiltersFragment : Fragment() {
 
         availableBrands = dbHelper.getAvailableBrands()
         availableModels = dbHelper.getAvailableModels()
+        availableBrands?.add(0, "All")
+        availableModels?.add(0, "All")
 
         // Set the available brands to the spinner
         binding.brandSpinner.adapter = context?.let {
@@ -87,6 +89,7 @@ class FiltersFragment : Fragment() {
                 id: Long
             ) {
                 availableModels = dbHelper.getAvailableModelsByBrand(parent.getItemAtPosition(position).toString())
+                availableModels?.add(0, "All")
 
                 binding.modelSpinner.adapter = context?.let {
                     ArrayAdapter(

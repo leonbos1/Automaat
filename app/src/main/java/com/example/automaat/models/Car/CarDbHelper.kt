@@ -116,7 +116,8 @@ class CarDbHelper private constructor(context: Context) :
     @SuppressLint("Range")
     fun getAvailableBrands(): ArrayList<String> {
         val db = readableDatabase
-        val cursor = db.rawQuery("SELECT DISTINCT ${FeedEntry.BRAND} FROM ${FeedEntry.TABLE_NAME}", null)
+        val cursor =
+            db.rawQuery("SELECT DISTINCT ${FeedEntry.BRAND} FROM ${FeedEntry.TABLE_NAME}", null)
         val brands = ArrayList<String>()
 
         if (cursor.moveToFirst()) {
@@ -135,7 +136,8 @@ class CarDbHelper private constructor(context: Context) :
     @SuppressLint("Range")
     fun getAvailableModels(): ArrayList<String> {
         val db = readableDatabase
-        val cursor = db.rawQuery("SELECT DISTINCT ${FeedEntry.MODEL} FROM ${FeedEntry.TABLE_NAME}", null)
+        val cursor =
+            db.rawQuery("SELECT DISTINCT ${FeedEntry.MODEL} FROM ${FeedEntry.TABLE_NAME}", null)
         val models = ArrayList<String>()
 
         if (cursor.moveToFirst()) {
@@ -154,7 +156,10 @@ class CarDbHelper private constructor(context: Context) :
     @SuppressLint("Range")
     fun getAvailableModelsByBrand(brand: String): ArrayList<String> {
         val db = readableDatabase
-        val cursor = db.rawQuery("SELECT DISTINCT ${FeedEntry.MODEL} FROM ${FeedEntry.TABLE_NAME} WHERE ${FeedEntry.BRAND} = '$brand'", null)
+        val cursor = db.rawQuery(
+            "SELECT DISTINCT ${FeedEntry.MODEL} FROM ${FeedEntry.TABLE_NAME} WHERE ${FeedEntry.BRAND} = '$brand'",
+            null
+        )
         val models = ArrayList<String>()
 
         if (cursor.moveToFirst()) {
@@ -179,12 +184,7 @@ class CarDbHelper private constructor(context: Context) :
         val brand = appliedFilters?.brand?.lowercase()
         val model = appliedFilters?.model?.lowercase()
 
-        println("=====================================")
-        println("brand: $brand")
-        println("model: $model")
-        println("=====================================")
-
-        if (!brand.isNullOrBlank()) {
+        if (brand != null && brand != "all") {
             if (queryAdded) {
                 query += " AND "
             }
@@ -192,14 +192,19 @@ class CarDbHelper private constructor(context: Context) :
             queryAdded = true
         }
 
-        if (!model.isNullOrBlank()) {
+        if (model != null && model != "all") {
             if (queryAdded) {
                 query += " AND "
             }
             query += "LOWER(${FeedEntry.MODEL}) = '$model'"
         }
 
-        // prevents syntax error when no filters are applied
+        // Handle the case where both brand and model are "All"
+        if ((brand == null || brand == "all") && (model == null || model == "all")) {
+            query = "SELECT * FROM ${FeedEntry.TABLE_NAME}"
+        }
+
+        // Prevents syntax error when no filters are applied
         if (!queryAdded) {
             query = query.replace("WHERE", "")
         }
