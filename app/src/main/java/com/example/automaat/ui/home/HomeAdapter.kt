@@ -10,6 +10,7 @@ import com.example.automaat.R
 import com.example.automaat.models.Car.CarDbHelper
 import com.example.automaat.models.Car.CarHelper.Companion.getCarImageResourceId
 import com.example.automaat.models.Car.CarModel
+import com.example.automaat.models.Car.FilterModel
 import java.util.ArrayList
 
 class HomeAdapter(
@@ -56,9 +57,9 @@ class HomeAdapter(
         }
     }
 
-    public fun updateCarsList() {
+    public fun filterCars(appliedFilters: FilterModel?) {
         cars = ArrayList()
-        cars = dbHelper.getAllCars()
+        cars = dbHelper.filterCars(appliedFilters)
         notifyDataSetChanged()
     }
 }

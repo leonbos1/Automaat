@@ -25,4 +25,5 @@
     <string name="fuelIcon" />
     <string name="gasoline">Gasoline</string>
     <string name="availableSince">Available since</string>
+    <string name="basic_data">Basic Data\n</string>
 </resources>

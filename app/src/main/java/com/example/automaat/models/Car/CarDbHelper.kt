@@ -112,4 +112,56 @@ class CarDbHelper private constructor(context: Context) :
 
         return cars
     }
+    //dbHelper.filterCars(maxPrice, minPrice, brand, model)
+    @SuppressLint("Range")
+    fun filterCars(appliedFilters: FilterModel?): ArrayList<CarModel> {
+        val db = readableDatabase
+        var query = "SELECT * FROM ${FeedEntry.TABLE_NAME} WHERE "
+        var queryAdded = false
+
+        val brand = appliedFilters?.brand?.lowercase()
+        val model = appliedFilters?.model?.lowercase()
+
+        println("=====================================")
+        println("brand: $brand")
+        println("model: $model")
+        println("=====================================")
+
+        if (!brand.isNullOrBlank()) {
+            if (queryAdded) {
+                query += " AND "
+            }
+            query += "LOWER(${FeedEntry.BRAND}) = '$brand'"
+            queryAdded = true
+        }
+
+        if (!model.isNullOrBlank()) {
+            if (queryAdded) {
+                query += " AND "
+            }
+            query += "LOWER(${FeedEntry.MODEL}) = '$model'"
+        }
+
+        // prevents syntax error when no filters are applied
+        if (!queryAdded) {
+            query = query.replace("WHERE", "")
+        }
+
+        val cursor = db.rawQuery(query, null)
+        val cars = ArrayList<CarModel>()
+
+        if (cursor.moveToFirst()) {
+            do {
+                val id = cursor.getInt(cursor.getColumnIndex(FeedEntry.ID))
+                val brand = cursor.getString(cursor.getColumnIndex(FeedEntry.BRAND))
+                val model = cursor.getString(cursor.getColumnIndex(FeedEntry.MODEL))
+                cars.add(CarModel(id, brand, model))
+            } while (cursor.moveToNext())
+        }
+
+        cursor.close()
+        db.close()
+
+        return cars
+    }
 }

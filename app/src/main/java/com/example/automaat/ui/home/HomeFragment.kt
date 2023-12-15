@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.automaat.R
 import com.example.automaat.models.Car.CarDbHelper
 import com.example.automaat.databinding.FragmentHomeBinding
+import com.example.automaat.models.Car.FilterModel
 
 class HomeFragment : Fragment() {
 
@@ -21,6 +22,7 @@ class HomeFragment : Fragment() {
     private val binding get() = _binding!!
     private lateinit var dbHelper: CarDbHelper
     private lateinit var homeAdapter: HomeAdapter
+    private var appliedFilters: FilterModel? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -40,6 +42,13 @@ class HomeFragment : Fragment() {
         binding.carsRecyclerView.adapter = homeAdapter
 
         val navController = findNavController()
+
+        appliedFilters = arguments?.getParcelable("appliedFilters")
+
+        if (appliedFilters != null) {
+
+            homeAdapter.filterCars(appliedFilters)
+        }
 
         //when clicked on a car_item in the list, navigate to the car details fragment
         homeAdapter.onItemClick = { car ->
