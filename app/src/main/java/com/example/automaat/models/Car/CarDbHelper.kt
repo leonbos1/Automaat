@@ -8,7 +8,25 @@ import android.database.sqlite.SQLiteOpenHelper
 import android.provider.BaseColumns
 import com.example.automaat.models.Car.CarDbHelper.FeedReaderContract.FeedEntry
 
-class CarDbHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION) {
+class CarDbHelper private constructor(context: Context) :
+    SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION) {
+
+    companion object {
+        // If you change the database schema, you must increment the database version.
+        const val DATABASE_VERSION = 1
+        const val DATABASE_NAME = "FeedReader.db"
+
+        private var instance: CarDbHelper? = null
+
+        @Synchronized
+        fun getInstance(context: Context): CarDbHelper {
+            if (instance == null) {
+                instance = CarDbHelper(context.applicationContext)
+            }
+            return instance!!
+        }
+    }
+
     object FeedReaderContract {
         // Table contents are grouped together in an anonymous object.
         object FeedEntry : BaseColumns {
@@ -31,20 +49,16 @@ class CarDbHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, n
     override fun onCreate(db: SQLiteDatabase) {
         db.execSQL(SQL_CREATE_ENTRIES)
     }
+
     override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
         // This database is only a cache for online data, so its upgrade policy is
         // to simply to discard the data and start over
         db.execSQL(SQL_DELETE_ENTRIES)
         onCreate(db)
     }
+
     override fun onDowngrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
         onUpgrade(db, oldVersion, newVersion)
-    }
-
-    companion object {
-        // If you change the database schema, you must increment the database version.
-        const val DATABASE_VERSION = 1
-        const val DATABASE_NAME = "FeedReader.db"
     }
 
     fun insertCar(car: CarModel): Long {
@@ -65,18 +79,17 @@ class CarDbHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, n
     }
 
     fun insertDummyCars() {
-        val db = writableDatabase
-        val values = ContentValues().apply {
-            put(FeedEntry.ID, CarModel.getAutoId())
-            put(FeedEntry.BRAND, "BMW")
-            put(FeedEntry.MODEL, "X5")
-        }
-        val success = db.insert(FeedEntry.TABLE_NAME, null, values)
-        db.close()
+        val car1 = CarModel(1, "BMW", "X3")
+        val car2 = CarModel(2, "BMW", "M3")
+        val car3 = CarModel(3, "Alfa Romeo", "Guilia")
+        val car4 = CarModel(4, "Volkswagen", "Golf GTI")
+        val car5 = CarModel(5, "Toyota", "Prius")
 
-        if (success == -1L) {
-            throw Exception("Failed to insert car")
-        }
+        insertCar(car1)
+        insertCar(car2)
+        insertCar(car3)
+        insertCar(car4)
+        insertCar(car5)
     }
 
     @SuppressLint("Range")

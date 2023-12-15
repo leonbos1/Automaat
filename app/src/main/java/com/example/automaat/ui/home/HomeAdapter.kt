@@ -1,4 +1,4 @@
-package com.example.automaat.models.Car
+package com.example.automaat.ui.home
 
 import android.content.Context
 import android.view.View
@@ -7,14 +7,16 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.automaat.R
+import com.example.automaat.models.Car.CarDbHelper
 import com.example.automaat.models.Car.CarHelper.Companion.getCarImageResourceId
+import com.example.automaat.models.Car.CarModel
 import java.util.ArrayList
 
-class CarsAdapter(
+class HomeAdapter(
     private var cars: List<CarModel>,
     context: Context,
     private val dbHelper: CarDbHelper
-) : RecyclerView.Adapter<CarsAdapter.CarViewHolder>() {
+) : RecyclerView.Adapter<HomeAdapter.CarViewHolder>() {
 
     var onItemClick: ((CarModel) -> Unit)? = null
 

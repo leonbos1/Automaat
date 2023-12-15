@@ -4,16 +4,13 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.Navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.automaat.R
 import com.example.automaat.models.Car.CarDbHelper
 import com.example.automaat.databinding.FragmentHomeBinding
-import com.example.automaat.models.Car.CarsAdapter
 
 class HomeFragment : Fragment() {
 
@@ -23,7 +20,7 @@ class HomeFragment : Fragment() {
     // onDestroyView.
     private val binding get() = _binding!!
     private lateinit var dbHelper: CarDbHelper
-    private lateinit var carsAdapter: CarsAdapter
+    private lateinit var homeAdapter: HomeAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -36,16 +33,16 @@ class HomeFragment : Fragment() {
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
-        dbHelper = CarDbHelper(requireContext())
-        carsAdapter = CarsAdapter(dbHelper.getAllCars(), requireContext(), dbHelper)
+        dbHelper = CarDbHelper.getInstance(requireContext())
+        homeAdapter = HomeAdapter(dbHelper.getAllCars(), requireContext(), dbHelper)
 
         binding.carsRecyclerView.layoutManager = LinearLayoutManager(requireContext())
-        binding.carsRecyclerView.adapter = carsAdapter
+        binding.carsRecyclerView.adapter = homeAdapter
 
         val navController = findNavController()
 
         //when clicked on a car_item in the list, navigate to the car details fragment
-        carsAdapter.onItemClick = { car ->
+        homeAdapter.onItemClick = { car ->
             val bundle = Bundle().apply {
                 putParcelable("car", car)
             }
