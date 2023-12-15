@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    tools:context=".ui.cars.CarDetailsFragment">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -26,69 +28,293 @@
                 android:src="@drawable/bmw_x5" />
         </RelativeLayout>
 
-        <RelativeLayout
-            android:id="@+id/relativeLayout2"
+        <LinearLayout
+            android:id="@+id/container"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:padding="15dp">
 
-            <RelativeLayout
-                android:layout_width="match_parent"
+            <LinearLayout
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:padding="8dp">
+                android:orientation="vertical">
 
-                <TextView
-                    android:id="@+id/brandTextView"
+                <RelativeLayout
+                    android:id="@+id/relativeLayout2"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:padding="8dp">
+
+                        <TextView
+                            android:id="@+id/brandTextView"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="6dp"
+                            android:text="@string/brand"
+                            android:textColor="@color/black"
+                            android:textSize="24sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/modelTextView"
+                            android:layout_width="200dp"
+                            android:layout_height="wrap_content"
+                            android:layout_toEndOf="@id/brandTextView"
+                            android:text="@string/model"
+                            android:textColor="@color/black"
+                            android:textSize="24sp"
+                            android:textStyle="bold" />
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="36dp"
+                        android:padding="8dp">
+
+                        <TextView
+                            android:id="@+id/engineTypeTextView"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="@string/engine"
+                            android:textColor="@color/black" />
+
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="64dp"
+                        android:padding="8dp">
+
+                        <TextView
+                            android:id="@+id/optionsTextView"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="@string/options"
+                            android:textColor="@color/black" />
+
+                    </RelativeLayout>
+
+                </RelativeLayout>
+
+                <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginEnd="6dp"
-                    android:text="@string/brand"
-                    android:textColor="@color/black"
-                    android:textSize="24sp"
-                    android:textStyle="bold" />
+                    android:orientation="vertical">
 
-                <TextView
-                    android:id="@+id/modelTextView"
-                    android:layout_width="200dp"
-                    android:layout_height="wrap_content"
-                    android:layout_toEndOf="@id/brandTextView"
-                    android:text="@string/model"
-                    android:textColor="@color/black"
-                    android:textSize="24sp"
-                    android:textStyle="bold" />
-            </RelativeLayout>
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginTop="8dp"
+                        android:background="@android:color/darker_gray" />
 
-            <RelativeLayout
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:padding="8dp">
+
+                        <RelativeLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1">
+
+                            <TextView
+                                android:id="@+id/locationTitleTextView"
+                                android:layout_width="wrap_content"
+                                android:layout_height="17dp"
+                                android:layout_marginLeft="24dp"
+                                android:text="@string/locationTitle"
+                                android:textColor="@color/black" />
+
+                            <ImageView
+                                android:id="@+id/locationIconImageView"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_below="@+id/locationTitleTextView"
+                                android:layout_marginTop="0dp"
+                                android:contentDescription="@string/locationIcon"
+                                android:src="@drawable/baseline_shopping_cart_24" />
+
+                            <TextView
+                                android:id="@+id/locationContentTextView"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_below="@+id/locationTitleTextView"
+                                android:layout_toEndOf="@+id/locationIconImageView"
+                                android:text="Groningen, NL"
+                                android:textColor="@color/black"
+                                android:textStyle="bold" />
+
+                        </RelativeLayout>
+
+                        <RelativeLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1">
+
+                            <TextView
+                                android:id="@+id/engineTitleTextView"
+                                android:layout_width="wrap_content"
+                                android:layout_height="17dp"
+                                android:layout_marginLeft="24dp"
+                                android:text="@string/engineTitle"
+                                android:textColor="@color/black" />
+
+                            <ImageView
+                                android:id="@+id/engineIconImageView"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_below="@+id/engineTitleTextView"
+                                android:layout_marginTop="0dp"
+                                android:contentDescription="@string/engineIcon"
+                                android:src="@drawable/baseline_shopping_cart_24" />
+
+                            <TextView
+                                android:id="@+id/engineContentTextView"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_below="@+id/engineTitleTextView"
+                                android:layout_toEndOf="@+id/engineIconImageView"
+                                android:text="@string/engine"
+                                android:textColor="@color/black"
+                                android:textStyle="bold" />
+
+                        </RelativeLayout>
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="30dp"
+                        android:orientation="horizontal"
+                        android:padding="8dp">
+
+                        <RelativeLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1">
+
+                            <TextView
+                                android:id="@+id/modelYearTitleTextView"
+                                android:layout_width="wrap_content"
+                                android:layout_height="17dp"
+                                android:layout_marginLeft="24dp"
+                                android:text="@string/modelYearTitle"
+                                android:textColor="@color/black" />
+
+                            <ImageView
+                                android:id="@+id/modelYearIconImageView"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_below="@+id/modelYearTitleTextView"
+                                android:layout_marginTop="0dp"
+                                android:contentDescription="@string/modelYearIcon"
+                                android:src="@drawable/baseline_shopping_cart_24" />
+
+                            <TextView
+                                android:id="@+id/modelYearContentTextView"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_below="@+id/modelYearTitleTextView"
+                                android:layout_toEndOf="@+id/modelYearIconImageView"
+                                android:text="01/2023"
+                                android:textColor="@color/black"
+                                android:textStyle="bold" />
+
+                        </RelativeLayout>
+
+                        <RelativeLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1">
+
+                            <TextView
+                                android:id="@+id/fuelTitleTextView"
+                                android:layout_width="wrap_content"
+                                android:layout_height="17dp"
+                                android:layout_marginLeft="24dp"
+                                android:text="@string/fuelTitle"
+                                android:textColor="@color/black" />
+
+                            <ImageView
+                                android:id="@+id/fuelIconImageView"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_below="@+id/fuelTitleTextView"
+                                android:layout_marginTop="0dp"
+                                android:contentDescription="@string/fuelIcon"
+                                android:src="@drawable/baseline_shopping_cart_24" />
+
+                            <TextView
+                                android:id="@+id/fuelContentTextView"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_below="@+id/fuelTitleTextView"
+                                android:layout_toEndOf="@+id/fuelIconImageView"
+                                android:text="@string/gasoline"
+                                android:textColor="@color/black"
+                                android:textStyle="bold" />
+
+                        </RelativeLayout>
+
+                    </LinearLayout>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginTop="8dp"
+                        android:background="@android:color/darker_gray" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/bottomTextLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="36dp"
-                android:padding="8dp">
+                android:orientation="vertical"
+                android:layout_marginTop="70dp"
+                app:layout_constraintBottom_toBottomOf="parent">
+                >
 
-                <TextView
-                    android:id="@+id/engineTypeTextView"
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:id="@+id/availableSinceTitleTextView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/availableSince"
+                        android:textColor="@color/black" />
+
+                    <TextView
+                        android:id="@+id/availableSinceContentTextView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_toEndOf="@+id/availableSinceTitleTextView"
+                        android:text=" 12/2023"
+                        android:textColor="@color/black" />
+
+                </RelativeLayout>
+
+                <Button
+                    android:id="@+id/reserveButton"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/black"
-                    android:text="@string/engine" />
+                    android:text="@string/reserve" />
 
-            </RelativeLayout>
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="64dp"
-                android:padding="8dp">
-
-                <TextView
-                    android:id="@+id/optionsTextView"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/black"
-                    android:text="@string/options" />
-
-            </RelativeLayout>
-
-        </RelativeLayout>
+            </LinearLayout>
+        </LinearLayout>
     </LinearLayout>
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -14,4 +14,15 @@
     <string name="car_details">Car Details</string>
     <string name="engine"><![CDATA[" 3.0 L B58 turbo I6 & electric motor"]]></string>
     <string name="options">Head-up display, LED lighting, Seat heating, Blind spot detection, Adaptive Cruise Control, Lumbar support, Keyless Entry, Navigation system</string>
+    <string name="reserve">Reserve</string>
+    <string name="locationTitle">Location\n</string>
+    <string name="engineTitle">Engine\n</string>
+    <string name="modelYearTitle">First registration</string>
+    <string name="fuelTitle">Fuel type</string>
+    <string name="locationIcon" />
+    <string name="engineIcon">\n</string>
+    <string name="modelYearIcon" />
+    <string name="fuelIcon" />
+    <string name="gasoline">Gasoline</string>
+    <string name="availableSince">Available since</string>
 </resources>

@@ -8,7 +8,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
+import com.example.automaat.R
 import com.example.automaat.models.Car.CarDbHelper
+import com.example.automaat.models.Car.CarHelper
 import com.example.automaat.models.Car.CarModel
 
 class CarDetailsFragment : Fragment() {
@@ -44,7 +46,15 @@ class CarDetailsFragment : Fragment() {
 
     private fun setCarData() {
         binding.brandTextView.text = car?.brand
-        // Expand with more properties later
+
+        val imageResourceId =
+            CarHelper.getCarImageResourceId(car?.brand, car?.model, binding.carImage.context)
+
+        if (imageResourceId != 0) {
+            binding.carImage.setImageResource(imageResourceId)
+        } else {
+            binding.carImage.setImageResource(R.drawable.placeholder_image)
+        }
     }
 
     override fun onDestroyView() {
