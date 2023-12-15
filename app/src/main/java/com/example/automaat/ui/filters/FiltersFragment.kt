@@ -4,6 +4,8 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
@@ -20,6 +22,8 @@ class FiltersFragment : Fragment() {
     private val binding get() = _binding!!
     private lateinit var dbHelper: CarDbHelper
     private lateinit var homeAdapter: HomeAdapter
+    private var availableBrands: ArrayList<String>? = null
+    private var availableModels: ArrayList<String>? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -36,9 +40,30 @@ class FiltersFragment : Fragment() {
 
         val navController = findNavController()
 
+        availableBrands = dbHelper.getAvailableBrands()
+        availableModels = dbHelper.getAvailableModels()
+
+        // Set the available brands to the spinner
+        binding.brandSpinner.adapter = context?.let {
+            ArrayAdapter(
+                it,
+                android.R.layout.simple_spinner_item,
+                availableBrands!!
+            )
+        }
+
+        // Set the available models to the spinner
+        binding.modelSpinner.adapter = context?.let {
+            ArrayAdapter(
+                it,
+                android.R.layout.simple_spinner_item,
+                availableModels!!
+            )
+        }
+
         binding.resultsButton.setOnClickListener {
-            var brand = binding.brandEditText.text.toString()
-            var model = binding.modelEditText.text.toString()
+            var brand = binding.brandSpinner.selectedItem.toString()
+            var model = binding.modelSpinner.selectedItem.toString()
 
             var filterModel = FilterModel(brand, model)
 
@@ -51,6 +76,29 @@ class FiltersFragment : Fragment() {
 
         binding.initCarsButton.setOnClickListener {
             dbHelper.insertDummyCars()
+        }
+
+        binding.brandSpinner.onItemSelectedListener = object :
+            AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(
+                parent: AdapterView<*>,
+                view: View?,
+                position: Int,
+                id: Long
+            ) {
+                availableModels = dbHelper.getAvailableModelsByBrand(parent.getItemAtPosition(position).toString())
+
+                binding.modelSpinner.adapter = context?.let {
+                    ArrayAdapter(
+                        it,
+                        android.R.layout.simple_spinner_item,
+                        availableModels!!
+                    )
+                }
+            }
+
+            override fun onNothingSelected(parent: AdapterView<*>) {
+            }
         }
 
         return root

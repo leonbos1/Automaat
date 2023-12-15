@@ -37,27 +37,26 @@
                     android:text="@string/basic_data"
                     android:textSize="18sp" />
 
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/brandEditText"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:hint="@string/brand"
-                    android:inputType="text"
-                    android:textColor="@color/black"
-                    android:textColorHint="@color/gray"
-                    android:textSize="14sp" />
+                <!--                <com.google.android.material.textfield.TextInputEditText-->
+                <!--                    android:id="@+id/brandEditText"-->
+                <!--                    android:layout_width="match_parent"-->
+                <!--                    android:layout_height="wrap_content"-->
+                <!--                    android:layout_marginTop="10dp"-->
+                <!--                    android:hint="@string/brand"-->
+                <!--                    android:inputType="text"-->
+                <!--                    android:textColor="@color/black"-->
+                <!--                    android:textColorHint="@color/gray"-->
+                <!--                    android:textSize="14sp" />-->
 
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/modelEditText"
+                <Spinner
+                    android:id="@+id/brandSpinner"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:hint="@string/model"
-                    android:inputType="text"
-                    android:textColor="@color/black"
-                    android:textColorHint="@color/gray"
-                    android:textSize="14sp" />
+                    android:layout_height="wrap_content" />
+
+                <Spinner
+                    android:id="@+id/modelSpinner"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
 
             </LinearLayout>
 
@@ -70,6 +69,11 @@
             android:backgroundTint="@color/red"
             android:text="Initialize Cars"
             android:textColor="@color/white" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Temporary button to initialize 5 different car for development purposes" />
 
         <LinearLayout
             android:id="@+id/bottomLayout"

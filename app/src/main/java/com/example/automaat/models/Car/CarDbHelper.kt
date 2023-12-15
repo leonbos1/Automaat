@@ -112,7 +112,64 @@ class CarDbHelper private constructor(context: Context) :
 
         return cars
     }
-    //dbHelper.filterCars(maxPrice, minPrice, brand, model)
+
+    @SuppressLint("Range")
+    fun getAvailableBrands(): ArrayList<String> {
+        val db = readableDatabase
+        val cursor = db.rawQuery("SELECT DISTINCT ${FeedEntry.BRAND} FROM ${FeedEntry.TABLE_NAME}", null)
+        val brands = ArrayList<String>()
+
+        if (cursor.moveToFirst()) {
+            do {
+                val brand = cursor.getString(cursor.getColumnIndex(FeedEntry.BRAND))
+                brands.add(brand)
+            } while (cursor.moveToNext())
+        }
+
+        cursor.close()
+        db.close()
+
+        return brands
+    }
+
+    @SuppressLint("Range")
+    fun getAvailableModels(): ArrayList<String> {
+        val db = readableDatabase
+        val cursor = db.rawQuery("SELECT DISTINCT ${FeedEntry.MODEL} FROM ${FeedEntry.TABLE_NAME}", null)
+        val models = ArrayList<String>()
+
+        if (cursor.moveToFirst()) {
+            do {
+                val model = cursor.getString(cursor.getColumnIndex(FeedEntry.MODEL))
+                models.add(model)
+            } while (cursor.moveToNext())
+        }
+
+        cursor.close()
+        db.close()
+
+        return models
+    }
+
+    @SuppressLint("Range")
+    fun getAvailableModelsByBrand(brand: String): ArrayList<String> {
+        val db = readableDatabase
+        val cursor = db.rawQuery("SELECT DISTINCT ${FeedEntry.MODEL} FROM ${FeedEntry.TABLE_NAME} WHERE ${FeedEntry.BRAND} = '$brand'", null)
+        val models = ArrayList<String>()
+
+        if (cursor.moveToFirst()) {
+            do {
+                val model = cursor.getString(cursor.getColumnIndex(FeedEntry.MODEL))
+                models.add(model)
+            } while (cursor.moveToNext())
+        }
+
+        cursor.close()
+        db.close()
+
+        return models
+    }
+
     @SuppressLint("Range")
     fun filterCars(appliedFilters: FilterModel?): ArrayList<CarModel> {
         val db = readableDatabase
