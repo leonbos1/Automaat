@@ -59,7 +59,7 @@
             app:destination="@id/navigation_home" />
         <argument
             android:name="appliedFilters"
-            app:argType="com.example.automaat.models.Car.FilterModel" />
+            app:argType="com.example.automaat.models.car.FilterModel" />
     </fragment>
     <fragment
         android:id="@+id/car_details"
@@ -77,7 +77,22 @@
         <argument
 
             android:name="car"
-            app:argType="com.example.automaat.models.Car.CarModel" />
+            app:argType="com.example.automaat.models.car.CarModel" />
+        <action
+            android:id="@+id/action_car_details_to_reservation_details"
+            app:destination="@id/reservation_details" />
+    </fragment>
+    <fragment
+        android:id="@+id/reservation_details"
+        android:name="com.example.automaat.ui.rentals.ReservationDetailsFragment"
+        android:label="@string/reservation_details"
+        tools:layout="@layout/fragment_reservation_details">
+        <argument
+            android:name="reservationViewModel"
+            app:argType="com.example.automaat.viewmodels.ReservationViewModel" />
+        <action
+            android:id="@+id/action_reservation_details_to_car_details"
+            app:destination="@id/car_details" />
     </fragment>
 
 

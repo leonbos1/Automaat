@@ -7,16 +7,16 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.automaat.R
-import com.example.automaat.models.Car.CarDbHelper
-import com.example.automaat.models.Car.CarHelper.Companion.getCarImageResourceId
-import com.example.automaat.models.Car.CarModel
-import com.example.automaat.models.Car.FilterModel
+import com.example.automaat.repositories.CarRepository
+import com.example.automaat.models.car.CarHelper.Companion.getCarImageResourceId
+import com.example.automaat.models.car.CarModel
+import com.example.automaat.models.car.FilterModel
 import java.util.ArrayList
 
 class HomeAdapter(
     private var cars: List<CarModel>,
     context: Context,
-    private val dbHelper: CarDbHelper
+    private val carRepository: CarRepository
 ) : RecyclerView.Adapter<HomeAdapter.CarViewHolder>() {
 
     var onItemClick: ((CarModel) -> Unit)? = null
@@ -59,7 +59,7 @@ class HomeAdapter(
 
     public fun filterCars(appliedFilters: FilterModel?) {
         cars = ArrayList()
-        cars = dbHelper.filterCars(appliedFilters)
+        cars = carRepository.filterCars(appliedFilters)
         notifyDataSetChanged()
     }
 }

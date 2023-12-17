@@ -8,10 +8,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import com.example.automaat.R
-import com.example.automaat.models.Car.CarDbHelper
-import com.example.automaat.models.Car.CarHelper
-import com.example.automaat.models.Car.CarModel
+import com.example.automaat.repositories.CarRepository
+import com.example.automaat.models.car.CarHelper
+import com.example.automaat.models.car.CarModel
+import com.example.automaat.models.rental.RentalModel
+import com.example.automaat.viewmodels.ReservationViewModel
 
 class CarDetailsFragment : Fragment() {
 
@@ -20,7 +23,7 @@ class CarDetailsFragment : Fragment() {
     // This property is only valid between onCreateView and
     // onDestroyView.
     private val binding get() = _binding!!
-    private lateinit var dbHelper: CarDbHelper
+    private lateinit var dbHelper: CarRepository
     private var car: CarModel? = null
 
     override fun onCreateView(
@@ -41,7 +44,20 @@ class CarDetailsFragment : Fragment() {
 
         setCarData()
 
+        val navController = findNavController()
+
+        binding.reserveButton.setOnClickListener {
+            val bundle = Bundle()
+            val reservationViewModel = getReservationViewModel()
+            
+            navController.navigate(R.id.action_car_details_to_reservation_details, bundle)
+        }
+
         return root
+    }
+
+    private fun getReservationViewModel(car: CarModel): Any {
+
     }
 
     private fun setCarData() {

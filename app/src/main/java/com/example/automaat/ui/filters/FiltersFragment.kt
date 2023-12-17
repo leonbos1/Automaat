@@ -7,12 +7,11 @@ import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.example.automaat.R
 import com.example.automaat.databinding.FragmentFiltersBinding
-import com.example.automaat.models.Car.CarDbHelper
-import com.example.automaat.models.Car.FilterModel
+import com.example.automaat.repositories.CarRepository
+import com.example.automaat.models.car.FilterModel
 import com.example.automaat.ui.home.HomeAdapter
 
 class FiltersFragment : Fragment() {
@@ -20,7 +19,7 @@ class FiltersFragment : Fragment() {
     private var _binding: FragmentFiltersBinding? = null
 
     private val binding get() = _binding!!
-    private lateinit var dbHelper: CarDbHelper
+    private lateinit var carRepository: CarRepository
     private lateinit var homeAdapter: HomeAdapter
     private var availableBrands: ArrayList<String>? = null
     private var availableModels: ArrayList<String>? = null
@@ -34,14 +33,14 @@ class FiltersFragment : Fragment() {
         _binding = FragmentFiltersBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
-        dbHelper = CarDbHelper.getInstance(requireContext())
+        carRepository = CarRepository.getInstance(requireContext())
 
-        homeAdapter = HomeAdapter(dbHelper.getAllCars(), requireContext(), dbHelper)
+        homeAdapter = HomeAdapter(carRepository.getAllCars(), requireContext(), carRepository)
 
         val navController = findNavController()
 
-        availableBrands = dbHelper.getAvailableBrands()
-        availableModels = dbHelper.getAvailableModels()
+        availableBrands = carRepository.getAvailableBrands()
+        availableModels = carRepository.getAvailableModels()
         availableBrands?.add(0, "All")
         availableModels?.add(0, "All")
 
@@ -77,7 +76,7 @@ class FiltersFragment : Fragment() {
         }
 
         binding.initCarsButton.setOnClickListener {
-            dbHelper.insertDummyCars()
+            carRepository.insertDummyCars()
         }
 
         binding.brandSpinner.onItemSelectedListener = object :
@@ -88,7 +87,7 @@ class FiltersFragment : Fragment() {
                 position: Int,
                 id: Long
             ) {
-                availableModels = dbHelper.getAvailableModelsByBrand(parent.getItemAtPosition(position).toString())
+                availableModels = carRepository.getAvailableModelsByBrand(parent.getItemAtPosition(position).toString())
                 availableModels?.add(0, "All")
 
                 binding.modelSpinner.adapter = context?.let {

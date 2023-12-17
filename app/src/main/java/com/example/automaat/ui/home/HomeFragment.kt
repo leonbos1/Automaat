@@ -1,5 +1,6 @@
 package com.example.automaat.ui.home
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -9,9 +10,10 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.automaat.R
-import com.example.automaat.models.Car.CarDbHelper
+import com.example.automaat.repositories.CarRepository
 import com.example.automaat.databinding.FragmentHomeBinding
-import com.example.automaat.models.Car.FilterModel
+import com.example.automaat.models.car.CarModel
+import com.example.automaat.models.car.FilterModel
 
 class HomeFragment : Fragment() {
 
@@ -20,10 +22,11 @@ class HomeFragment : Fragment() {
     // This property is only valid between onCreateView and
     // onDestroyView.
     private val binding get() = _binding!!
-    private lateinit var dbHelper: CarDbHelper
+    private lateinit var carRepository: CarRepository
     private lateinit var homeAdapter: HomeAdapter
     private var appliedFilters: FilterModel? = null
 
+    @SuppressLint("Range")
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -35,8 +38,17 @@ class HomeFragment : Fragment() {
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
-        dbHelper = CarDbHelper.getInstance(requireContext())
-        homeAdapter = HomeAdapter(dbHelper.getAllCars(), requireContext(), dbHelper)
+        carRepository = CarRepository.getInstance(requireContext())
+
+        var allCars = carRepository.getAllEntities("cars") { cursor ->
+            val id = cursor.getInt(cursor.getColumnIndex(CarRepository.FeedEntry.ID))
+            val brand = cursor.getString(cursor.getColumnIndex(CarRepository.FeedEntry.BRAND))
+            val model = cursor.getString(cursor.getColumnIndex(CarRepository.FeedEntry.MODEL))
+            CarModel(id, brand, model)
+        }
+
+        homeAdapter =
+            HomeAdapter(allCars, requireContext(), carRepository)
 
         binding.carsRecyclerView.layoutManager = LinearLayoutManager(requireContext())
         binding.carsRecyclerView.adapter = homeAdapter
