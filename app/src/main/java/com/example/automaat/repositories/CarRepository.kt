@@ -6,6 +6,7 @@ import android.content.Context
 import android.provider.BaseColumns
 import com.example.automaat.models.car.CarModel
 import com.example.automaat.models.car.FilterModel
+import com.example.automaat.models.rental.RentalModel
 
 class CarRepository(context: Context) : BaseRepository<CarModel>(
     context,
@@ -40,6 +41,7 @@ class CarRepository(context: Context) : BaseRepository<CarModel>(
         const val BRAND = "brand"
         const val MODEL = "model"
         const val FUELTYPE = "fuelType"
+        const val RENTAL = "rental"
     }
 
     @SuppressLint("Range")
@@ -199,5 +201,30 @@ class CarRepository(context: Context) : BaseRepository<CarModel>(
         db.close()
 
         return models
+    }
+
+    @SuppressLint("Range")
+    fun getRentalByCarId(car: CarModel): RentalModel {
+        val db = readableDatabase
+
+        val cursor = db.rawQuery(
+            "SELECT * FROM ${RentalRepository.FeedEntry.TABLE_NAME} WHERE ${RentalRepository.FeedEntry.ID} = ${car.rental}",
+            null
+        )
+
+        var rental: RentalModel? = null
+        if (cursor.moveToFirst()) {
+            val id = cursor.getInt(cursor.getColumnIndex(RentalRepository.FeedEntry.ID))
+            val code = cursor.getString(cursor.getColumnIndex(RentalRepository.FeedEntry.CODE))
+            val longitude = cursor.getDouble(cursor.getColumnIndex(RentalRepository.FeedEntry.LONGITUDE))
+            val latitude = cursor.getDouble(cursor.getColumnIndex(RentalRepository.FeedEntry.LATITUDE))
+            //add more props here
+
+            rental = RentalModel(id, code, longitude, latitude)
+        }
+        cursor.close()
+        db.close()
+
+        return rental ?: throw IllegalStateException("Rental not found")
     }
 }

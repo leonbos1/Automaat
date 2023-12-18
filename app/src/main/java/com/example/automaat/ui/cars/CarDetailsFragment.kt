@@ -48,7 +48,7 @@ class CarDetailsFragment : Fragment() {
 
         binding.reserveButton.setOnClickListener {
             val bundle = Bundle()
-            val reservationViewModel = getReservationViewModel()
+            val reservationViewModel = getReservationViewModel(car)
             
             navController.navigate(R.id.action_car_details_to_reservation_details, bundle)
         }
@@ -56,7 +56,7 @@ class CarDetailsFragment : Fragment() {
         return root
     }
 
-    private fun getReservationViewModel(car: CarModel): Any {
+    private fun getReservationViewModel(car: CarModel?): Any {
 
     }
 

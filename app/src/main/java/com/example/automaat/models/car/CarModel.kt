@@ -16,7 +16,8 @@ data class CarModel(
     val numOfSeats: Int = 0,
     val modelYear: Int = 0,
     val since: LocalDate = LocalDate.now(),
-    val body: Int = 0
+    val body: Int = 0,
+    val rental: Int = 0
 ) : Parcelable {
     constructor(parcel: Parcel) : this(
         parcel.readInt(),
@@ -30,6 +31,7 @@ data class CarModel(
         parcel.readInt(),
         parcel.readInt(),
         parcel.readSerializable() as LocalDate,
+        parcel.readInt(),
         parcel.readInt()
     ) {
     }
@@ -47,6 +49,7 @@ data class CarModel(
         parcel.writeInt(modelYear)
         parcel.writeSerializable(since)
         parcel.writeInt(body)
+        parcel.writeInt(rental)
     }
 
     override fun describeContents(): Int {
