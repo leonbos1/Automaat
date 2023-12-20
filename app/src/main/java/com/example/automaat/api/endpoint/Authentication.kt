@@ -16,6 +16,7 @@ class Authentication {
     private val api = Retrofit.Builder()
         .baseUrl(BASE_URL)
         .addConverterFactory(GsonConverterFactory.create())
+        .build()
         .create(InterfaceApi::class.java)
 
     val body = Auth("admin", "admin", true)
