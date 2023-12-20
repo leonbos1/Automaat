@@ -7,6 +7,7 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.example.automaat.api.endpoint.Authentication
+import com.example.automaat.api.endpoint.Cars
 import com.example.automaat.api.endpoint.Routes
 import com.example.automaat.databinding.ActivityMainBinding
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -49,9 +50,12 @@ class MainActivity : AppCompatActivity() {
         }
 
         authentication.authenticate {
-            // Get all data to local DB
+            // Get all data and store in local DB
             // ...
             Routes().getAllRoutes()
+            Routes().getRouteById(1)
+            Cars().getAllCars()
+            Cars().getCarById(1)
         }
     }
 

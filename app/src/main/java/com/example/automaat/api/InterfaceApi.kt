@@ -7,6 +7,7 @@ import retrofit2.Call
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST
+import retrofit2.http.Path
 
 
 interface InterfaceApi {
@@ -15,4 +16,13 @@ interface InterfaceApi {
 
     @GET("routes")
     fun getAllRoutes(): Call<JsonArray>
+
+    @GET("routes/{id}")
+    fun getRouteById(@Path("id") id: Int): Call<JsonObject>
+
+    @GET("cars")
+    fun getAllCars(): Call<JsonArray>
+
+    @GET("cars/{id}")
+    fun getCarById(@Path("id") id: Int): Call<JsonObject>
 }

@@ -11,8 +11,8 @@ import retrofit2.Response
 
 class Authentication {
     private val api = ApiClient.retrofit.create(InterfaceApi::class.java)
-    private val body = Auth("admin", "admin", true)
     private val TAG: String = "CHECK_RESPONSE"
+    private val body = Auth("admin", "admin", true)
 
     fun authenticate(onAuthenticationComplete: () -> Unit) {
         api.postAuthenticate(body).enqueue(object: Callback<JsonObject> {
