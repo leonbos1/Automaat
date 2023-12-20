@@ -13,11 +13,7 @@ import com.example.automaat.models.car.CarModel
 import com.example.automaat.models.car.FilterModel
 import java.util.ArrayList
 
-class HomeAdapter(
-    private var cars: List<CarModel>,
-    context: Context,
-    private val carRepository: CarRepository
-) : RecyclerView.Adapter<HomeAdapter.CarViewHolder>() {
+class HomeAdapter() : RecyclerView.Adapter<HomeAdapter.CarViewHolder>() {
 
     var onItemClick: ((CarModel) -> Unit)? = null
 
@@ -59,7 +55,7 @@ class HomeAdapter(
 
     public fun filterCars(appliedFilters: FilterModel?) {
         cars = ArrayList()
-        cars = carRepository.filterCars(appliedFilters)
+        //cars = carRepository.filterCars(appliedFilters)
         notifyDataSetChanged()
     }
 }

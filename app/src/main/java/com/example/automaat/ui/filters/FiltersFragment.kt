@@ -1,5 +1,6 @@
 package com.example.automaat.ui.filters
 
+import android.app.Application
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -7,22 +8,34 @@ import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.LiveData
 import androidx.navigation.fragment.findNavController
+import com.example.automaat.AutomaatDatabase
 import com.example.automaat.R
 import com.example.automaat.databinding.FragmentFiltersBinding
+import com.example.automaat.models.car.CarModel
 import com.example.automaat.repositories.CarRepository
 import com.example.automaat.models.car.FilterModel
 import com.example.automaat.ui.home.HomeAdapter
 
-class FiltersFragment : Fragment() {
+class FiltersFragment(application: Application) : Fragment() {
 
     private var _binding: FragmentFiltersBinding? = null
 
     private val binding get() = _binding!!
+    private val readAllData: LiveData<List<CarModel>>
     private lateinit var carRepository: CarRepository
     private lateinit var homeAdapter: HomeAdapter
     private var availableBrands: ArrayList<String>? = null
     private var availableModels: ArrayList<String>? = null
+
+    init {
+        val userDao = AutomaatDatabase.getDatabase(application).carDao()
+
+        carRepository = CarRepository(userDao)
+
+        readAllData = carRepository.readAllData
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -33,14 +46,20 @@ class FiltersFragment : Fragment() {
         _binding = FragmentFiltersBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
-        carRepository = CarRepository.getInstance(requireContext())
+        var allCars = carRepository.readAllData.value
 
-        homeAdapter = HomeAdapter(carRepository.getAllCars(), requireContext(), carRepository)
+        if (allCars == null) {
+            // Temporary solution to avoid null pointer exception
+            allCars = List<CarModel>(0) { i -> CarModel(0, "", "", 0, "", 0.0f, "", 0, 0, 0, "", 0, 0) }
+        }
+
+        homeAdapter = HomeAdapter(allCars, requireContext(), carRepository)
 
         val navController = findNavController()
 
         availableBrands = carRepository.getAvailableBrands()
         availableModels = carRepository.getAvailableModels()
+
         availableBrands?.add(0, "All")
         availableModels?.add(0, "All")
 

@@ -1,10 +1,13 @@
 package com.example.automaat
 
 import android.content.Context
+import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import com.example.automaat.models.car.CarModel
 import com.example.automaat.repositories.CarDao
 
+@Database(entities = [CarModel::class], version = 1, exportSchema = false)
 abstract class AutomaatDatabase : RoomDatabase() {
     abstract fun carDao(): CarDao
 
