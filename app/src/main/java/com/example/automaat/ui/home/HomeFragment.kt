@@ -40,12 +40,7 @@ class HomeFragment : Fragment() {
 
         carRepository = CarRepository.getInstance(requireContext())
 
-        var allCars = carRepository.getAllEntities("cars") { cursor ->
-            val id = cursor.getInt(cursor.getColumnIndex(CarRepository.FeedEntry.ID))
-            val brand = cursor.getString(cursor.getColumnIndex(CarRepository.FeedEntry.BRAND))
-            val model = cursor.getString(cursor.getColumnIndex(CarRepository.FeedEntry.MODEL))
-            CarModel(id, brand, model)
-        }
+        var allCars = carRepository.getAllCars()
 
         homeAdapter =
             HomeAdapter(allCars, requireContext(), carRepository)

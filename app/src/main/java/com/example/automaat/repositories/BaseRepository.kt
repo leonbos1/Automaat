@@ -6,6 +6,7 @@ import android.content.Context
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
+import com.example.automaat.models.rental.RentalModel
 
 abstract class BaseRepository<T>(
     context: Context,
@@ -29,6 +30,8 @@ abstract class BaseRepository<T>(
     }
 
     abstract fun createTableQuery(tableName: String): String
+
+    abstract fun getEntityFromCursor(cursor: Cursor): T
 
     @SuppressLint("Range")
     fun <T> getAllEntities(

@@ -1,72 +1,25 @@
 package com.example.automaat.models.car
 
-import android.os.Parcel
 import android.os.Parcelable
-import java.time.LocalDate
+import androidx.room.Entity
+import androidx.room.PrimaryKey
+import kotlinx.android.parcel.Parcelize
 
-data class CarModel(
+@Parcelize
+@Entity(tableName = "cars")
+data class CarModel (
+    @PrimaryKey(autoGenerate = true)
     val id: Int,
     val brand: String?,
     val model: String?,
-    val fuelType: Int = 0,
+    val fuelType: Int,
     val options: String?,
-    val price: Float = 0.0f,
+    val price: Float,
     val licensePlate: String?,
-    val engineSize: Int = 0,
-    val numOfSeats: Int = 0,
-    val modelYear: Int = 0,
-    val since: LocalDate = LocalDate.now(),
-    val body: Int = 0,
-    val rental: Int = 0
-) : Parcelable {
-    constructor(parcel: Parcel) : this(
-        parcel.readInt(),
-        parcel.readString(),
-        parcel.readString(),
-        parcel.readInt(),
-        parcel.readString(),
-        parcel.readFloat(),
-        parcel.readString(),
-        parcel.readInt(),
-        parcel.readInt(),
-        parcel.readInt(),
-        parcel.readSerializable() as LocalDate,
-        parcel.readInt(),
-        parcel.readInt()
-    ) {
-    }
-
-    override fun writeToParcel(parcel: Parcel, flags: Int) {
-        parcel.writeInt(id)
-        parcel.writeString(brand)
-        parcel.writeString(model)
-        parcel.writeInt(fuelType)
-        parcel.writeString(options)
-        parcel.writeFloat(price)
-        parcel.writeString(licensePlate)
-        parcel.writeInt(engineSize)
-        parcel.writeInt(numOfSeats)
-        parcel.writeInt(modelYear)
-        parcel.writeSerializable(since)
-        parcel.writeInt(body)
-        parcel.writeInt(rental)
-    }
-
-    override fun describeContents(): Int {
-        return 0
-    }
-
-    companion object CREATOR : Parcelable.Creator<CarModel> {
-        override fun createFromParcel(parcel: Parcel): CarModel {
-            return CarModel(parcel)
-        }
-
-        override fun newArray(size: Int): Array<CarModel?> {
-            return arrayOfNulls(size)
-        }
-
-        fun getAutoId(): Int {
-            return (100000..999999).random()
-        }
-    }
-}
+    val engineSize: Int,
+    val numOfSeats: Int,
+    val modelYear: Int,
+    val since: String?,
+    val body: Int,
+    val rental: Int
+): Parcelable
