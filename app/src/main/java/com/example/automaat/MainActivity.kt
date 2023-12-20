@@ -18,7 +18,6 @@ class MainActivity : AppCompatActivity() {
     private lateinit var dbHelper: CarDbHelper
     private val authentication = Authentication()
 
-    private val TAG: String = "CHECK_RESPONSE"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -52,7 +51,7 @@ class MainActivity : AppCompatActivity() {
         authentication.authenticate {
             // Get all data to local DB
             // ...
-            Routes(authentication.getToken()).getAllRoutes()
+            Routes().getAllRoutes()
         }
     }
 
