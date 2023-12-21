@@ -19,16 +19,4 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
         repository = CarRepository(carDao)
         readAllData = repository.readAllData
     }
-
-    fun getAvailableModelsByBrand(brand: String): ArrayList<String> {
-        return repository.getAvailableModelsByBrand(brand)
-    }
-
-    fun getAvailableBrands(): ArrayList<String> {
-        return repository.getAvailableBrands()
-    }
-
-    fun getAvailableModels(): ArrayList<String> {
-        return repository.getAvailableModels()
-    }
 }

@@ -50,13 +50,13 @@ class HomeAdapter() : RecyclerView.Adapter<HomeAdapter.CarViewHolder>() {
         }
 
         holder.itemView.setOnClickListener {
+            println("onItemClick called")
             onItemClick?.invoke(car)
         }
     }
 
-    fun setData(user: List<CarModel>){
-        this.carList = user
+    fun setData(cars: List<CarModel>){
+        this.carList = cars
         notifyDataSetChanged()
-
     }
 }

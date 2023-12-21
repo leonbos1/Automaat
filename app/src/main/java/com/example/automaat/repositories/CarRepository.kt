@@ -1,6 +1,7 @@
 package com.example.automaat.repositories
 
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.Observer
 import com.example.automaat.models.car.CarModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -36,53 +37,12 @@ class CarRepository(private val carDao: CarDao) {
         return (0..1000000).random()
     }
 
-    fun getAvailableModelsByBrand(brand: String): ArrayList<String> {
-        val availableModels = arrayListOf<String>()
-        val allCars = readAllData.value
+    fun getModelsByBrand(brand: String): List<String> {
+        val cars = readAllData.value
+        val models = cars?.filter { it.brand == brand }
+            ?.mapNotNull { it.model }
+            ?.distinct()
 
-        if (allCars != null) {
-            for (car in allCars) {
-                if (car.brand == brand) {
-                    var model = car.model
-                    if (model != null) {
-                        availableModels.add(model)
-                    }
-                }
-            }
-        }
-
-        return availableModels
-    }
-
-    fun getAvailableBrands(): ArrayList<String> {
-        val availableBrands = mutableListOf<String>()
-        val allCars = readAllData.value
-
-        if (allCars != null) {
-            for (car in allCars) {
-                val brand = car.brand
-                if (brand != null) {
-                    availableBrands.add(brand)
-                }
-            }
-        }
-
-        return ArrayList(availableBrands.distinct())
-    }
-
-    fun getAvailableModels(): ArrayList<String> {
-        val availableModels = mutableListOf<String>()
-        val allCars = readAllData.value
-
-        if (allCars != null) {
-            for (car in allCars) {
-                var model = car.model
-                if (model != null) {
-                    availableModels.add(model)
-                }
-            }
-        }
-
-        return ArrayList(availableModels.distinct())
+        return models ?: emptyList()
     }
 }
