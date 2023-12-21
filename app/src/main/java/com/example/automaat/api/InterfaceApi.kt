@@ -25,4 +25,10 @@ interface InterfaceApi {
 
     @GET("cars/{id}")
     fun getCarById(@Path("id") id: Int): Call<JsonObject>
+
+    @GET("customers")
+    fun getAllCustomers(): Call<JsonArray>
+
+    @GET("customers/{id}")
+    fun getCustomerById(@Path("id") id: Int): Call<JsonObject>
 }
