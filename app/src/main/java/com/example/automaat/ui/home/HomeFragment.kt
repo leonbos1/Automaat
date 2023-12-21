@@ -1,40 +1,31 @@
 package com.example.automaat.ui.home
 
-import android.annotation.SuppressLint
-import android.app.Application
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.room.InvalidationTracker
-import com.example.automaat.AutomaatDatabase
+import androidx.recyclerview.widget.RecyclerView
 import com.example.automaat.R
-import com.example.automaat.repositories.CarRepository
-import com.example.automaat.databinding.FragmentHomeBinding
-import com.example.automaat.models.car.CarModel
-import com.example.automaat.models.car.FilterModel
 
 class HomeFragment() : Fragment() {
 
     private lateinit var homeViewModel: HomeViewModel
-    private var _binding: FragmentHomeBinding? = null
-    private val binding get() = _binding!!
 
-    @SuppressLint("Range")
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+        val view =  inflater.inflate(R.layout.fragment_home, container, false)
         val adapter = HomeAdapter()
 
-        val recyclerView = binding.carsRecyclerView
+        val recyclerView = view.findViewById<RecyclerView>(R.id.carsRecyclerView)
+
         recyclerView.adapter = adapter
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
 
@@ -42,11 +33,20 @@ class HomeFragment() : Fragment() {
         homeViewModel.readAllData.observe(viewLifecycleOwner, Observer { car ->
             adapter.setData(car)
         })
+
+        val filterButton = view.findViewById<View>(R.id.filterButton)
+
+        val navigationController = findNavController()
+
+        filterButton.setOnClickListener {
+            navigationController.navigate(R.id.action_navigation_home_to_filtersFragment)
+        }
+
+        return view;
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
-        _binding = null
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

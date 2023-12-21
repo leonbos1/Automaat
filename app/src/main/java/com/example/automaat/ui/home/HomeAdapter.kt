@@ -16,6 +16,7 @@ import java.util.ArrayList
 class HomeAdapter() : RecyclerView.Adapter<HomeAdapter.CarViewHolder>() {
 
     var onItemClick: ((CarModel) -> Unit)? = null
+    private var carList = emptyList<CarModel>()
 
     class CarViewHolder(val view: View) : RecyclerView.ViewHolder(view) {
         var titleTextView: TextView = view.findViewById(R.id.titleTextView)
@@ -29,11 +30,11 @@ class HomeAdapter() : RecyclerView.Adapter<HomeAdapter.CarViewHolder>() {
     }
 
     override fun getItemCount(): Int {
-        return cars.size
+        return carList.size
     }
 
     override fun onBindViewHolder(holder: CarViewHolder, position: Int) {
-        val car = cars[position]
+        val car = carList[position]
         holder.titleTextView.text = car.brand
         holder.contentTextView.text = car.model
 
@@ -53,9 +54,9 @@ class HomeAdapter() : RecyclerView.Adapter<HomeAdapter.CarViewHolder>() {
         }
     }
 
-    public fun filterCars(appliedFilters: FilterModel?) {
-        cars = ArrayList()
-        //cars = carRepository.filterCars(appliedFilters)
+    fun setData(user: List<CarModel>){
+        this.carList = user
         notifyDataSetChanged()
+
     }
 }

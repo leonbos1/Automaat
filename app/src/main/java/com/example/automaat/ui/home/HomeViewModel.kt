@@ -20,10 +20,6 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
         readAllData = repository.readAllData
     }
 
-    fun insertDummyCars() {
-        repository.insertDummyCars()
-    }
-
     fun getAvailableModelsByBrand(brand: String): ArrayList<String> {
         return repository.getAvailableModelsByBrand(brand)
     }

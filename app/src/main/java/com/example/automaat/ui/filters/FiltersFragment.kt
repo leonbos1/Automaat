@@ -18,24 +18,15 @@ import com.example.automaat.repositories.CarRepository
 import com.example.automaat.models.car.FilterModel
 import com.example.automaat.ui.home.HomeAdapter
 
-class FiltersFragment(application: Application) : Fragment() {
+class FiltersFragment() : Fragment() {
 
     private var _binding: FragmentFiltersBinding? = null
 
     private val binding get() = _binding!!
-    private val readAllData: LiveData<List<CarModel>>
     private lateinit var carRepository: CarRepository
     private lateinit var homeAdapter: HomeAdapter
     private var availableBrands: ArrayList<String>? = null
     private var availableModels: ArrayList<String>? = null
-
-    init {
-        val userDao = AutomaatDatabase.getDatabase(application).carDao()
-
-        carRepository = CarRepository(userDao)
-
-        readAllData = carRepository.readAllData
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -46,40 +37,9 @@ class FiltersFragment(application: Application) : Fragment() {
         _binding = FragmentFiltersBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
-        var allCars = carRepository.readAllData.value
-
-        if (allCars == null) {
-            // Temporary solution to avoid null pointer exception
-            allCars = List<CarModel>(0) { i -> CarModel(0, "", "", 0, "", 0.0f, "", 0, 0, 0, "", 0, 0) }
-        }
-
-        homeAdapter = HomeAdapter(allCars, requireContext(), carRepository)
+        homeAdapter = HomeAdapter()
 
         val navController = findNavController()
-
-        availableBrands = carRepository.getAvailableBrands()
-        availableModels = carRepository.getAvailableModels()
-
-        availableBrands?.add(0, "All")
-        availableModels?.add(0, "All")
-
-        // Set the available brands to the spinner
-        binding.brandSpinner.adapter = context?.let {
-            ArrayAdapter(
-                it,
-                android.R.layout.simple_spinner_item,
-                availableBrands!!
-            )
-        }
-
-        // Set the available models to the spinner
-        binding.modelSpinner.adapter = context?.let {
-            ArrayAdapter(
-                it,
-                android.R.layout.simple_spinner_item,
-                availableModels!!
-            )
-        }
 
         binding.resultsButton.setOnClickListener {
             var brand = binding.brandSpinner.selectedItem.toString()
