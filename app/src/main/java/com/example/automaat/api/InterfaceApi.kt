@@ -31,4 +31,22 @@ interface InterfaceApi {
 
     @GET("customers/{id}")
     fun getCustomerById(@Path("id") id: Int): Call<JsonObject>
+
+    @GET("rentals")
+    fun getAllRentals(): Call<JsonArray>
+
+    @GET("rentals/{id}")
+    fun getRentalById(@Path("id") id: Int): Call<JsonObject>
+
+    @GET("inspections")
+    fun getAllInspections(): Call<JsonArray>
+
+    @GET("inspections/{id}")
+    fun getInspectionById(@Path("id") id: Int): Call<JsonObject>
+
+    @GET("inspection-photos")
+    fun getAllInspectionPhotos(): Call<JsonArray>
+
+    @GET("inspection-photos/{id}")
+    fun getInspectionPhotoById(@Path("id") id: Int): Call<JsonObject>
 }

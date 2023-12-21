@@ -9,6 +9,9 @@ import androidx.navigation.ui.setupWithNavController
 import com.example.automaat.api.endpoint.Authentication
 import com.example.automaat.api.endpoint.Cars
 import com.example.automaat.api.endpoint.Customers
+import com.example.automaat.api.endpoint.InspectionPhotos
+import com.example.automaat.api.endpoint.Inspections
+import com.example.automaat.api.endpoint.Rentals
 import com.example.automaat.api.endpoint.Routes
 import com.example.automaat.databinding.ActivityMainBinding
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -61,6 +64,15 @@ class MainActivity : AppCompatActivity() {
 
             Customers().getAllCustomers()
             Customers().getCustomerById(1)
+
+            Rentals().getAllRentals()
+            Rentals().getRentalById(1)
+
+            Inspections().getAllInspections()
+            Inspections().getInspectionById(1)
+
+            InspectionPhotos().getAllInspectionPhotos()
+            InspectionPhotos().getInspectionPhotoById(1)
         }
     }
 

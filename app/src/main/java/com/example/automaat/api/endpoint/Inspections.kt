@@ -9,36 +9,36 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class Customers {
+class Inspections {
     private val api = ApiClient.retrofit.create(InterfaceApi::class.java)
     private val TAG: String = "CHECK_RESPONSE"
 
-    fun getAllCustomers() {
-        api.getAllCustomers().enqueue(object: Callback<JsonArray> {
+    fun getAllInspections() {
+        api.getAllInspections().enqueue(object: Callback<JsonArray> {
             override fun onResponse(call: Call<JsonArray>, response: Response<JsonArray>) {
                 if (response.isSuccessful) {
-                    Log.i(TAG, "onResponse Customers: ${response.body()}")
+                    Log.i(TAG, "onResponse Inspections: ${response.body()}")
                     // For loop to make each value a datatype.
                     // Store in DB
                 }
             }
 
             override fun onFailure(call: Call<JsonArray>, t: Throwable) {
-                Log.i(TAG, "onFailure Customers: ${t.message}")
+                Log.i(TAG, "onFailure Inspections: ${t.message}")
             }
         })
     }
 
-    fun getCustomerById(id: Int) {
-        api.getCustomerById(id).enqueue(object: Callback<JsonObject> {
+    fun getInspectionById(id: Int) {
+        api.getInspectionById(id).enqueue(object: Callback<JsonObject> {
             override fun onResponse(call: Call<JsonObject>, response: Response<JsonObject>) {
                 if (response.isSuccessful) {
-                    Log.i(TAG, "onResponse CustomerById: ${response.body()}")
+                    Log.i(TAG, "onResponse InspectionById: ${response.body()}")
                 }
             }
 
             override fun onFailure(call: Call<JsonObject>, t: Throwable) {
-                Log.i(TAG, "onFailure CustomerById: ${t.message}")
+                Log.i(TAG, "onFailure InspectionById: ${t.message}")
             }
         })
     }
