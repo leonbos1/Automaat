@@ -6,3 +6,12 @@ enum class FuelType {
     HYBRID,
     ELECTRIC
 }
+
+fun FuelType.toReadableString(): String {
+    return when (this) {
+        FuelType.GASOLINE -> "Gasoline"
+        FuelType.DIESEL -> "Diesel"
+        FuelType.HYBRID -> "Hybrid"
+        FuelType.ELECTRIC -> "Electric"
+    }
+}

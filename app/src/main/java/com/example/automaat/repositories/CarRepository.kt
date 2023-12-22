@@ -2,7 +2,9 @@ package com.example.automaat.repositories
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
+import com.example.automaat.models.car.Body
 import com.example.automaat.models.car.CarModel
+import com.example.automaat.models.car.FuelType
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -14,14 +16,90 @@ class CarRepository(private val carDao: CarDao) {
         carDao.addCar(car)
     }
 
+    suspend fun deleteAllCars() {
+        carDao.deleteAllCars()
+    }
+
     fun insertDummyCars() {
-        val car1 = CarModel(getRandomId(), "BMW", "X5", 0, "", 0.0f, "", 0, 0, 0, "", 0, 0)
-        val car2 = CarModel(getRandomId(), "BMW", "M3", 0, "", 0.0f, "", 0, 0, 0, "", 0, 0)
-        val car3 =
-            CarModel(getRandomId(), "Volkswagen", "Golf GTI", 0, "", 0.0f, "", 0, 0, 0, "", 0, 0)
-        val car4 =
-            CarModel(getRandomId(), "Alfa Romeo", "Guilia", 0, "", 0.0f, "", 0, 0, 0, "", 0, 0)
-        val car5 = CarModel(getRandomId(), "Toyota", "Prius", 0, "", 0.0f, "", 0, 0, 0, "", 0, 0)
+        val car1 = CarModel(
+            getRandomId(),
+            brand = "BMW",
+            model = "X5",
+            fuelType = FuelType.GASOLINE,
+            options = "Navigation",
+            price = 150f,
+            licensePlate = "05-TGB-10",
+            engineSize = 3000,
+            numOfSeats = 5,
+            modelYear = 2023,
+            since = "2023-12-21",
+            body = Body.SUV.ordinal,
+            rental = 0 //TODO actually make a relation to a rental
+        )
+
+        val car2 = CarModel(
+            getRandomId(),
+            brand = "BMW",
+            model = "M3",
+            fuelType = FuelType.GASOLINE,
+            options = "Sunroof",
+            price = 80f,
+            licensePlate = "05-ABC-20",
+            engineSize = 3000,
+            numOfSeats = 4,
+            modelYear = 2023,
+            since = "2023-12-22",
+            body = Body.SEDAN.ordinal,
+            rental = 0 //TODO actually make a relation to a rental
+        )
+
+        val car3 = CarModel(
+            getRandomId(),
+            brand = "Alfa Romeo",
+            model = "Guilia",
+            fuelType = FuelType.GASOLINE,
+            options = "Sports Package",
+            price = 175f,
+            licensePlate = "05-XYZ-30",
+            engineSize = 2900,
+            numOfSeats = 4,
+            modelYear = 2023,
+            since = "2023-12-23",
+            body = Body.SEDAN.ordinal,
+            rental = 0 //TODO actually make a relation to a rental
+        )
+
+        val car4 = CarModel(
+            getRandomId(),
+            brand = "Volkswagen",
+            model = "Golf GTI",
+            fuelType = FuelType.GASOLINE,
+            options = "Performance Package",
+            price = 95f,
+            licensePlate = "05-PQR-40",
+            engineSize = 3000,
+            numOfSeats = 4,
+            modelYear = 2023,
+            since = "2023-12-24",
+            body = Body.HATCHBACK.ordinal,
+            rental = 0 //TODO actually make a relation to a rental
+        )
+
+        val car5 = CarModel(
+            getRandomId(),
+            brand = "Toyota",
+            model = "Prius",
+            fuelType = FuelType.HYBRID,
+            options = "Technology Package",
+            price = 30f,
+            licensePlate = "05-LMN-50",
+            engineSize = 3000,
+            numOfSeats = 4,
+            modelYear = 2023,
+            since = "2023-12-25",
+            body = Body.SEDAN.ordinal,
+            rental = 0 //TODO actually make a relation to a rental
+        )
 
         val scope = CoroutineScope(Dispatchers.IO)
         scope.launch {

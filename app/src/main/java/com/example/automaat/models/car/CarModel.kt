@@ -12,7 +12,7 @@ data class CarModel (
     val id: Int,
     val brand: String?,
     val model: String?,
-    val fuelType: Int,
+    val fuelType: FuelType,
     val options: String?,
     val price: Float,
     val licensePlate: String?,

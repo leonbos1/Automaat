@@ -24,6 +24,7 @@ import com.example.automaat.ui.home.HomeAdapter
 class FiltersFragment() : Fragment() {
     private lateinit var homeAdapter: HomeAdapter
     private lateinit var initCarsButton: Button
+    private lateinit var deleteCarsButton: Button
     private lateinit var filterViewModel: FilterViewModel
     private lateinit var resultsBtn: Button
     private lateinit var brandSpinner: Spinner
@@ -44,6 +45,12 @@ class FiltersFragment() : Fragment() {
 
         initCarsButton.setOnClickListener {
             initDummyCars()
+        }
+
+        deleteCarsButton = view.findViewById(R.id.deleteCarsButton)
+
+        deleteCarsButton.setOnClickListener {
+            deleteAllCars()
         }
 
         resultsBtn = view.findViewById(R.id.resultsButton)
@@ -103,6 +110,12 @@ class FiltersFragment() : Fragment() {
     //TODO: Remove this function
     private fun initDummyCars() {
         filterViewModel.insertDummyCars()
+
+        findNavController().navigate(R.id.action_navigation_filters_to_navigation_home)
+    }
+
+    private fun deleteAllCars() {
+        filterViewModel.removeAllCars()
 
         findNavController().navigate(R.id.action_navigation_filters_to_navigation_home)
     }

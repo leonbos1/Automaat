@@ -11,6 +11,7 @@ import com.example.automaat.repositories.CarRepository
 import com.example.automaat.models.car.CarHelper.Companion.getCarImageResourceId
 import com.example.automaat.models.car.CarModel
 import com.example.automaat.models.car.FilterModel
+import com.example.automaat.models.car.toReadableString
 import java.util.ArrayList
 
 class HomeAdapter() : RecyclerView.Adapter<HomeAdapter.CarViewHolder>() {
@@ -19,9 +20,11 @@ class HomeAdapter() : RecyclerView.Adapter<HomeAdapter.CarViewHolder>() {
     private var carList = emptyList<CarModel>()
 
     class CarViewHolder(val view: View) : RecyclerView.ViewHolder(view) {
-        var titleTextView: TextView = view.findViewById(R.id.titleTextView)
-        var contentTextView: TextView = view.findViewById(R.id.contentTextView)
+        var brandTextView: TextView = view.findViewById(R.id.brandTextView)
+        var modelTextView: TextView = view.findViewById(R.id.modelTextView)
         var imageView: ImageView = view.findViewById(R.id.carImageView)
+        var fuelTypeTextView: TextView = view.findViewById(R.id.fuelTypeTextView)
+        var priceTextView: TextView = view.findViewById(R.id.priceTextView)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CarViewHolder {
@@ -35,8 +38,10 @@ class HomeAdapter() : RecyclerView.Adapter<HomeAdapter.CarViewHolder>() {
 
     override fun onBindViewHolder(holder: CarViewHolder, position: Int) {
         val car = carList[position]
-        holder.titleTextView.text = car.brand
-        holder.contentTextView.text = car.model
+        holder.brandTextView.text = car.brand
+        holder.modelTextView.text = car.model
+        holder.fuelTypeTextView.text = car.fuelType.toReadableString()
+        holder.priceTextView.text = car.price.toString()
 
         // Pass the context to get the resource ID
         val imageResourceId = getCarImageResourceId(car.brand, car.model, holder.itemView.context)

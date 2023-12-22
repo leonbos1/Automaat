@@ -23,10 +23,9 @@ class FilterViewModel(application: Application) : AndroidViewModel(application) 
         readAllData = repository.readAllData
     }
 
-    //TODO: Remove this function
-    fun addCar(car: CarModel) {
+    fun removeAllCars() {
         viewModelScope.launch(Dispatchers.IO) {
-            repository.addCar(car)
+            repository.deleteAllCars()
         }
     }
 

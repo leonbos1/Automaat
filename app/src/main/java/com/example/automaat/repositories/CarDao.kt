@@ -14,4 +14,7 @@ interface CarDao {
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun addCar(car: CarModel)
+
+    @Query("DELETE FROM cars")
+    suspend fun deleteAllCars()
 }
