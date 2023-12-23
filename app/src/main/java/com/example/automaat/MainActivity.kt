@@ -1,17 +1,27 @@
 package com.example.automaat
 
 import android.os.Bundle
-import com.google.android.material.bottomnavigation.BottomNavigationView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
+import com.example.automaat.api.endpoint.Authentication
+import com.example.automaat.api.endpoint.Cars
+import com.example.automaat.api.endpoint.Customers
+import com.example.automaat.api.endpoint.InspectionPhotos
+import com.example.automaat.api.endpoint.Inspections
+import com.example.automaat.api.endpoint.Rentals
+import com.example.automaat.api.endpoint.Routes
 import com.example.automaat.databinding.ActivityMainBinding
+import com.google.android.material.bottomnavigation.BottomNavigationView
+
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
+    private lateinit var dbHelper: CarDbHelper
+    private val authentication = Authentication()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,5 +45,43 @@ class MainActivity : AppCompatActivity() {
 
     override fun onSupportNavigateUp(): Boolean {
         return findNavController(R.id.nav_host_fragment_activity_main).navigateUp() || super.onSupportNavigateUp()
+
+        dbHelper = CarDbHelper(this)
+
+        dbHelper.insertDummyCars()
+
+        val cars = dbHelper.getAllCars()
+
+        for (car in cars) {
+            log("Car: ${car.id} ${car.brand} ${car.model}")
+        }
+
+        authentication.authenticate {
+            // Get all data and store in local DB
+            // ...
+            Routes().getAllRoutes()
+            Routes().getRouteById(1)
+
+            Cars().getAllCars()
+            Cars().getCarById(1)
+
+            Customers().getAllCustomers()
+            Customers().getCustomerById(1)
+
+            Rentals().getAllRentals()
+            Rentals().getRentalById(1)
+
+            Inspections().getAllInspections()
+            Inspections().getInspectionById(1)
+
+            InspectionPhotos().getAllInspectionPhotos()
+            InspectionPhotos().getInspectionPhotoById(1)
+        }
+    }
+
+
+
+    private fun log(message: String) {
+        println("MainActivity: $message")
     }
 }
