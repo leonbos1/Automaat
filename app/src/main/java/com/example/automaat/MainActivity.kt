@@ -20,7 +20,6 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
-    private lateinit var dbHelper: CarDbHelper
     private val authentication = Authentication()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -46,40 +45,29 @@ class MainActivity : AppCompatActivity() {
     override fun onSupportNavigateUp(): Boolean {
         return findNavController(R.id.nav_host_fragment_activity_main).navigateUp() || super.onSupportNavigateUp()
 
-        dbHelper = CarDbHelper(this)
-
-        dbHelper.insertDummyCars()
-
-        val cars = dbHelper.getAllCars()
-
-        for (car in cars) {
-            log("Car: ${car.id} ${car.brand} ${car.model}")
-        }
-
-        authentication.authenticate {
-            // Get all data and store in local DB
-            // ...
-            Routes().getAllRoutes()
-            Routes().getRouteById(1)
-
-            Cars().getAllCars()
-            Cars().getCarById(1)
-
-            Customers().getAllCustomers()
-            Customers().getCustomerById(1)
-
-            Rentals().getAllRentals()
-            Rentals().getRentalById(1)
-
-            Inspections().getAllInspections()
-            Inspections().getInspectionById(1)
-
-            InspectionPhotos().getAllInspectionPhotos()
-            InspectionPhotos().getInspectionPhotoById(1)
-        }
+        //Unreachable code
+//        authentication.authenticate {
+//            // Get all data and store in local DB
+//            // ...
+//            Routes().getAllRoutes()
+//            Routes().getRouteById(1)
+//
+//            Cars().getAllCars()
+//            Cars().getCarById(1)
+//
+//            Customers().getAllCustomers()
+//            Customers().getCustomerById(1)
+//
+//            Rentals().getAllRentals()
+//            Rentals().getRentalById(1)
+//
+//            Inspections().getAllInspections()
+//            Inspections().getInspectionById(1)
+//
+//            InspectionPhotos().getAllInspectionPhotos()
+//            InspectionPhotos().getInspectionPhotoById(1)
+//        }
     }
-
-
 
     private fun log(message: String) {
         println("MainActivity: $message")

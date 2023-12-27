@@ -14,7 +14,7 @@ import kotlinx.coroutines.launch
 
 class FilterViewModel(application: Application) : AndroidViewModel(application) {
     val readAllData: LiveData<List<CarModel>>
-    private val repository: CarRepository
+    public val repository: CarRepository
     private val _availableModels = MutableLiveData<List<String>>()
 
     init {

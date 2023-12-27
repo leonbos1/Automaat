@@ -15,6 +15,8 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.example.automaat.AutomaatDatabase
 import com.example.automaat.R
+import com.example.automaat.api.endpoint.Authentication
+import com.example.automaat.api.endpoint.Cars
 import com.example.automaat.databinding.FragmentFiltersBinding
 import com.example.automaat.models.car.CarModel
 import com.example.automaat.repositories.CarRepository
@@ -29,6 +31,7 @@ class FiltersFragment() : Fragment() {
     private lateinit var resultsBtn: Button
     private lateinit var brandSpinner: Spinner
     private lateinit var modelSpinner: Spinner
+    private lateinit var getAllCarsButton: Button
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -65,6 +68,14 @@ class FiltersFragment() : Fragment() {
             bundle.putParcelable("appliedFilters", filterModel)
 
             navController.navigate(R.id.action_navigation_filters_to_navigation_home, bundle)
+        }
+
+        getAllCarsButton = view.findViewById(R.id.getAllCarsButton)
+
+        getAllCarsButton.setOnClickListener {
+            Authentication().authenticate {
+                Cars(filterViewModel.repository).getAllCars()
+            }
         }
 
         brandSpinner = view.findViewById(R.id.brandSpinner)

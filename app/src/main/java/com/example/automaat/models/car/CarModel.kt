@@ -20,6 +20,6 @@ data class CarModel (
     val numOfSeats: Int,
     val modelYear: Int,
     val since: String?,
-    val body: Int,
-    val rental: Int
+    val body: Body?,
+    val rental: Int?
 ): Parcelable

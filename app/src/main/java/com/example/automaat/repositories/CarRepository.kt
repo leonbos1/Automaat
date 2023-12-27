@@ -33,7 +33,7 @@ class CarRepository(private val carDao: CarDao) {
             numOfSeats = 5,
             modelYear = 2023,
             since = "2023-12-21",
-            body = Body.SUV.ordinal,
+            body = Body.SUV,
             rental = 0 //TODO actually make a relation to a rental
         )
 
@@ -49,7 +49,7 @@ class CarRepository(private val carDao: CarDao) {
             numOfSeats = 4,
             modelYear = 2023,
             since = "2023-12-22",
-            body = Body.SEDAN.ordinal,
+            body = Body.SEDAN,
             rental = 0 //TODO actually make a relation to a rental
         )
 
@@ -65,7 +65,7 @@ class CarRepository(private val carDao: CarDao) {
             numOfSeats = 4,
             modelYear = 2023,
             since = "2023-12-23",
-            body = Body.SEDAN.ordinal,
+            body = Body.SEDAN,
             rental = 0 //TODO actually make a relation to a rental
         )
 
@@ -81,7 +81,7 @@ class CarRepository(private val carDao: CarDao) {
             numOfSeats = 4,
             modelYear = 2023,
             since = "2023-12-24",
-            body = Body.HATCHBACK.ordinal,
+            body = Body.HATCHBACK,
             rental = 0 //TODO actually make a relation to a rental
         )
 
@@ -97,7 +97,7 @@ class CarRepository(private val carDao: CarDao) {
             numOfSeats = 4,
             modelYear = 2023,
             since = "2023-12-25",
-            body = Body.SEDAN.ordinal,
+            body = Body.SEDAN,
             rental = 0 //TODO actually make a relation to a rental
         )
 
