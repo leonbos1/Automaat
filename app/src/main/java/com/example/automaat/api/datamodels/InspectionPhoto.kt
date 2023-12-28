@@ -1,4 +1,4 @@
-package com.example.automaat.api.dataClasses
+package com.example.automaat.api.datamodels
 
 data class InspectionPhoto(
     val id: Int,

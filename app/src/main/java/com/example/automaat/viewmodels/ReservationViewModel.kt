@@ -2,8 +2,8 @@ package com.example.automaat.viewmodels
 
 import android.os.Parcel
 import android.os.Parcelable
-import com.example.automaat.models.car.CarModel
-import com.example.automaat.models.rental.RentalModel
+import com.example.automaat.entities.CarModel
+import com.example.automaat.entities.RentalModel
 
 data class ReservationViewModel(
     val car: CarModel?,

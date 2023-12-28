@@ -1,9 +1,9 @@
-package com.example.automaat.api.endpoint
+package com.example.automaat.api.endpoints
 
 import android.util.Log
 import com.example.automaat.api.ApiClient
 import com.example.automaat.api.InterfaceApi
-import com.example.automaat.api.dataClasses.Auth
+import com.example.automaat.api.datamodels.Auth
 import com.google.gson.JsonObject
 import retrofit2.Call
 import retrofit2.Callback

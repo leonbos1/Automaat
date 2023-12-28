@@ -59,7 +59,7 @@
             app:destination="@id/navigation_home" />
         <argument
             android:name="appliedFilters"
-            app:argType="com.example.automaat.models.car.FilterModel" />
+            app:argType="com.example.automaat.entities.FilterModel" />
     </fragment>
     <fragment
         android:id="@+id/car_details"
@@ -77,7 +77,7 @@
         <argument
 
             android:name="car"
-            app:argType="com.example.automaat.models.car.CarModel" />
+            app:argType="com.example.automaat.entities.CarModel" />
         <action
             android:id="@+id/action_car_details_to_reservation_details"
             app:destination="@id/reservation_details" />

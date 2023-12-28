@@ -6,13 +6,7 @@ import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
-import com.example.automaat.api.endpoint.Authentication
-import com.example.automaat.api.endpoint.Cars
-import com.example.automaat.api.endpoint.Customers
-import com.example.automaat.api.endpoint.InspectionPhotos
-import com.example.automaat.api.endpoint.Inspections
-import com.example.automaat.api.endpoint.Rentals
-import com.example.automaat.api.endpoint.Routes
+import com.example.automaat.api.endpoints.Authentication
 import com.example.automaat.databinding.ActivityMainBinding
 import com.google.android.material.bottomnavigation.BottomNavigationView
 

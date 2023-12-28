@@ -1,23 +1,20 @@
 package com.example.automaat.ui.home
 
-import android.content.Context
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.automaat.R
-import com.example.automaat.repositories.CarRepository
-import com.example.automaat.models.car.CarHelper.Companion.getCarImageResourceId
-import com.example.automaat.models.car.CarModel
-import com.example.automaat.models.car.FilterModel
-import com.example.automaat.models.car.toReadableString
-import java.util.ArrayList
+import com.example.automaat.entities.CarHelper.Companion.getCarImageResourceId
+import com.example.automaat.entities.CarModel
+import com.example.automaat.entities.relations.CarWithRental
+import com.example.automaat.entities.toReadableString
 
 class HomeAdapter() : RecyclerView.Adapter<HomeAdapter.CarViewHolder>() {
 
     var onItemClick: ((CarModel) -> Unit)? = null
-    private var carList = emptyList<CarModel>()
+    private var carList = emptyList<CarWithRental>()
 
     class CarViewHolder(val view: View) : RecyclerView.ViewHolder(view) {
         var brandTextView: TextView = view.findViewById(R.id.brandTextView)
@@ -37,14 +34,14 @@ class HomeAdapter() : RecyclerView.Adapter<HomeAdapter.CarViewHolder>() {
     }
 
     override fun onBindViewHolder(holder: CarViewHolder, position: Int) {
-        val car = carList[position]
-        holder.brandTextView.text = car.brand
-        holder.modelTextView.text = car.model
-        holder.fuelTypeTextView.text = car.fuelType.toReadableString()
-        holder.priceTextView.text = car.price.toString()
+        val carWithRental = carList[position]
+        holder.brandTextView.text = carWithRental.car.brand
+        holder.modelTextView.text = carWithRental.car.model
+        holder.fuelTypeTextView.text = carWithRental.car.fuelType.toReadableString()
+        holder.priceTextView.text = carWithRental.car.price.toString()
 
         // Pass the context to get the resource ID
-        val imageResourceId = getCarImageResourceId(car.brand, car.model, holder.itemView.context)
+        val imageResourceId = getCarImageResourceId(carWithRental.car.brand, carWithRental.car.model, holder.itemView.context)
 
         // Set the image resource if it exists
         if (imageResourceId != 0) {
@@ -56,11 +53,11 @@ class HomeAdapter() : RecyclerView.Adapter<HomeAdapter.CarViewHolder>() {
 
         holder.itemView.setOnClickListener {
             println("onItemClick called")
-            onItemClick?.invoke(car)
+            onItemClick?.invoke(carWithRental.car)
         }
     }
 
-    fun setData(cars: List<CarModel>){
+    fun setData(cars: List<CarWithRental>){
         this.carList = cars
         notifyDataSetChanged()
     }

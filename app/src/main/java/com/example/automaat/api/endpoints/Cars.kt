@@ -1,11 +1,11 @@
-package com.example.automaat.api.endpoint
+package com.example.automaat.api.endpoints
 
 import android.util.Log
 import com.example.automaat.api.ApiClient
 import com.example.automaat.api.InterfaceApi
-import com.example.automaat.models.car.Body
-import com.example.automaat.models.car.CarModel
-import com.example.automaat.models.car.FuelType
+import com.example.automaat.entities.Body
+import com.example.automaat.entities.CarModel
+import com.example.automaat.entities.FuelType
 import com.example.automaat.repositories.CarRepository
 import com.google.gson.JsonArray
 import com.google.gson.JsonObject
@@ -31,9 +31,6 @@ class Cars(private val carRepository: CarRepository) {
                         val car = response.body()?.get(0)?.asJsonObject
                         Log.i(TAG, "onResponse Car: $car")
 
-
-                        // =====
-
                         // Dit naar aparte class voor het syncen
 
                         car?.let {
@@ -49,12 +46,9 @@ class Cars(private val carRepository: CarRepository) {
                                 it.get("nrOfSeats").asInt,
                                 it.get("modelYear").asInt,
                                 it.get("since").asString,
-                                Body.fromString(it.get("body").asString),
-                                null // hier is een fix nodig omdat it.get("rental") een null kan zijn
+                                Body.fromString(it.get("body").asString)
                             )
                             carRepository.addCar(carModel)
-
-                            // =====
                         }
                     }
                 }

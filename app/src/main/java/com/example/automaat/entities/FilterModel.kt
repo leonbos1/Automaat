@@ -1,4 +1,4 @@
-package com.example.automaat.models.car
+package com.example.automaat.entities
 
 import android.os.Parcel
 import android.os.Parcelable

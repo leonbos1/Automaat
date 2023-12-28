@@ -1,4 +1,4 @@
-package com.example.automaat.api.endpoint
+package com.example.automaat.api.endpoints
 
 import android.util.Log
 import com.example.automaat.api.ApiClient

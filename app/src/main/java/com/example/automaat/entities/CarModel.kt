@@ -1,4 +1,4 @@
-package com.example.automaat.models.car
+package com.example.automaat.entities
 
 import android.os.Parcelable
 import androidx.room.Entity
@@ -20,6 +20,5 @@ data class CarModel (
     val numOfSeats: Int,
     val modelYear: Int,
     val since: String?,
-    val body: Body?,
-    val rental: Int?
+    val body: Body?
 ): Parcelable

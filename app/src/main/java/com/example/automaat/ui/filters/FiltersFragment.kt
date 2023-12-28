@@ -1,6 +1,5 @@
 package com.example.automaat.ui.filters
 
-import android.app.Application
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -10,17 +9,14 @@ import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.Spinner
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
-import com.example.automaat.AutomaatDatabase
 import com.example.automaat.R
-import com.example.automaat.api.endpoint.Authentication
-import com.example.automaat.api.endpoint.Cars
-import com.example.automaat.databinding.FragmentFiltersBinding
-import com.example.automaat.models.car.CarModel
-import com.example.automaat.repositories.CarRepository
-import com.example.automaat.models.car.FilterModel
+import com.example.automaat.api.datamodels.Rental
+import com.example.automaat.api.endpoints.Authentication
+import com.example.automaat.api.endpoints.Cars
+import com.example.automaat.api.endpoints.Rentals
+import com.example.automaat.entities.FilterModel
 import com.example.automaat.ui.home.HomeAdapter
 
 class FiltersFragment() : Fragment() {
@@ -74,7 +70,8 @@ class FiltersFragment() : Fragment() {
 
         getAllCarsButton.setOnClickListener {
             Authentication().authenticate {
-                Cars(filterViewModel.repository).getAllCars()
+                Cars(filterViewModel.carRepository).getAllCars()
+                Rentals(filterViewModel.rentalRepository).getAllRentals()
             }
         }
 

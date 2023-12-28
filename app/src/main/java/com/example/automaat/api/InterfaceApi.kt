@@ -1,6 +1,6 @@
 package com.example.automaat.api;
 
-import com.example.automaat.api.dataClasses.Auth
+import com.example.automaat.api.datamodels.Auth
 import com.google.gson.JsonArray
 import com.google.gson.JsonObject
 import retrofit2.Call

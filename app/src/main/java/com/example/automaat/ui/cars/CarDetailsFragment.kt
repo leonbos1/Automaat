@@ -11,10 +11,8 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.example.automaat.R
 import com.example.automaat.repositories.CarRepository
-import com.example.automaat.models.car.CarHelper
-import com.example.automaat.models.car.CarModel
-import com.example.automaat.models.rental.RentalModel
-import com.example.automaat.viewmodels.ReservationViewModel
+import com.example.automaat.entities.CarHelper
+import com.example.automaat.entities.CarModel
 
 class CarDetailsFragment : Fragment() {
 

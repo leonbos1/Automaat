@@ -1,10 +1,10 @@
 package com.example.automaat.repositories
 
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.Observer
-import com.example.automaat.models.car.Body
-import com.example.automaat.models.car.CarModel
-import com.example.automaat.models.car.FuelType
+import com.example.automaat.entities.Body
+import com.example.automaat.entities.CarModel
+import com.example.automaat.entities.relations.CarWithRental
+import com.example.automaat.entities.FuelType
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -12,12 +12,29 @@ import kotlinx.coroutines.launch
 class CarRepository(private val carDao: CarDao) {
     val readAllData: LiveData<List<CarModel>> = carDao.readAllData()
 
+    fun getCarsWithRentals(): LiveData<List<CarWithRental>> {
+        return carDao.getCarsWithRentals()
+    }
+
     suspend fun addCar(car: CarModel) {
         carDao.addCar(car)
     }
 
     suspend fun deleteAllCars() {
         carDao.deleteAllCars()
+    }
+
+    fun getRandomId(): Int {
+        return (0..1000000).random()
+    }
+
+    fun getModelsByBrand(brand: String): List<String> {
+        val cars = readAllData.value
+        val models = cars?.filter { it.brand == brand }
+            ?.mapNotNull { it.model }
+            ?.distinct()
+
+        return models ?: emptyList()
     }
 
     fun insertDummyCars() {
@@ -33,8 +50,7 @@ class CarRepository(private val carDao: CarDao) {
             numOfSeats = 5,
             modelYear = 2023,
             since = "2023-12-21",
-            body = Body.SUV,
-            rental = 0 //TODO actually make a relation to a rental
+            body = Body.SUV
         )
 
         val car2 = CarModel(
@@ -49,8 +65,7 @@ class CarRepository(private val carDao: CarDao) {
             numOfSeats = 4,
             modelYear = 2023,
             since = "2023-12-22",
-            body = Body.SEDAN,
-            rental = 0 //TODO actually make a relation to a rental
+            body = Body.SEDAN
         )
 
         val car3 = CarModel(
@@ -65,8 +80,7 @@ class CarRepository(private val carDao: CarDao) {
             numOfSeats = 4,
             modelYear = 2023,
             since = "2023-12-23",
-            body = Body.SEDAN,
-            rental = 0 //TODO actually make a relation to a rental
+            body = Body.SEDAN
         )
 
         val car4 = CarModel(
@@ -81,8 +95,7 @@ class CarRepository(private val carDao: CarDao) {
             numOfSeats = 4,
             modelYear = 2023,
             since = "2023-12-24",
-            body = Body.HATCHBACK,
-            rental = 0 //TODO actually make a relation to a rental
+            body = Body.HATCHBACK
         )
 
         val car5 = CarModel(
@@ -97,8 +110,7 @@ class CarRepository(private val carDao: CarDao) {
             numOfSeats = 4,
             modelYear = 2023,
             since = "2023-12-25",
-            body = Body.SEDAN,
-            rental = 0 //TODO actually make a relation to a rental
+            body = Body.SEDAN
         )
 
         val scope = CoroutineScope(Dispatchers.IO)
@@ -109,18 +121,5 @@ class CarRepository(private val carDao: CarDao) {
             addCar(car4)
             addCar(car5)
         }
-    }
-
-    fun getRandomId(): Int {
-        return (0..1000000).random()
-    }
-
-    fun getModelsByBrand(brand: String): List<String> {
-        val cars = readAllData.value
-        val models = cars?.filter { it.brand == brand }
-            ?.mapNotNull { it.model }
-            ?.distinct()
-
-        return models ?: emptyList()
     }
 }
