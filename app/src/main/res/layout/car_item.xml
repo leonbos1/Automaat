@@ -32,7 +32,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="6dp"
                 android:text="@string/brand"
-                android:textColor="@color/black" />
+                style="@style/textViewStyle"
+                />
 
             <TextView
                 android:id="@+id/modelTextView"
@@ -40,7 +41,7 @@
                 android:layout_height="wrap_content"
                 android:layout_toEndOf="@id/brandTextView"
                 android:text="@string/model"
-                android:textColor="@color/black" />
+                style="@style/textViewStyle" />
 
         </RelativeLayout>
 
@@ -55,8 +56,8 @@
                 android:layout_width="250dp"
                 android:layout_height="wrap_content"
                 android:text="Gasoline"
-                android:textColor="@color/black"
-                android:textSize="10dp" />
+                style="@style/textViewSmallStyle"
+                />
 
             <TextView
                 android:id="@+id/priceTextView"
@@ -64,8 +65,7 @@
                 android:layout_height="wrap_content"
                 android:layout_toEndOf="@id/fuelTypeTextView"
                 android:text="$122"
-                android:textColor="@color/black"
-                android:textSize="10dp" />
+                style="@style/textViewSmallStyle"/>
 
             <TextView
                 android:id="@+id/priceExtraTextView"
@@ -73,8 +73,7 @@
                 android:layout_height="wrap_content"
                 android:layout_toEndOf="@id/priceTextView"
                 android:text="Per Day"
-                android:textColor="@color/black"
-                android:textSize="10dp" />
+                style="@style/textViewSmallStyle"/>
 
         </RelativeLayout>
 

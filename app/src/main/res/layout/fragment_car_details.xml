@@ -52,23 +52,19 @@
 
                         <TextView
                             android:id="@+id/brandTextView"
+                            style="@style/textViewTitleStyle"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginEnd="6dp"
-                            android:text="@string/brand"
-                            android:textColor="@color/black"
-                            android:textSize="24sp"
-                            android:textStyle="bold" />
+                            android:text="@string/brand" />
 
                         <TextView
                             android:id="@+id/modelTextView"
+                            style="@style/textViewTitleStyle"
                             android:layout_width="200dp"
                             android:layout_height="wrap_content"
                             android:layout_toEndOf="@id/brandTextView"
-                            android:text="@string/model"
-                            android:textColor="@color/black"
-                            android:textSize="24sp"
-                            android:textStyle="bold" />
+                            android:text="@string/model" />
                     </RelativeLayout>
 
                     <RelativeLayout
@@ -79,10 +75,10 @@
 
                         <TextView
                             android:id="@+id/engineTypeTextView"
+                            style="@style/textViewStyle"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="@string/engine"
-                            android:textColor="@color/black" />
+                            android:text="@string/engine" />
 
                     </RelativeLayout>
 
@@ -94,10 +90,10 @@
 
                         <TextView
                             android:id="@+id/optionsTextView"
+                            style="@style/textViewStyle"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="@string/options"
-                            android:textColor="@color/black" />
+                            android:text="@string/options" />
 
                     </RelativeLayout>
 
@@ -127,11 +123,11 @@
 
                             <TextView
                                 android:id="@+id/locationTitleTextView"
+                                style="@style/textViewMediumStyle"
                                 android:layout_width="wrap_content"
                                 android:layout_height="17dp"
                                 android:layout_marginLeft="24dp"
-                                android:text="@string/locationTitle"
-                                android:textColor="@color/black" />
+                                android:text="@string/locationTitle" />
 
                             <ImageView
                                 android:id="@+id/locationIconImageView"
@@ -144,13 +140,12 @@
 
                             <TextView
                                 android:id="@+id/locationContentTextView"
+                                style="@style/textViewMediumBoldStyle"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_below="@+id/locationTitleTextView"
                                 android:layout_toEndOf="@+id/locationIconImageView"
-                                android:text="Groningen, NL"
-                                android:textColor="@color/black"
-                                android:textStyle="bold" />
+                                android:text="Groningen, NL" />
 
                         </RelativeLayout>
 
@@ -161,11 +156,11 @@
 
                             <TextView
                                 android:id="@+id/engineTitleTextView"
+                                style="@style/textViewMediumStyle"
                                 android:layout_width="wrap_content"
                                 android:layout_height="17dp"
                                 android:layout_marginLeft="24dp"
-                                android:text="@string/engineTitle"
-                                android:textColor="@color/black" />
+                                android:text="@string/engineTitle" />
 
                             <ImageView
                                 android:id="@+id/engineIconImageView"
@@ -178,13 +173,12 @@
 
                             <TextView
                                 android:id="@+id/engineContentTextView"
+                                style="@style/textViewMediumBoldStyle"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_below="@+id/engineTitleTextView"
                                 android:layout_toEndOf="@+id/engineIconImageView"
-                                android:text="@string/engine"
-                                android:textColor="@color/black"
-                                android:textStyle="bold" />
+                                android:text="@string/engine" />
 
                         </RelativeLayout>
 
@@ -204,11 +198,11 @@
 
                             <TextView
                                 android:id="@+id/modelYearTitleTextView"
+                                style="@style/textViewMediumStyle"
                                 android:layout_width="wrap_content"
                                 android:layout_height="17dp"
                                 android:layout_marginLeft="24dp"
-                                android:text="@string/modelYearTitle"
-                                android:textColor="@color/black" />
+                                android:text="@string/modelYearTitle" />
 
                             <ImageView
                                 android:id="@+id/modelYearIconImageView"
@@ -221,13 +215,12 @@
 
                             <TextView
                                 android:id="@+id/modelYearContentTextView"
+                                style="@style/textViewMediumBoldStyle"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_below="@+id/modelYearTitleTextView"
                                 android:layout_toEndOf="@+id/modelYearIconImageView"
-                                android:text="01/2023"
-                                android:textColor="@color/black"
-                                android:textStyle="bold" />
+                                android:text="01/2023" />
 
                         </RelativeLayout>
 
@@ -238,11 +231,11 @@
 
                             <TextView
                                 android:id="@+id/fuelTitleTextView"
+                                style="@style/textViewMediumStyle"
                                 android:layout_width="wrap_content"
                                 android:layout_height="17dp"
                                 android:layout_marginLeft="24dp"
-                                android:text="@string/fuelTitle"
-                                android:textColor="@color/black" />
+                                android:text="@string/fuelTitle" />
 
                             <ImageView
                                 android:id="@+id/fuelIconImageView"
@@ -255,13 +248,12 @@
 
                             <TextView
                                 android:id="@+id/fuelContentTextView"
+                                style="@style/textViewMediumBoldStyle"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_below="@+id/fuelTitleTextView"
                                 android:layout_toEndOf="@+id/fuelIconImageView"
-                                android:text="@string/gasoline"
-                                android:textColor="@color/black"
-                                android:textStyle="bold" />
+                                android:text="@string/gasoline" />
 
                         </RelativeLayout>
 
@@ -281,8 +273,8 @@
                 android:id="@+id/bottomTextLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
                 android:layout_marginTop="70dp"
+                android:orientation="vertical"
                 app:layout_constraintBottom_toBottomOf="parent">
                 >
 
