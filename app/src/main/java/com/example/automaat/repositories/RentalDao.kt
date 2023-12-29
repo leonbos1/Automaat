@@ -12,7 +12,7 @@ interface RentalDao {
     @Query("SELECT * FROM rentals ORDER BY id ASC")
     fun readAllData(): LiveData<List<RentalModel>>
 
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun addRental(rental: RentalModel)
 
     @Query("DELETE FROM rentals")

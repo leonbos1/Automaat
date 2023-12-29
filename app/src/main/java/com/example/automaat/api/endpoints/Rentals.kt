@@ -3,6 +3,7 @@ package com.example.automaat.api.endpoints
 import android.util.Log
 import com.example.automaat.api.ApiClient
 import com.example.automaat.api.InterfaceApi
+import com.example.automaat.api.synchers.RentalSyncManager
 import com.example.automaat.entities.Body
 import com.example.automaat.entities.CarModel
 import com.example.automaat.entities.FuelType
@@ -22,35 +23,14 @@ import retrofit2.Response
 class Rentals(private val rentalRepository: RentalRepository) {
     private val api = ApiClient.retrofit.create(InterfaceApi::class.java)
     private val TAG: String = "CHECK_RESPONSE"
+    private val rentalSyncManager = RentalSyncManager(rentalRepository)
 
     fun getAllRentals() {
         api.getAllRentals().enqueue(object : Callback<JsonArray> {
             override fun onResponse(call: Call<JsonArray>, response: Response<JsonArray>) {
                 CoroutineScope(Dispatchers.IO).launch {
                     if (response.isSuccessful) {
-                        Log.i(TAG, "onResponse Rentals: ${response.body()}")
-
-                        val rental = response.body()?.get(0)?.asJsonObject
-                        Log.i(TAG, "onResponse Rental: $rental")
-
-                        rental?.let {
-                            val carId = it.get("car").asJsonObject.get("id").asInt
-
-                            val rentalModel = RentalModel(
-                                it.get("id").asInt,
-                                it.get("code").asString,
-                                it.get("longitude").asFloat,
-                                it.get("latitude").asFloat,
-                                it.get("fromDate").asString,
-                                it.get("toDate").asString,
-                                RentalState.fromString(it.get("state").asString),
-                                null,
-                                null,
-                                carId
-                            )
-
-                            rentalRepository.addRental(rentalModel)
-                        }
+                        rentalSyncManager.syncEntities(response.body()!!)
                     }
                 }
             }

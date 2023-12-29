@@ -4,6 +4,8 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
+import android.widget.LinearLayout
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -52,7 +54,41 @@ class HomeFragment() : Fragment() {
             navigationController.navigate(R.id.action_navigation_home_to_car_details, bundle)
         }
 
+        val filterContainer = view.findViewById<LinearLayout>(R.id.filtersContainer)
+
+        addFilterButtons(filterModel, filterContainer)
+
         return view;
+    }
+
+    fun addFilterButtons(filterModel: FilterModel?, filterContainer: LinearLayout) {
+        if (filterModel == null) {
+            return
+        }
+
+        if (filterModel.brand != "All") {
+            val brandButton = Button(requireContext())
+            brandButton.text = filterModel.brand
+            brandButton.setOnClickListener {
+                val newFilterModel = FilterModel("All", filterModel.model)
+                val bundle = Bundle()
+                bundle.putParcelable("appliedFilters", newFilterModel)
+                findNavController().navigate(R.id.action_navigation_home_to_home, bundle)
+            }
+            filterContainer.addView(brandButton)
+        }
+
+        if (filterModel.model != "All") {
+            val modelButton = Button(requireContext())
+            modelButton.text = filterModel.model
+            modelButton.setOnClickListener {
+                val newFilterModel = FilterModel(filterModel.brand, "All")
+                val bundle = Bundle()
+                bundle.putParcelable("appliedFilters", newFilterModel)
+                findNavController().navigate(R.id.action_navigation_home_to_home, bundle)
+            }
+            filterContainer.addView(modelButton)
+        }
     }
 
     fun setCars(filterModel: FilterModel?, adapter: HomeAdapter) {

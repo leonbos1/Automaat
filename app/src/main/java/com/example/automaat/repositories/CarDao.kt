@@ -18,7 +18,7 @@ interface CarDao {
     @Query("SELECT * FROM Cars")
     fun getCarsWithRentals(): LiveData<List<CarWithRental>>
 
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun addCar(car: CarModel)
 
     @Query("DELETE FROM cars")
