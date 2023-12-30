@@ -20,7 +20,6 @@ import com.example.automaat.entities.FilterModel
 import com.example.automaat.ui.home.HomeAdapter
 
 class FiltersFragment() : Fragment() {
-    private lateinit var homeAdapter: HomeAdapter
     private lateinit var initCarsButton: Button
     private lateinit var deleteCarsButton: Button
     private lateinit var filterViewModel: FilterViewModel

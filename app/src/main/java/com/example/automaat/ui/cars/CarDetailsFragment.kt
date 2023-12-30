@@ -1,5 +1,6 @@
 package com.example.automaat.ui.cars
 
+import android.annotation.SuppressLint
 import androidx.fragment.app.Fragment
 import com.example.automaat.databinding.FragmentCarDetailsBinding
 import com.example.automaat.ui.home.HomeViewModel
@@ -7,67 +8,86 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
+import android.widget.ImageView
+import android.widget.TextView
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.example.automaat.R
 import com.example.automaat.repositories.CarRepository
 import com.example.automaat.entities.CarHelper
 import com.example.automaat.entities.CarModel
+import com.example.automaat.entities.toReadableString
 
 class CarDetailsFragment : Fragment() {
-
-    private var _binding: FragmentCarDetailsBinding? = null
-
-    // This property is only valid between onCreateView and
-    // onDestroyView.
-    private val binding get() = _binding!!
-    private lateinit var dbHelper: CarRepository
     private var car: CarModel? = null
+    private lateinit var reserveButton: Button
+    private lateinit var carImage: ImageView
+    private lateinit var brandTextView: TextView
+    private lateinit var modelTextView: TextView
+    private lateinit var engineTextView: TextView
+    private lateinit var optionsTextView: TextView
+    private lateinit var engineContentTextView: TextView
+    private lateinit var firstRegistrationTextView: TextView
+    private lateinit var fuelTextView: TextView
+    private lateinit var availableSinceTextView: TextView
 
+    @SuppressLint("MissingInflatedId")
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        val homeViewModel =
-            ViewModelProvider(this).get(HomeViewModel::class.java)
+        val view =  inflater.inflate(R.layout.fragment_car_details, container, false)
 
-        // This retrieves the car object from the bundle
-        // It was passed in from the HomeFragment at carsAdapter.onItemClick...
         car = arguments?.getParcelable("car")
 
-        _binding = FragmentCarDetailsBinding.inflate(inflater, container, false)
-
-        val root: View = binding.root
+        brandTextView = view.findViewById(R.id.brandTextView)
+        modelTextView = view.findViewById(R.id.modelTextView)
+        engineTextView = view.findViewById(R.id.engineTypeTextView)
+        carImage = view.findViewById(R.id.carImage)
+        optionsTextView = view.findViewById(R.id.optionsTextView)
+        engineContentTextView = view.findViewById(R.id.engineContentTextView)
+        firstRegistrationTextView = view.findViewById(R.id.modelYearContentTextView)
+        fuelTextView = view.findViewById(R.id.fuelContentTextView)
+        availableSinceTextView = view.findViewById(R.id.availableSinceContentTextView)
 
         setCarData()
 
         val navController = findNavController()
 
-        binding.reserveButton.setOnClickListener {
+        reserveButton = view.findViewById(R.id.reserveButton)
+
+        reserveButton.setOnClickListener {
             val bundle = Bundle()
             
             navController.navigate(R.id.action_car_details_to_reservation_details, bundle)
         }
 
-        return root
+        return view
     }
 
     private fun setCarData() {
-        binding.brandTextView.text = car?.brand
+        brandTextView.text = car?.brand
+        modelTextView.text = car?.model
+        engineTextView.text = car?.engineSize.toString() + " Liter  Engine"
+        optionsTextView.text = car?.options
+        engineContentTextView.text = car?.engineSize.toString() + " Liter  Engine"
+        firstRegistrationTextView.text = car?.modelYear.toString()
+        fuelTextView.text = car?.fuelType?.toReadableString()
+        availableSinceTextView.text = car?.since
 
         val imageResourceId =
-            CarHelper.getCarImageResourceId(car?.brand, car?.model, binding.carImage.context)
+            CarHelper.getCarImageResourceId(car?.brand, car?.model, carImage.context)
 
         if (imageResourceId != 0) {
-            binding.carImage.setImageResource(imageResourceId)
+            carImage.setImageResource(imageResourceId)
         } else {
-            binding.carImage.setImageResource(R.drawable.placeholder_image)
+            carImage.setImageResource(R.drawable.placeholder_image)
         }
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
-        _binding = null
     }
 }
