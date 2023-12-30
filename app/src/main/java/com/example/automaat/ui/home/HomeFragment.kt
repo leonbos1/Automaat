@@ -1,6 +1,7 @@
 package com.example.automaat.ui.home
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -19,6 +20,7 @@ import com.example.automaat.entities.RentalState
 class HomeFragment() : Fragment() {
 
     private lateinit var homeViewModel: HomeViewModel
+    private lateinit var swipeContainer: androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -46,6 +48,13 @@ class HomeFragment() : Fragment() {
 
         filterButton.setOnClickListener {
             navigationController.navigate(R.id.action_navigation_home_to_filtersFragment)
+        }
+
+        swipeContainer = view.findViewById(R.id.swipeRefreshLayout)
+
+        swipeContainer.setOnRefreshListener {
+            homeViewModel.refreshCars()
+            swipeContainer.isRefreshing = false
         }
 
         adapter.onItemClick = { car ->

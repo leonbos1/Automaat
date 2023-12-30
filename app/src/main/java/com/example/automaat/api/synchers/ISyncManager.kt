@@ -1,7 +1,8 @@
 package com.example.automaat.api.synchers
 
-import com.google.gson.JsonArray
-
 interface ISyncManager {
-    fun syncEntities(jsonArray: JsonArray)
+    /**
+     * Synchronizes entities from the server to the local database
+     */
+    fun syncEntities()
 }

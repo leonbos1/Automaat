@@ -16,29 +16,42 @@ import com.google.gson.JsonObject
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.suspendCancellableCoroutine
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import kotlin.coroutines.resume
+import kotlin.coroutines.resumeWithException
 
-class Rentals(private val rentalRepository: RentalRepository) {
+class Rentals {
     private val api = ApiClient.retrofit.create(InterfaceApi::class.java)
     private val TAG: String = "CHECK_RESPONSE"
-    private val rentalSyncManager = RentalSyncManager(rentalRepository)
 
-    fun getAllRentals() {
-        api.getAllRentals().enqueue(object : Callback<JsonArray> {
-            override fun onResponse(call: Call<JsonArray>, response: Response<JsonArray>) {
-                CoroutineScope(Dispatchers.IO).launch {
+    /**
+     * Get all rentals from the backend server
+     *
+     * Returns a JsonArray of all rentals
+     *
+     * @return JsonArray?
+     */
+    suspend fun getAllRentals(): JsonArray? {
+        return suspendCancellableCoroutine { continuation ->
+            api.getAllRentals().enqueue(object : Callback<JsonArray> {
+                override fun onResponse(call: Call<JsonArray>, response: Response<JsonArray>) {
                     if (response.isSuccessful) {
-                        rentalSyncManager.syncEntities(response.body()!!)
+                        continuation.resume(response.body())
+                    } else {
+                        continuation.resumeWithException(
+                            RuntimeException("Failed with ${response.code()}")
+                        )
                     }
                 }
-            }
 
-            override fun onFailure(call: Call<JsonArray>, t: Throwable) {
-                Log.i(TAG, "onFailure Rentals: ${t.message}")
-            }
-        })
+                override fun onFailure(call: Call<JsonArray>, t: Throwable) {
+                    continuation.resumeWithException(t)
+                }
+            })
+        }
     }
 
     fun getRentalById(id: Int) {

@@ -16,6 +16,8 @@ import com.example.automaat.api.datamodels.Rental
 import com.example.automaat.api.endpoints.Authentication
 import com.example.automaat.api.endpoints.Cars
 import com.example.automaat.api.endpoints.Rentals
+import com.example.automaat.api.synchers.CarSyncManager
+import com.example.automaat.api.synchers.RentalSyncManager
 import com.example.automaat.entities.FilterModel
 import com.example.automaat.ui.home.HomeAdapter
 
@@ -27,6 +29,8 @@ class FiltersFragment() : Fragment() {
     private lateinit var brandSpinner: Spinner
     private lateinit var modelSpinner: Spinner
     private lateinit var getAllCarsButton: Button
+    private lateinit var carSyncManager: CarSyncManager
+    private lateinit var rentalSyncManager: RentalSyncManager
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -67,10 +71,13 @@ class FiltersFragment() : Fragment() {
 
         getAllCarsButton = view.findViewById(R.id.getAllCarsButton)
 
+        carSyncManager = CarSyncManager(filterViewModel.carRepository)
+        rentalSyncManager = RentalSyncManager(filterViewModel.rentalRepository)
+
         getAllCarsButton.setOnClickListener {
             Authentication().authenticate {
-                Cars(filterViewModel.carRepository).getAllCars()
-                Rentals(filterViewModel.rentalRepository).getAllRentals()
+                carSyncManager.syncEntities()
+                rentalSyncManager.syncEntities()
             }
         }
 
