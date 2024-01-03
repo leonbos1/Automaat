@@ -4,28 +4,41 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import androidx.fragment.app.Fragment
-import com.example.automaat.databinding.FragmentReservationDetailsBinding
-import com.example.automaat.viewmodels.ReservationViewModel
+import androidx.lifecycle.ViewModelProvider
+import com.example.automaat.R
+import com.example.automaat.entities.FilterModel
+import com.example.automaat.entities.relations.CarWithRental
+import com.example.automaat.entities.toReadableString
+import com.example.automaat.ui.home.HomeViewModel
 
 class ReservationDetailsFragment : Fragment() {
-    private var _binding: FragmentReservationDetailsBinding? = null
     private var reservationViewModel: ReservationViewModel? = null
-    private val binding get() = _binding!!
+    private var carWithRental: CarWithRental? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        reservationViewModel = arguments?.getParcelable("reservationViewModel")
+        val view = inflater.inflate(R.layout.fragment_reservation_details, container, false)
 
-        _binding = FragmentReservationDetailsBinding.inflate(inflater, container, false)
+        reservationViewModel = ViewModelProvider(this).get(ReservationViewModel::class.java)
 
-        val root: View = binding.root
+        carWithRental = arguments?.getParcelable("carWithRental")
 
+        view.findViewById<TextView>(R.id.carBrandTitleTextView).text = carWithRental?.car?.brand
+        view.findViewById<TextView>(R.id.carModelTitleTextView).text = carWithRental?.car?.model
 
-        return root
+        // TODO: wat doen als een car nog geen rental heeft? Deze fix laat alleen active op het scherm zien.
+        if (carWithRental?.rental != null) {
+            view.findViewById<TextView>(R.id.rentalStatus).text =
+                carWithRental?.rental?.state?.toReadableString()
+        } else {
+            view.findViewById<TextView>(R.id.rentalStatus).text = "Active"
+        }
+
+        return view
     }
-
 }

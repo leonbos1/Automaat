@@ -59,7 +59,10 @@ class HomeFragment() : Fragment() {
 
         adapter.onItemClick = { car ->
             val bundle = Bundle()
-            bundle.putParcelable("car", car)
+
+            val carWithRental = homeViewModel.carsWithRentals.value?.find { it.car.id == car.id }
+
+            bundle.putParcelable("car", carWithRental)
             navigationController.navigate(R.id.action_navigation_home_to_car_details, bundle)
         }
 

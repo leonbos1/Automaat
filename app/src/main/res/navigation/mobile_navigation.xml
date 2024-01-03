@@ -90,12 +90,14 @@
             app:popExitAnim="@anim/nav_default_pop_exit_anim"
             app:popUpTo="@id/navigation_home" />
         <argument
-
             android:name="car"
             app:argType="com.example.automaat.entities.CarModel" />
         <action
             android:id="@+id/action_car_details_to_reservation_details"
             app:destination="@id/reservation_details" />
+        <argument
+            android:name="carWithRental"
+            app:argType="com.example.automaat.entities.relations.CarWithRental" />
     </fragment>
     <fragment
         android:id="@+id/reservation_details"
@@ -103,8 +105,8 @@
         android:label="@string/reservation_details"
         tools:layout="@layout/fragment_reservation_details">
         <argument
-            android:name="reservationViewModel"
-            app:argType="com.example.automaat.viewmodels.ReservationViewModel" />
+            android:name="carWithRental"
+            app:argType="com.example.automaat.entities.relations.CarWithRental" />
         <action
             android:id="@+id/action_reservation_details_to_car_details"
             app:destination="@id/car_details" />

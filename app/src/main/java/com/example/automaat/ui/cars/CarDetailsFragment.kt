@@ -17,10 +17,11 @@ import com.example.automaat.R
 import com.example.automaat.repositories.CarRepository
 import com.example.automaat.entities.CarHelper
 import com.example.automaat.entities.CarModel
+import com.example.automaat.entities.relations.CarWithRental
 import com.example.automaat.entities.toReadableString
 
 class CarDetailsFragment : Fragment() {
-    private var car: CarModel? = null
+    private var car: CarWithRental? = null
     private lateinit var reserveButton: Button
     private lateinit var carImage: ImageView
     private lateinit var brandTextView: TextView
@@ -60,6 +61,8 @@ class CarDetailsFragment : Fragment() {
 
         reserveButton.setOnClickListener {
             val bundle = Bundle()
+
+            bundle.putParcelable("carWithRental", car)
             
             navController.navigate(R.id.action_car_details_to_reservation_details, bundle)
         }
@@ -68,17 +71,17 @@ class CarDetailsFragment : Fragment() {
     }
 
     private fun setCarData() {
-        brandTextView.text = car?.brand
-        modelTextView.text = car?.model
-        engineTextView.text = car?.engineSize.toString() + " Liter  Engine"
-        optionsTextView.text = car?.options
-        engineContentTextView.text = car?.engineSize.toString() + " Liter  Engine"
-        firstRegistrationTextView.text = car?.modelYear.toString()
-        fuelTextView.text = car?.fuelType?.toReadableString()
-        availableSinceTextView.text = car?.since
+        brandTextView.text = car?.car?.brand
+        modelTextView.text = car?.car?.model
+        engineTextView.text = car?.car?.engineSize.toString() + " Liter  Engine"
+        optionsTextView.text = car?.car?.options
+        engineContentTextView.text = car?.car?.engineSize.toString() + " Liter  Engine"
+        firstRegistrationTextView.text = car?.car?.modelYear.toString()
+        fuelTextView.text = car?.car?.fuelType?.toReadableString()
+        availableSinceTextView.text = car?.car?.since
 
         val imageResourceId =
-            CarHelper.getCarImageResourceId(car?.brand, car?.model, carImage.context)
+            CarHelper.getCarImageResourceId(car?.car?.brand, car?.car?.model, carImage.context)
 
         if (imageResourceId != 0) {
             carImage.setImageResource(imageResourceId)
