@@ -46,7 +46,7 @@
 
     <fragment
         android:id="@+id/navigation_dashboard"
-        android:name="com.example.automaat.ui.dashboard.DashboardFragment"
+        android:name="com.example.automaat.ui.reservations.ReservationFragment"
         android:label="@string/title_reservations"
         tools:layout="@layout/fragment_reservations">
         <action

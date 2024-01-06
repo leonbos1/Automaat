@@ -1,5 +1,6 @@
 package com.example.automaat.ui.home
 
+import android.annotation.SuppressLint
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
@@ -52,11 +53,11 @@ class HomeAdapter() : RecyclerView.Adapter<HomeAdapter.CarViewHolder>() {
         }
 
         holder.itemView.setOnClickListener {
-            println("onItemClick called")
             onItemClick?.invoke(carWithRental.car)
         }
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     fun setData(cars: List<CarWithRental>){
         this.carList = cars
         notifyDataSetChanged()

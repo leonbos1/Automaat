@@ -22,6 +22,9 @@ class RentalSyncManager(private val rentalRepository: RentalRepository) : ISyncM
                             val carJsonObject = if (it.has("car") && it.get("car").isJsonObject) it.getAsJsonObject("car") else null
                             val carId = carJsonObject?.takeIf { it.has("id") && it.get("id").isJsonPrimitive }?.get("id")?.asInt
 
+                            val customerJsonObject = if (it.has("customer") && it.get("customer").isJsonObject) it.getAsJsonObject("customer") else null
+                            val customerId = customerJsonObject?.takeIf { it.has("id") && it.get("id").isJsonPrimitive }?.get("id")?.asInt
+
                             val rentalModel = RentalModel(
                                 it.get("id").asInt,
                                 it.get("code").asString,
@@ -31,7 +34,7 @@ class RentalSyncManager(private val rentalRepository: RentalRepository) : ISyncM
                                 it.get("toDate").asString,
                                 RentalState.fromString(it.get("state").asString),
                                 null,
-                                null,
+                                customerId,
                                 carId
                             )
                             rentalRepository.addRental(rentalModel)

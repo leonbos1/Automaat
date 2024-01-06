@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="reservationTitle">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">@color/black</item>
+        <item name="android:textSize">18sp</item>
+        <item name="android:layout_marginLeft">120dp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="reservationText">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">@color/black</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:layout_marginLeft">120dp</item>
+        <item name="android:layout_marginTop">20dp</item>
+    </style>
+
+    <style name="reservationImage">
+        <item name="android:layout_width">100dp</item>
+        <item name="android:layout_height">100dp</item>
+        <item name="android:scaleType">centerCrop</item>
+    </style>
+
+    <style name="reservationCard">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginTop">40dp</item>
+        <item name="android:padding">8dp</item>
+        <item name="backgroundColor">@color/light_gray</item>
+        <item name="layout_constraintTop_toTopOf">parent</item>
+    </style>
+</resources>

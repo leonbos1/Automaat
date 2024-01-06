@@ -16,7 +16,7 @@ class CarSyncManager(private val carRepository: CarRepository) : ISyncManager {
         Authentication().authenticate {
             CoroutineScope(Dispatchers.IO).launch {
                 val jsonArray = Cars().getAllCars()
-                                //TODO dont make new instance of Cars() here, use the one from the constructor
+                //TODO dont make new instance of Cars() here, use the one from the constructor
                 if (jsonArray != null) {
                     jsonArray.forEach { jsonElement ->
                         jsonElement.asJsonObject.let {
@@ -34,8 +34,11 @@ class CarSyncManager(private val carRepository: CarRepository) : ISyncManager {
                                 it.get("since").asString,
                                 Body.fromString(it.get("body").asString)
                             )
-                            carRepository.addCar(carModel)
-                            Log.i("CHECK_RESPONSE", "Car added: $carModel")
+                            try {
+                                carRepository.addCar(carModel)
+                            } catch (e: Exception) {
+                                Log.e("CHECK_RESPONSE", "Error while adding car: $carModel", e)
+                            }
                         }
                     }
                 }

@@ -2,39 +2,59 @@ package com.example.automaat.ui.home
 
 import android.app.Application
 import android.os.Debug
+import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.viewModelScope
 import com.example.automaat.AutomaatDatabase
 import com.example.automaat.api.endpoints.Cars
 import com.example.automaat.api.synchers.CarSyncManager
+import com.example.automaat.api.synchers.CustomerSyncManager
+import com.example.automaat.api.synchers.RentalSyncManager
 import com.example.automaat.entities.CarModel
 import com.example.automaat.entities.relations.CarWithRental
 import com.example.automaat.repositories.CarRepository
+import com.example.automaat.repositories.CustomerRepository
+import com.example.automaat.repositories.RentalRepository
 import kotlinx.coroutines.launch
 import java.io.Console
 
 class HomeViewModel(application: Application) : AndroidViewModel(application) {
 
-    val readAllData: LiveData<List<CarModel>>
     private val carRepository: CarRepository
-    lateinit var carsWithRentals: LiveData<List<CarWithRental>>
-    lateinit var carsSynchManager: CarSyncManager
+    private val rentalRepository: RentalRepository
+    private val customerRepository: CustomerRepository
+
+    val readAllData: LiveData<List<CarModel>>
+    val carsWithRentals: LiveData<List<CarWithRental>>
+
+    private var carsSyncManager: CarSyncManager
+    private var rentalSyncManager: RentalSyncManager
+    private var customerSyncManager: CustomerSyncManager
 
     init {
-        val carDao = AutomaatDatabase.getDatabase(application).carDao()
-        carRepository = CarRepository(carDao)
-        readAllData = carRepository.readAllData
-        carsSynchManager = CarSyncManager(carRepository)
+        val database = AutomaatDatabase.getDatabase(application)
+        carRepository = CarRepository(database.carDao())
+        rentalRepository = RentalRepository(database.rentalDao())
+        customerRepository = CustomerRepository(database.customerDao())
 
-        viewModelScope.launch {
-            carsWithRentals = carRepository.getCarsWithRentals()
-        }
+        readAllData = carRepository.readAllData
+        carsWithRentals = carRepository.getCarsWithRentals()
+
+        carsSyncManager = CarSyncManager(carRepository)
+        rentalSyncManager = RentalSyncManager(rentalRepository)
+        customerSyncManager = CustomerSyncManager(customerRepository)
     }
 
     fun refreshCars() {
         viewModelScope.launch {
-            carsSynchManager.syncEntities()
+            try {
+                carsSyncManager.syncEntities()
+                rentalSyncManager.syncEntities()
+                customerSyncManager.syncEntities()
+            } catch (e: Exception) {
+                Log.e("HomeViewModel", "Error while syncing", e)
+            }
         }
     }
 }

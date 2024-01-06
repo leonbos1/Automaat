@@ -7,17 +7,13 @@ import com.example.automaat.api.datamodels.Car
 import kotlinx.android.parcel.Parcelize
 
 @Parcelize
-@Entity(tableName = "rentals")
-data class RentalModel (
+@Entity(tableName = "customers")
+data class CustomerModel (
     @PrimaryKey(autoGenerate = true)
     val id: Int,
-    val code: String,
-    val longitude: Float,
-    val latitude: Float,
-    val fromDate: String,
-    val toDate: String,
-    val state: RentalState,
-    val inspections: Int?,
-    val customerId: Int?,
-    val carId: Int?
+    val nr: String,
+    val firstName: String,
+    val lastName: String,
+    val from: String,
+    val location: String?
 ): Parcelable

@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/cardView"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:cardCornerRadius="8dp"
+    app:cardElevation="4dp"
+    app:cardUseCompatPadding="true">
+
+    <ImageView
+        android:id="@+id/reservationImage"
+        style="@style/reservationImage"
+        android:src="@drawable/bmw_x5" />
+
+    <TextView
+        android:id="@+id/reservationTitle"
+        style="@style/reservationTitle"
+        android:text="@string/brand" />
+
+    <TextView
+        android:id="@+id/reservationText"
+        style="@style/reservationText"
+        android:text="Reservation ID: 123456789" />
+
+</androidx.cardview.widget.CardView>

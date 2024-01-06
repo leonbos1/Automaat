@@ -17,6 +17,7 @@ import com.example.automaat.api.endpoints.Authentication
 import com.example.automaat.api.endpoints.Cars
 import com.example.automaat.api.endpoints.Rentals
 import com.example.automaat.api.synchers.CarSyncManager
+import com.example.automaat.api.synchers.CustomerSyncManager
 import com.example.automaat.api.synchers.RentalSyncManager
 import com.example.automaat.entities.FilterModel
 import com.example.automaat.ui.home.HomeAdapter
@@ -31,6 +32,7 @@ class FiltersFragment() : Fragment() {
     private lateinit var getAllCarsButton: Button
     private lateinit var carSyncManager: CarSyncManager
     private lateinit var rentalSyncManager: RentalSyncManager
+    private lateinit var customerSyncManager: CustomerSyncManager
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -52,7 +54,7 @@ class FiltersFragment() : Fragment() {
         deleteCarsButton = view.findViewById(R.id.deleteCarsButton)
 
         deleteCarsButton.setOnClickListener {
-            deleteAllCars()
+            deleteAllData()
         }
 
         resultsBtn = view.findViewById(R.id.resultsButton)
@@ -73,11 +75,13 @@ class FiltersFragment() : Fragment() {
 
         carSyncManager = CarSyncManager(filterViewModel.carRepository)
         rentalSyncManager = RentalSyncManager(filterViewModel.rentalRepository)
+        customerSyncManager = CustomerSyncManager(filterViewModel.customerRepository)
 
         getAllCarsButton.setOnClickListener {
             Authentication().authenticate {
                 carSyncManager.syncEntities()
                 rentalSyncManager.syncEntities()
+
             }
         }
 
@@ -128,8 +132,8 @@ class FiltersFragment() : Fragment() {
         findNavController().navigate(R.id.action_navigation_filters_to_navigation_home)
     }
 
-    private fun deleteAllCars() {
-        filterViewModel.removeAllCars()
+    private fun deleteAllData() {
+        filterViewModel.removeAllData()
 
         findNavController().navigate(R.id.action_navigation_filters_to_navigation_home)
     }

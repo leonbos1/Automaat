@@ -9,27 +9,33 @@ import androidx.lifecycle.viewModelScope
 import com.example.automaat.AutomaatDatabase
 import com.example.automaat.entities.CarModel
 import com.example.automaat.repositories.CarRepository
+import com.example.automaat.repositories.CustomerRepository
 import com.example.automaat.repositories.RentalRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class FilterViewModel(application: Application) : AndroidViewModel(application) {
     val readAllData: LiveData<List<CarModel>>
-    public val carRepository: CarRepository
-    public val rentalRepository: RentalRepository
+    val carRepository: CarRepository
+    val rentalRepository: RentalRepository
+    val customerRepository: CustomerRepository
     private val _availableModels = MutableLiveData<List<String>>()
 
     init {
         val carDao = AutomaatDatabase.getDatabase(application).carDao()
         val rentalDao = AutomaatDatabase.getDatabase(application).rentalDao()
+        val customerDao = AutomaatDatabase.getDatabase(application).customerDao()
         carRepository = CarRepository(carDao)
         rentalRepository = RentalRepository(rentalDao)
+        customerRepository = CustomerRepository(customerDao)
         readAllData = carRepository.readAllData
     }
 
-    fun removeAllCars() {
+    fun removeAllData() {
         viewModelScope.launch(Dispatchers.IO) {
             carRepository.deleteAllCars()
+            rentalRepository.deleteAllRentals()
+            customerRepository.deleteAllCustomers()
         }
     }
 

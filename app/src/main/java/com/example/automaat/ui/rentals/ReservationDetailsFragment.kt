@@ -8,13 +8,11 @@ import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.automaat.R
-import com.example.automaat.entities.FilterModel
 import com.example.automaat.entities.relations.CarWithRental
 import com.example.automaat.entities.toReadableString
-import com.example.automaat.ui.home.HomeViewModel
 
 class ReservationDetailsFragment : Fragment() {
-    private var reservationViewModel: ReservationViewModel? = null
+    private var reservationViewModel: ReservationDetailsViewModel? = null
     private var carWithRental: CarWithRental? = null
 
     override fun onCreateView(
@@ -24,7 +22,7 @@ class ReservationDetailsFragment : Fragment() {
     ): View {
         val view = inflater.inflate(R.layout.fragment_reservation_details, container, false)
 
-        reservationViewModel = ViewModelProvider(this).get(ReservationViewModel::class.java)
+        reservationViewModel = ViewModelProvider(this).get(ReservationDetailsViewModel::class.java)
 
         carWithRental = arguments?.getParcelable("carWithRental")
 
