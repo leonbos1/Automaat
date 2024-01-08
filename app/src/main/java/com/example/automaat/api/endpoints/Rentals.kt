@@ -3,12 +3,16 @@ package com.example.automaat.api.endpoints
 import android.util.Log
 import com.example.automaat.api.ApiClient
 import com.example.automaat.api.InterfaceApi
+import com.example.automaat.api.datamodels.Inspection
+import com.example.automaat.api.datamodels.Rental
 import com.example.automaat.api.synchers.RentalSyncManager
 import com.example.automaat.entities.Body
 import com.example.automaat.entities.CarModel
 import com.example.automaat.entities.FuelType
 import com.example.automaat.entities.RentalModel
 import com.example.automaat.entities.RentalState
+import com.example.automaat.entities.relations.RentalWithCarWithCustomer
+import com.example.automaat.entities.toReadableString
 import com.example.automaat.repositories.CarRepository
 import com.example.automaat.repositories.RentalRepository
 import com.google.gson.JsonArray
@@ -51,6 +55,31 @@ class Rentals {
                     continuation.resumeWithException(t)
                 }
             })
+        }
+    }
+
+    suspend fun updateRental(rental: RentalWithCarWithCustomer): RentalWithCarWithCustomer? {
+        return suspendCancellableCoroutine { continuation ->
+            rental.rental?.id?.let {
+                api.updateRental(it, rental).enqueue(object : Callback<RentalWithCarWithCustomer> {
+                    override fun onResponse(
+                        call: Call<RentalWithCarWithCustomer>,
+                        response: Response<RentalWithCarWithCustomer>
+                    ) {
+                        if (response.isSuccessful) {
+                            continuation.resume(response.body())
+                        } else {
+                            continuation.resumeWithException(
+                                RuntimeException("Failed with ${response.code()}")
+                            )
+                        }
+                    }
+
+                    override fun onFailure(call: Call<RentalWithCarWithCustomer>, t: Throwable) {
+                        continuation.resumeWithException(t)
+                    }
+                })
+            }
         }
     }
 

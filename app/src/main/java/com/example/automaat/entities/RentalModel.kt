@@ -3,7 +3,6 @@ package com.example.automaat.entities
 import android.os.Parcelable
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.example.automaat.api.datamodels.Car
 import kotlinx.android.parcel.Parcelize
 
 @Parcelize
@@ -14,9 +13,9 @@ data class RentalModel (
     val code: String,
     val longitude: Float,
     val latitude: Float,
-    val fromDate: String,
-    val toDate: String,
-    val state: RentalState,
+    var fromDate: String,
+    var toDate: String,
+    var state: RentalState,
     val inspections: Int?,
     val customerId: Int?,
     val carId: Int?

@@ -9,5 +9,5 @@ data class Inspection(
     val result: String,
     val photo: String,
     val photoContentType: String,
-    val completed: Date
+    val completed: String
 )

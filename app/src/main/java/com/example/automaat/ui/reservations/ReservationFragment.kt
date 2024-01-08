@@ -54,11 +54,4 @@ class ReservationFragment : Fragment() {
 
         return view
     }
-
-    fun setRentalsInLayout(
-        rentalsByCustomer: List<RentalWithCarWithCustomer>,
-        adapter: ReservationAdapter
-    ) {
-        adapter.setData(rentalsByCustomer)
-    }
 }

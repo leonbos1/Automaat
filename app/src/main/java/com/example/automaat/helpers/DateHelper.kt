@@ -16,15 +16,15 @@ class DateHelper {
             return dateList
         }
 
-        fun getPossibleEndDates(startDate: String): LiveData<List<String>> {
-            val dates = MutableLiveData<List<String>>()
-            val start = LocalDate.parse(startDate)
+        fun getPossibleEndDates(startDate: String): List<String> {
+            var start = LocalDate.parse(startDate)
+            start = start.plusDays(1) // A reservation must be at least 1 day long
+
             val dateList = mutableListOf<String>()
             for (i in 0..100) {
                 dateList.add(start.plusDays(i.toLong()).toString())
             }
-            dates.value = dateList
-            return dates
+            return dateList
         }
 
         fun getDaysBetween(startDate: String, endDate: String): Long {

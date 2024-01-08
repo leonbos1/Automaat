@@ -11,6 +11,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.navigation.fragment.findNavController
 import com.example.automaat.R
+import com.example.automaat.entities.RentalState
 import com.example.automaat.helpers.CarHelper
 import com.example.automaat.entities.relations.CarWithRental
 import com.example.automaat.entities.toReadableString
@@ -47,18 +48,23 @@ class CarDetailsFragment : Fragment() {
         firstRegistrationTextView = view.findViewById(R.id.modelYearContentTextView)
         fuelTextView = view.findViewById(R.id.fuelContentTextView)
         availableSinceTextView = view.findViewById(R.id.availableSinceContentTextView)
+        reserveButton = view.findViewById(R.id.reserveButton)
+
+        if (car?.rental?.state == RentalState.RESERVED) {
+            reserveButton.isEnabled = false
+            reserveButton.text = "Reserved"
+        }
 
         setCarData()
 
         val navController = findNavController()
-
-        reserveButton = view.findViewById(R.id.reserveButton)
 
         reserveButton.setOnClickListener {
             val bundle = Bundle()
 
             bundle.putParcelable("carWithRental", car)
             
+            navController.popBackStack(R.id.car_details, false)
             navController.navigate(R.id.action_car_details_to_reservation_details, bundle)
         }
 

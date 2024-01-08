@@ -45,13 +45,10 @@
     </fragment>
 
     <fragment
-        android:id="@+id/navigation_dashboard"
+        android:id="@+id/navigation_reservations"
         android:name="com.example.automaat.ui.reservations.ReservationFragment"
         android:label="@string/title_reservations"
         tools:layout="@layout/fragment_reservations">
-        <action
-            android:id="@+id/action_navigation_dashboard_to_navigation_home"
-            app:destination="@id/navigation_home" />
     </fragment>
 
     <fragment
@@ -94,22 +91,25 @@
             app:argType="com.example.automaat.entities.CarModel" />
         <action
             android:id="@+id/action_car_details_to_reservation_details"
-            app:destination="@id/reservation_details" />
+            app:destination="@id/create_reservation" />
         <argument
             android:name="carWithRental"
             app:argType="com.example.automaat.entities.relations.CarWithRental" />
     </fragment>
     <fragment
-        android:id="@+id/reservation_details"
-        android:name="com.example.automaat.ui.rentals.ReservationDetailsFragment"
+        android:id="@+id/create_reservation"
+        android:name="com.example.automaat.ui.rentals.CreateReservationFragment"
         android:label="@string/reservation_details"
-        tools:layout="@layout/fragment_reservation_details">
+        tools:layout="@layout/fragment_create_reservation">
         <argument
             android:name="carWithRental"
             app:argType="com.example.automaat.entities.relations.CarWithRental" />
         <action
             android:id="@+id/action_reservation_details_to_car_details"
             app:destination="@id/car_details" />
+        <action
+            android:id="@+id/action_create_reservation_to_reservations"
+            app:destination="@id/navigation_reservations" />
     </fragment>
 
 

@@ -6,16 +6,10 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.room.InvalidationTracker
 import com.example.automaat.AutomaatDatabase
-import com.example.automaat.api.synchers.CarSyncManager
-import com.example.automaat.entities.CarModel
 import com.example.automaat.entities.RentalState
-import com.example.automaat.entities.relations.CarWithRental
 import com.example.automaat.entities.relations.RentalWithCarWithCustomer
-import com.example.automaat.repositories.CarRepository
 import com.example.automaat.repositories.RentalRepository
 import kotlinx.coroutines.launch
 

@@ -1,12 +1,15 @@
 package com.example.automaat.api;
 
 import com.example.automaat.api.datamodels.Auth
+import com.example.automaat.entities.RentalModel
+import com.example.automaat.entities.relations.RentalWithCarWithCustomer
 import com.google.gson.JsonArray
 import com.google.gson.JsonObject
 import retrofit2.Call
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST
+import retrofit2.http.PUT
 import retrofit2.http.Path
 
 
@@ -37,6 +40,10 @@ interface InterfaceApi {
 
     @GET("rentals/{id}")
     fun getRentalById(@Path("id") id: Int): Call<JsonObject>
+
+    //update rental
+    @PUT("rentals/{id}")
+    fun updateRental(@Path("id") id: Int, @Body rental: RentalWithCarWithCustomer): Call<RentalWithCarWithCustomer>
 
     @GET("inspections")
     fun getAllInspections(): Call<JsonArray>
