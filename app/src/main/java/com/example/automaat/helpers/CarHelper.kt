@@ -1,4 +1,4 @@
-package com.example.automaat.entities
+package com.example.automaat.helpers
 
 import android.content.Context
 

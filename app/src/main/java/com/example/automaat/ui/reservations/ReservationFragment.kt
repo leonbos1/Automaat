@@ -1,26 +1,15 @@
 package com.example.automaat.ui.reservations
 
-import android.annotation.SuppressLint
 import android.os.Bundle
-import android.view.ContextThemeWrapper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.automaat.R
-import com.example.automaat.entities.CarHelper
-import com.example.automaat.entities.FilterModel
-import com.example.automaat.entities.RentalState
-import com.example.automaat.entities.relations.CarWithRental
 import com.example.automaat.entities.relations.RentalWithCarWithCustomer
-import com.example.automaat.entities.toReadableString
-import com.example.automaat.ui.home.HomeViewModel
-import com.google.android.material.card.MaterialCardView
 
 class ReservationFragment : Fragment() {
     private var reservationViewModel: ReservationViewModel? = null

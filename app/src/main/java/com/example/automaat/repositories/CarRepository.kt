@@ -3,7 +3,6 @@ package com.example.automaat.repositories
 import androidx.lifecycle.LiveData
 import com.example.automaat.entities.Body
 import com.example.automaat.entities.CarModel
-import com.example.automaat.entities.CustomerModel
 import com.example.automaat.entities.relations.CarWithRental
 import com.example.automaat.entities.FuelType
 import kotlinx.coroutines.CoroutineScope

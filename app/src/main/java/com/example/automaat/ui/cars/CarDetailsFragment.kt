@@ -2,8 +2,6 @@ package com.example.automaat.ui.cars
 
 import android.annotation.SuppressLint
 import androidx.fragment.app.Fragment
-import com.example.automaat.databinding.FragmentCarDetailsBinding
-import com.example.automaat.ui.home.HomeViewModel
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -11,12 +9,9 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.example.automaat.R
-import com.example.automaat.repositories.CarRepository
-import com.example.automaat.entities.CarHelper
-import com.example.automaat.entities.CarModel
+import com.example.automaat.helpers.CarHelper
 import com.example.automaat.entities.relations.CarWithRental
 import com.example.automaat.entities.toReadableString
 

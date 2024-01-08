@@ -8,11 +8,8 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.automaat.R
-import com.example.automaat.entities.CarHelper.Companion.getCarImageResourceId
-import com.example.automaat.entities.CarModel
-import com.example.automaat.entities.relations.CarWithRental
+import com.example.automaat.helpers.CarHelper.Companion.getCarImageResourceId
 import com.example.automaat.entities.relations.RentalWithCarWithCustomer
-import com.example.automaat.entities.toReadableString
 
 class ReservationAdapter() : RecyclerView.Adapter<ReservationAdapter.CarViewHolder>() {
 

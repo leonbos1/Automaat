@@ -27,4 +27,5 @@
     <string name="availableSince">Available since</string>
     <string name="basic_data">Basic Data\n</string>
     <string name="reservation_details">Reservation details\n</string>
+    <string name="euro">€</string>
 </resources>
