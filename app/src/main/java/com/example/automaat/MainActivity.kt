@@ -1,26 +1,36 @@
 package com.example.automaat
 
 import android.os.Bundle
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
-import com.example.automaat.api.endpoints.Authentication
 import com.example.automaat.databinding.ActivityMainBinding
+import com.example.automaat.utils.NetworkMonitor
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
-    private val authentication = Authentication()
+    private lateinit var networkMonitor: NetworkMonitor
+
+    companion object {
+        private var rootView: View? = null
+        fun getRootView(): View? = rootView
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        rootView = binding.root
+
+        networkMonitor = NetworkMonitor(this)
+        networkMonitor.startNetworkCallback()
 
         val navView: BottomNavigationView = binding.navView
 
@@ -38,29 +48,11 @@ class MainActivity : AppCompatActivity() {
 
     override fun onSupportNavigateUp(): Boolean {
         return findNavController(R.id.nav_host_fragment_activity_main).navigateUp() || super.onSupportNavigateUp()
+    }
 
-        //Unreachable code
-//        authentication.authenticate {
-//            // Get all data and store in local DB
-//            // ...
-//            Routes().getAllRoutes()
-//            Routes().getRouteById(1)
-//
-//            Cars().getAllCars()
-//            Cars().getCarById(1)
-//
-//            Customers().getAllCustomers()
-//            Customers().getCustomerById(1)
-//
-//            Rentals().getAllRentals()
-//            Rentals().getRentalById(1)
-//
-//            Inspections().getAllInspections()
-//            Inspections().getInspectionById(1)
-//
-//            InspectionPhotos().getAllInspectionPhotos()
-//            InspectionPhotos().getInspectionPhotoById(1)
-//        }
+    override fun onDestroy() {
+        super.onDestroy()
+        networkMonitor.stopNetworkCallback()
     }
 
     private fun log(message: String) {
