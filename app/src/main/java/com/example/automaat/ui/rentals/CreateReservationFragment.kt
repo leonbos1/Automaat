@@ -32,7 +32,6 @@ class CreateReservationFragment : Fragment() {
     private var priceTextView: TextView? = null
     private var reserveButton: Button? = null
     private var carWithRental: CarWithRental? = null
-    private var latestRentalWithCarWithCustomer: RentalWithCarWithCustomer? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -110,14 +109,14 @@ class CreateReservationFragment : Fragment() {
         }
 
         reservationViewModel!!.rentalWithCarWithCustomer.observe(viewLifecycleOwner) {
-            latestRentalWithCarWithCustomer = it
+            reservationViewModel!!.latestRentalWithCarWithCustomer = it
         }
 
         reserveButton?.setOnClickListener {
             val startDate = startDateSpinner?.selectedItem as String
             val endDate = endDateSpinner?.selectedItem as String
 
-            latestRentalWithCarWithCustomer?.let {
+            reservationViewModel!!.latestRentalWithCarWithCustomer?.let {
                 reservationViewModel!!.createReservation(it, startDate, endDate, viewLifecycleOwner)
                 rentalTextView?.text = RentalState.RESERVED.toReadableString()
             }
@@ -128,6 +127,7 @@ class CreateReservationFragment : Fragment() {
             Observer { rentalAddedToBackend ->
                 if (rentalAddedToBackend) {
                     SnackbarManager.showRentalReservedSnackbar(requireContext())
+                    // Insert into local database
                 } else {
                     SnackbarManager.showRentalAlreadyReservedSnackbar(requireContext())
                 }

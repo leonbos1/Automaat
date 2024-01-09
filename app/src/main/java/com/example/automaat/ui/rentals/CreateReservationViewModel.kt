@@ -25,6 +25,7 @@ class CreateReservationViewModel(application: Application) : AndroidViewModel(ap
     private val hardcodedCustomer = 1
     private val _addRentalResult = MutableLiveData<Boolean>()
     val addRentalResult: LiveData<Boolean> = _addRentalResult
+    var latestRentalWithCarWithCustomer: RentalWithCarWithCustomer? = null
 
     init {
         val rentalDao = com.example.automaat.AutomaatDatabase.getDatabase(application).rentalDao()
@@ -80,7 +81,6 @@ class CreateReservationViewModel(application: Application) : AndroidViewModel(ap
                         Authentication().authenticate {
                             CoroutineScope(viewModelScope.coroutineContext).launch {
                                 val result = Rentals().addRental(newRentalWithCarWithCustomer)
-                                println("============================================ AFADSFAFSDFASD with result: $result")
                                 _addRentalResult.postValue(result)
                             }
                         }
@@ -102,7 +102,6 @@ class CreateReservationViewModel(application: Application) : AndroidViewModel(ap
                 viewModelScope.launch {
                     val result = Rentals().addRental(rental)
                     _addRentalResult.postValue(result)
-                    println("============================================ POSTVACATION with result: $result")
                 }
             }
         }

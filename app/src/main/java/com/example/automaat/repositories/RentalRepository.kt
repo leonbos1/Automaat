@@ -26,6 +26,13 @@ class RentalRepository(private val rentalDao: RentalDao) {
 
     }
 
+    suspend fun createRental(rental: RentalModel) {
+        rentalDao.insertRental(rental)
+
+        //sync with server
+
+    }
+
     fun getRentalsWithCarAndCustomerByCustomer(customerId: Int): LiveData<List<RentalWithCarWithCustomer>> {
         return rentalDao.getRentalsWithCarAndCustomerByCustomer(customerId)
     }
