@@ -3,24 +3,19 @@ package com.example.automaat.api.endpoints
 import android.util.Log
 import com.example.automaat.api.ApiClient
 import com.example.automaat.api.InterfaceApi
-import com.example.automaat.api.datamodels.Inspection
+import com.example.automaat.api.datamodels.Car
+import com.example.automaat.api.datamodels.Customer
 import com.example.automaat.api.datamodels.Rental
-import com.example.automaat.api.synchers.RentalSyncManager
-import com.example.automaat.entities.Body
-import com.example.automaat.entities.CarModel
-import com.example.automaat.entities.FuelType
-import com.example.automaat.entities.RentalModel
-import com.example.automaat.entities.RentalState
 import com.example.automaat.entities.relations.RentalWithCarWithCustomer
-import com.example.automaat.entities.toReadableString
-import com.example.automaat.repositories.CarRepository
-import com.example.automaat.repositories.RentalRepository
+import com.example.automaat.entities.toUpperCaseString
+import com.example.automaat.utils.SnackbarManager
 import com.google.gson.JsonArray
 import com.google.gson.JsonObject
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.suspendCancellableCoroutine
+import kotlinx.coroutines.withContext
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -58,20 +53,19 @@ class Rentals {
         }
     }
 
-    suspend fun updateRental(rental: RentalWithCarWithCustomer): RentalWithCarWithCustomer? {
+    suspend fun updateRental(rentalWithCarWithCustomer: RentalWithCarWithCustomer): Boolean {
+        val rental = getRentalByRentalWithCarWithCustomer(rentalWithCarWithCustomer)
         return suspendCancellableCoroutine { continuation ->
-            rental.rental?.id?.let {
+            rental.id?.let {
                 api.updateRental(it, rental).enqueue(object : Callback<RentalWithCarWithCustomer> {
                     override fun onResponse(
                         call: Call<RentalWithCarWithCustomer>,
                         response: Response<RentalWithCarWithCustomer>
                     ) {
                         if (response.isSuccessful) {
-                            continuation.resume(response.body())
+                            continuation.resume(true)
                         } else {
-                            continuation.resumeWithException(
-                                RuntimeException("Failed with ${response.code()}")
-                            )
+                            continuation.resume(false)
                         }
                     }
 
@@ -80,6 +74,28 @@ class Rentals {
                     }
                 })
             }
+        }
+    }
+
+    suspend fun addRental(rentalWithCarWithCustomer: RentalWithCarWithCustomer): Boolean {
+        return suspendCancellableCoroutine { continuation ->
+            val rental = getRentalByRentalWithCarWithCustomer(rentalWithCarWithCustomer)
+            api.addRental(rental).enqueue(object : Callback<RentalWithCarWithCustomer> {
+                override fun onResponse(
+                    call: Call<RentalWithCarWithCustomer>,
+                    response: Response<RentalWithCarWithCustomer>
+                ) {
+                    if (response.isSuccessful) {
+                        continuation.resume(true)
+                    } else {
+                        continuation.resume(false)
+                    }
+                }
+
+                override fun onFailure(call: Call<RentalWithCarWithCustomer>, t: Throwable) {
+                    continuation.resumeWithException(t)
+                }
+            })
         }
     }
 
@@ -95,5 +111,45 @@ class Rentals {
                 Log.i(TAG, "onFailure RentalById: ${t.message}")
             }
         })
+    }
+
+    /**
+     * Get backend rental model using rental with car and customer
+     *
+     * This fix is needed because the backend expects nested models instead of ids :/
+     */
+    fun getRentalByRentalWithCarWithCustomer(rentalWithCarWithCustomer: RentalWithCarWithCustomer): Rental {
+        return Rental(
+            null,
+            rentalWithCarWithCustomer.rental?.code ?: "",
+            rentalWithCarWithCustomer.rental?.longitude ?: 0.0f,
+            rentalWithCarWithCustomer.rental?.latitude ?: 0.0f,
+            rentalWithCarWithCustomer.rental?.fromDate ?: "",
+            rentalWithCarWithCustomer.rental?.toDate ?: "",
+            rentalWithCarWithCustomer.rental?.state?.toUpperCaseString() ?: "",
+            null,
+            Customer(
+                rentalWithCarWithCustomer.customer?.id ?: 0,
+                rentalWithCarWithCustomer.customer?.nr ?: 0,
+                rentalWithCarWithCustomer.customer?.firstName ?: "",
+                rentalWithCarWithCustomer.customer?.lastName ?: "",
+                rentalWithCarWithCustomer.customer?.from ?: "",
+                null
+            ),
+            Car(
+                rentalWithCarWithCustomer.car?.id ?: 0,
+                rentalWithCarWithCustomer.car?.brand ?: "",
+                rentalWithCarWithCustomer.car?.model ?: "",
+                rentalWithCarWithCustomer.car?.fuelType?.ordinal ?: 0,
+                rentalWithCarWithCustomer.car?.options ?: "",
+                rentalWithCarWithCustomer.car?.price ?: 0.0f,
+                rentalWithCarWithCustomer.car?.licensePlate ?: "",
+                rentalWithCarWithCustomer.car?.engineSize ?: 0,
+                rentalWithCarWithCustomer.car?.numOfSeats ?: 0,
+                rentalWithCarWithCustomer.car?.modelYear ?: 0,
+                rentalWithCarWithCustomer.car?.since ?: "",
+                rentalWithCarWithCustomer.car?.body?.ordinal ?: 0
+            )
+        )
     }
 }

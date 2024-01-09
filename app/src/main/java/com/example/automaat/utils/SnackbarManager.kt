@@ -25,6 +25,22 @@ object SnackbarManager {
         }
     }
 
+    fun showRentalAlreadyReservedSnackbar(context: Context) {
+        getView()?.let { view ->
+            val snackbar = Snackbar.make(view, "This car is already reserved", Snackbar.LENGTH_LONG)
+            snackbar.setBackgroundTint(ContextCompat.getColor(context, R.color.red))
+            snackbar.show()
+        }
+    }
+
+    fun showRentalReservedSnackbar(context: Context) {
+        getView()?.let { view ->
+            val snackbar = Snackbar.make(view, "Car reserved succesfully", Snackbar.LENGTH_LONG)
+            snackbar.setBackgroundTint(ContextCompat.getColor(context, R.color.green))
+            snackbar.show()
+        }
+    }
+
     private fun getView(): View? {
         return MainActivity.getRootView()
     }

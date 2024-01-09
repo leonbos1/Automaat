@@ -27,3 +27,12 @@ fun RentalState.toReadableString(): String {
         RentalState.RESERVED -> "Reserved"
     }
 }
+
+fun RentalState.toUpperCaseString(): String {
+    return when (this) {
+        RentalState.ACTIVE -> "ACTIVE"
+        RentalState.RETURNED -> "RETURNED"
+        RentalState.PICKUP -> "PICKUP"
+        RentalState.RESERVED -> "RESERVED"
+    }
+}

@@ -11,7 +11,7 @@ import kotlinx.android.parcel.Parcelize
 data class CustomerModel (
     @PrimaryKey(autoGenerate = true)
     val id: Int,
-    val nr: String,
+    val nr: Int,
     val firstName: String,
     val lastName: String,
     val from: String,

@@ -24,7 +24,7 @@ class CustomerSyncManager(private val customerRepository: CustomerRepository) : 
                         jsonElement.asJsonObject.let {
                             val customerModel = CustomerModel(
                                 it.get("id").asInt,
-                                it.get("nr").asString,
+                                it.get("nr").asInt,
                                 it.get("firstName").asString,
                                 it.get("lastName").asString,
                                 it.get("from").asString,

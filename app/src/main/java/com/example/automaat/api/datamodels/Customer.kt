@@ -8,9 +8,6 @@ data class Customer(
     val nr: Int,
     val lastName: String,
     val firstName: String,
-    val from: LocalDate,
-    val systemUser: String, // Not sure if string or a User class
-    val rentals: Boolean, // Not sure if bool
-    val location: Location
-
+    val from: String,
+    val location: Location?
 )

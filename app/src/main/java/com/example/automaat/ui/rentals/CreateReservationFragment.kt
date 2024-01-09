@@ -11,6 +11,7 @@ import android.widget.Spinner
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.example.automaat.R
@@ -19,6 +20,7 @@ import com.example.automaat.entities.relations.CarWithRental
 import com.example.automaat.entities.relations.RentalWithCarWithCustomer
 import com.example.automaat.entities.toReadableString
 import com.example.automaat.helpers.DateHelper
+import com.example.automaat.utils.SnackbarManager
 
 class CreateReservationFragment : Fragment() {
     private var reservationViewModel: CreateReservationViewModel? = null
@@ -30,6 +32,7 @@ class CreateReservationFragment : Fragment() {
     private var priceTextView: TextView? = null
     private var reserveButton: Button? = null
     private var carWithRental: CarWithRental? = null
+    private var latestRentalWithCarWithCustomer: RentalWithCarWithCustomer? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -42,6 +45,8 @@ class CreateReservationFragment : Fragment() {
 
         carWithRental = arguments?.getParcelable("carWithRental")
 
+        reservationViewModel!!.fetchRentalWithCarWithCustomer(carWithRental!!)
+
         brandTextView = view.findViewById(R.id.carBrandTitleTextView)
         modelTextView = view.findViewById(R.id.carModelTitleTextView)
         rentalTextView = view.findViewById(R.id.rentalStatus)
@@ -50,9 +55,14 @@ class CreateReservationFragment : Fragment() {
         priceTextView = view.findViewById(R.id.priceTextView)
         reserveButton = view.findViewById(R.id.buttonReserve)
 
-        brandTextView?.text = reservationViewModel!!.rental.car?.brand
-        modelTextView?.text = reservationViewModel!!.rental.car?.model
-        rentalTextView?.text = reservationViewModel!!.rental.rental?.state?.toReadableString()
+        reservationViewModel!!.rentalWithCarWithCustomer.observe(
+            viewLifecycleOwner,
+            Observer { rentalWithCarWithCustomer ->
+                reservationViewModel!!.testRentalWithCarWithCustomer = rentalWithCarWithCustomer
+                brandTextView?.text = rentalWithCarWithCustomer.car?.brand
+                modelTextView?.text = rentalWithCarWithCustomer.car?.model
+                rentalTextView?.text = rentalWithCarWithCustomer.rental?.state?.toReadableString()
+            })
 
         val dates = DateHelper.getDates()
 
@@ -99,23 +109,33 @@ class CreateReservationFragment : Fragment() {
             }
         }
 
+        reservationViewModel!!.rentalWithCarWithCustomer.observe(viewLifecycleOwner) {
+            latestRentalWithCarWithCustomer = it
+        }
+
         reserveButton?.setOnClickListener {
             val startDate = startDateSpinner?.selectedItem as String
             val endDate = endDateSpinner?.selectedItem as String
 
-            reservationViewModel!!.createReservation(
-                reservationViewModel!!.rental,
-                startDate,
-                endDate
-            )
-
-            rentalTextView?.text = RentalState.RESERVED.toReadableString()
-
-            var navController = findNavController()
-
-            navController.popBackStack(R.id.create_reservation, false)
-            navController.navigate(R.id.navigation_home)
+            latestRentalWithCarWithCustomer?.let {
+                reservationViewModel!!.createReservation(it, startDate, endDate, viewLifecycleOwner)
+                rentalTextView?.text = RentalState.RESERVED.toReadableString()
+            }
         }
+
+        reservationViewModel!!.addRentalResult.observe(
+            viewLifecycleOwner,
+            Observer { rentalAddedToBackend ->
+                if (rentalAddedToBackend) {
+                    SnackbarManager.showRentalReservedSnackbar(requireContext())
+                } else {
+                    SnackbarManager.showRentalAlreadyReservedSnackbar(requireContext())
+                }
+
+                val navController = findNavController()
+                navController.popBackStack(R.id.create_reservation, false)
+                navController.navigate(R.id.navigation_home)
+            })
 
         return view
     }
@@ -126,8 +146,9 @@ class CreateReservationFragment : Fragment() {
 
         val rentalDuration = DateHelper.getDaysBetween(startDate, endDate)
 
-        val price = reservationViewModel!!.rental.car?.price?.times(rentalDuration)
-
-        priceTextView?.text = price.toString()
+        reservationViewModel!!.testRentalWithCarWithCustomer?.let { rentalWithCarWithCustomer ->
+            val price = rentalWithCarWithCustomer.car?.price?.times(rentalDuration)
+            priceTextView?.text = price?.toString()
+        }
     }
 }
