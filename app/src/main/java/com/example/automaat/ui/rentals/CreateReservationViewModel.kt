@@ -7,8 +7,10 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import androidx.lifecycle.viewModelScope
+import com.example.automaat.api.datamodels.Auth
 import com.example.automaat.api.endpoints.Authentication
 import com.example.automaat.api.endpoints.Rentals
+import com.example.automaat.api.synchers.RentalSyncManager
 import com.example.automaat.entities.RentalModel
 import com.example.automaat.entities.RentalState
 import com.example.automaat.entities.relations.CarWithRental
@@ -21,15 +23,17 @@ class CreateReservationViewModel(application: Application) : AndroidViewModel(ap
     private val _rentalWithCarWithCustomer = MutableLiveData<RentalWithCarWithCustomer>()
     var testRentalWithCarWithCustomer: RentalWithCarWithCustomer? = null
     val rentalWithCarWithCustomer: LiveData<RentalWithCarWithCustomer> = _rentalWithCarWithCustomer
-    private val rentalRepository: RentalRepository
+    val rentalRepository: RentalRepository
     private val hardcodedCustomer = 1
     private val _addRentalResult = MutableLiveData<Boolean>()
     val addRentalResult: LiveData<Boolean> = _addRentalResult
     var latestRentalWithCarWithCustomer: RentalWithCarWithCustomer? = null
+    var rentalSyncManager: RentalSyncManager? = null
 
     init {
         val rentalDao = com.example.automaat.AutomaatDatabase.getDatabase(application).rentalDao()
         rentalRepository = RentalRepository(rentalDao)
+        rentalSyncManager = RentalSyncManager(rentalRepository)
     }
 
     fun fetchRentalWithCarWithCustomer(carWithRental: CarWithRental) {
@@ -56,38 +60,15 @@ class CreateReservationViewModel(application: Application) : AndroidViewModel(ap
         endDate: String,
         lifecycleOwner: LifecycleOwner
     ) {
+        //car doesnt have a rental yet
         if (rental.rental == null) {
-            // Insert new rental
-            val newRental = RentalModel(
-                generateId(),
-                "code",
-                0.0f,
-                0.0f,
-                startDate,
-                endDate,
-                com.example.automaat.entities.RentalState.RESERVED,
-                0,
-                hardcodedCustomer,
-                rental.car?.id
-            )
+            val newRental = getNewRental(rental.car!!.id)
+
             viewModelScope.launch {
                 rentalRepository.insertRental(newRental)
             }
-
-            rentalRepository.getRentalsWithCarAndCustomerByRental(newRental.id)
-                .observe(lifecycleOwner, Observer { rentalList ->
-                    if (rentalList.isNotEmpty()) {
-                        val newRentalWithCarWithCustomer = rentalList[0]
-                        Authentication().authenticate {
-                            CoroutineScope(viewModelScope.coroutineContext).launch {
-                                val result = Rentals().addRental(newRentalWithCarWithCustomer)
-                                _addRentalResult.postValue(result)
-                            }
-                        }
-                    }
-                })
+        //car already has a rental
         } else {
-            // Update existing rental
             rental.rental.apply {
                 fromDate = startDate
                 toDate = endDate
@@ -97,17 +78,26 @@ class CreateReservationViewModel(application: Application) : AndroidViewModel(ap
             viewModelScope.launch {
                 rentalRepository.updateRental(rental.rental)
             }
-
-            Authentication().authenticate {
-                viewModelScope.launch {
-                    val result = Rentals().addRental(rental)
-                    _addRentalResult.postValue(result)
-                }
-            }
         }
+
     }
 
     fun generateId(): Int {
         return (100000..999999).random()
+    }
+
+    fun getNewRental(carId: Int): RentalModel {
+        return RentalModel(
+            generateId(),
+            "code",
+            0.0f,
+            0.0f,
+            "",
+            "",
+            RentalState.RESERVED,
+            0,
+            hardcodedCustomer,
+            carId
+        )
     }
 }

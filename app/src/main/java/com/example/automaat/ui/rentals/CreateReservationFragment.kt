@@ -15,6 +15,8 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.example.automaat.R
+import com.example.automaat.api.endpoints.Authentication
+import com.example.automaat.api.synchers.RentalSyncManager
 import com.example.automaat.entities.RentalState
 import com.example.automaat.entities.relations.CarWithRental
 import com.example.automaat.entities.relations.RentalWithCarWithCustomer
@@ -120,22 +122,11 @@ class CreateReservationFragment : Fragment() {
                 reservationViewModel!!.createReservation(it, startDate, endDate, viewLifecycleOwner)
                 rentalTextView?.text = RentalState.RESERVED.toReadableString()
             }
+
+            val navController = findNavController()
+            navController.popBackStack(R.id.create_reservation, false)
+            navController.navigate(R.id.navigation_home)
         }
-
-        reservationViewModel!!.addRentalResult.observe(
-            viewLifecycleOwner,
-            Observer { rentalAddedToBackend ->
-                if (rentalAddedToBackend) {
-                    SnackbarManager.showRentalReservedSnackbar(requireContext())
-                    // Insert into local database
-                } else {
-                    SnackbarManager.showRentalAlreadyReservedSnackbar(requireContext())
-                }
-
-                val navController = findNavController()
-                navController.popBackStack(R.id.create_reservation, false)
-                navController.navigate(R.id.navigation_home)
-            })
 
         return view
     }
