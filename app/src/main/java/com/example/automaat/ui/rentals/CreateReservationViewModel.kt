@@ -64,6 +64,10 @@ class CreateReservationViewModel(application: Application) : AndroidViewModel(ap
         if (rental.rental == null) {
             val newRental = getNewRental(rental.car!!.id)
 
+            newRental.fromDate = startDate
+            newRental.toDate = endDate
+            newRental.state = RentalState.RESERVED
+
             viewModelScope.launch {
                 rentalRepository.insertRental(newRental)
             }

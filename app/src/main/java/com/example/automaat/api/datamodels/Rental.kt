@@ -3,7 +3,7 @@ package com.example.automaat.api.datamodels
 import java.util.Date
 
 data class Rental(
-    val id: Int?,
+    var id: Int?,
     val code: String,
     val longitude: Float,
     val latitude: Float,

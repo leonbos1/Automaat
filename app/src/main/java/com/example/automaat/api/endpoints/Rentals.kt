@@ -80,6 +80,7 @@ class Rentals {
     suspend fun addRental(rentalWithCarWithCustomer: RentalWithCarWithCustomer): Boolean {
         return suspendCancellableCoroutine { continuation ->
             val rental = getRentalByRentalWithCarWithCustomer(rentalWithCarWithCustomer)
+            rental.id = null
             api.addRental(rental).enqueue(object : Callback<RentalWithCarWithCustomer> {
                 override fun onResponse(
                     call: Call<RentalWithCarWithCustomer>,
@@ -99,19 +100,24 @@ class Rentals {
         }
     }
 
-    fun getRentalById(id: Int) {
-        api.getRentalById(id).enqueue(object : Callback<JsonObject> {
-            override fun onResponse(call: Call<JsonObject>, response: Response<JsonObject>) {
-                if (response.isSuccessful) {
-                    Log.i(TAG, "onResponse RentalById: ${response.body()}")
+    suspend fun getRentalById(id: Int) : JsonObject? {
+        return suspendCancellableCoroutine { continuation ->
+            api.getRentalById(id).enqueue(object : Callback<JsonObject> {
+                override fun onResponse(call: Call<JsonObject>, response: Response<JsonObject>) {
+                    if (response.isSuccessful) {
+                        continuation.resume(response.body())
+                    } else {
+                        continuation.resume(response.body())
+                    }
                 }
-            }
 
-            override fun onFailure(call: Call<JsonObject>, t: Throwable) {
-                Log.i(TAG, "onFailure RentalById: ${t.message}")
-            }
-        })
+                override fun onFailure(call: Call<JsonObject>, t: Throwable) {
+                    continuation.resumeWithException(t)
+                }
+            })
+        }
     }
+
 
     /**
      * Get backend rental model using rental with car and customer
@@ -120,7 +126,7 @@ class Rentals {
      */
     fun getRentalByRentalWithCarWithCustomer(rentalWithCarWithCustomer: RentalWithCarWithCustomer): Rental {
         return Rental(
-            null,
+            rentalWithCarWithCustomer.rental?.id ?: 0,
             rentalWithCarWithCustomer.rental?.code ?: "",
             rentalWithCarWithCustomer.rental?.longitude ?: 0.0f,
             rentalWithCarWithCustomer.rental?.latitude ?: 0.0f,

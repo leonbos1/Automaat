@@ -15,14 +15,20 @@ interface RentalDao {
     @Query("SELECT * FROM rentals ORDER BY id ASC")
     fun readAllData(): LiveData<List<RentalModel>>
 
+    @Query("SELECT * FROM rentals ORDER BY id ASC")
+    suspend fun getAll(): List<RentalModel>
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun addRental(rental: RentalModel)
+
+    @Query("SELECT * FROM rentals WHERE id = :id")
+    suspend fun getRentalById(id: Int): RentalModel
 
     @Query("DELETE FROM rentals")
     suspend fun deleteAllRentals()
 
-    @Query("UPDATE rentals SET fromDate = :fromDate, toDate = :toDate, state = :state WHERE id = :id")
-    suspend fun updateRental(id: Int, fromDate: String, toDate: String, state: RentalState)
+    @Query("UPDATE rentals SET fromDate = :fromDate, toDate = :toDate, state = :state, customerId = :customerId, carId = :carId WHERE id = :id")
+    suspend fun updateRental(id: Int, fromDate: String, toDate: String, state: RentalState, customerId: Int, carId: Int)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertRental(rental: RentalModel)
@@ -40,4 +46,10 @@ interface RentalDao {
             " LEFT JOIN customers ON rentals.customerId = customers.id" +
             " WHERE rentals.id = :rentalId")
     fun getRentalsWithCarAndCustomerByRental(rentalId: Int): LiveData<List<RentalWithCarWithCustomer>>
+
+    @Query("SELECT * FROM rentals" +
+            " LEFT JOIN cars ON rentals.carId = cars.id" +
+            " LEFT JOIN customers ON rentals.customerId = customers.id" +
+            " WHERE rentals.id = :rentalId")
+    fun getRentalsWithCarAndCustomerByRentalAsync(rentalId: Int): RentalWithCarWithCustomer
 }

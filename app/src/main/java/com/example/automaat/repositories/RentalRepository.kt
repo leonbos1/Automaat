@@ -15,8 +15,23 @@ class RentalRepository(private val rentalDao: RentalDao) {
         rentalDao.deleteAllRentals()
     }
 
+    suspend fun getAll(): List<RentalModel> {
+        return rentalDao.getAll()
+    }
+
+    suspend fun getRentalById(id: Int): RentalModel {
+        return rentalDao.getRentalById(id)
+    }
+
     suspend fun updateRental(rental: RentalModel) {
-        rentalDao.updateRental(rental.id, rental.fromDate, rental.toDate, rental.state)
+        println("updateRental")
+        rental.customerId?.let {
+            rental.carId?.let { it1 ->
+                rentalDao.updateRental(rental.id, rental.fromDate, rental.toDate, rental.state,
+                    it, it1
+                )
+            }
+        }
     }
 
     suspend fun insertRental(rental: RentalModel) {
@@ -39,5 +54,9 @@ class RentalRepository(private val rentalDao: RentalDao) {
 
     fun getRentalsWithCarAndCustomerByRental(rentalId: Int): LiveData<List<RentalWithCarWithCustomer>> {
         return rentalDao.getRentalsWithCarAndCustomerByRental(rentalId)
+    }
+
+    fun getRentalsWithCarAndCustomerByRentalAsync(rentalId: Int): RentalWithCarWithCustomer {
+        return rentalDao.getRentalsWithCarAndCustomerByRentalAsync(rentalId)
     }
 }
