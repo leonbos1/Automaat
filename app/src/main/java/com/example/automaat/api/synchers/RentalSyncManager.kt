@@ -1,160 +1,22 @@
 package com.example.automaat.api.synchers
 
-import android.util.Log
 import com.example.automaat.api.endpoints.Authentication
 import com.example.automaat.api.endpoints.Rentals
 import com.example.automaat.entities.RentalModel
 import com.example.automaat.entities.RentalState
-import com.example.automaat.entities.relations.RentalWithCarWithCustomer
 import com.example.automaat.repositories.RentalRepository
+import com.google.gson.JsonArray
+import com.google.gson.JsonObject
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import java.util.Date
-import java.util.concurrent.CountDownLatch
 
 class RentalSyncManager(private val rentalRepository: RentalRepository) : ISyncManager {
     override fun syncEntities() {
         Authentication().authenticate {
             CoroutineScope(Dispatchers.IO).launch {
-
-                //sync remote rentals to local
-                val jsonArray = Rentals().getAllRentals()
-                jsonArray?.forEach { jsonElement ->
-                    jsonElement.asJsonObject.let {
-                        val carJsonObject =
-                            if (it.has("car") && it.get("car").isJsonObject) it.getAsJsonObject(
-                                "car"
-                            ) else null
-                        val carId =
-                            carJsonObject?.takeIf { it.has("id") && it.get("id").isJsonPrimitive }
-                                ?.get("id")?.asInt
-
-                        val customerJsonObject =
-                            if (it.has("customer") && it.get("customer").isJsonObject) it.getAsJsonObject(
-                                "customer"
-                            ) else null
-                        val customerId =
-                            customerJsonObject?.takeIf { it.has("id") && it.get("id").isJsonPrimitive }
-                                ?.get("id")?.asInt
-                        println(it)
-                        val remoteRental = RentalModel(
-                            it.get("id").asInt,
-                            it.get("code").asString,
-                            it.get("longitude").asFloat,
-                            it.get("latitude").asFloat,
-                            it.get("fromDate").asString,
-                            it.get("toDate").asString,
-                            RentalState.fromString(it.get("state").asString),
-                            null,
-                            customerId,
-                            carId
-                        )
-
-                        val localRental = rentalRepository.getRentalById(remoteRental.id)
-
-                        if (localRental != null && isConflict(localRental, remoteRental)) {
-                            resolveConflict(localRental, remoteRental)
-                        } else {
-                            //check if rental is relevant to user
-                            // TODO Hardcoded customer id!!!
-                            if (remoteRental.customerId != 1) {
-                                return@forEach
-                            }
-                            rentalRepository.addRental(remoteRental)
-                        }
-
-                        Log.i("CHECK_RESPONSE", "Rental added: $remoteRental")
-                    }
-                }
-
-                val allLocalRentals = rentalRepository.getAll()
-
-                //sync local rentals to server
-                allLocalRentals.forEach { localRental ->
-                    // rental does not have a car, so it is not relevant
-                    if (localRental.carId == null) {
-                        return@forEach
-                    }
-
-                    // check if this rental is already on the server
-                    val allRentals = Rentals().getAllRentals()
-
-                    //find rental in allRentals using car.id
-                    val foundRental = allRentals?.find { rental ->
-                        rental.asJsonObject.get("car").asJsonObject.get("id").asInt == localRental.carId
-                    }?.asJsonObject
-
-                    val deserializedRental = foundRental?.let {
-                        val carJsonObject =
-                            if (it.has("car") && it.get("car").isJsonObject) it.getAsJsonObject(
-                                "car"
-                            ) else null
-                        val carId =
-                            carJsonObject?.takeIf { it.has("id") && it.get("id").isJsonPrimitive }
-                                ?.get("id")?.asInt
-
-                        val customerJsonObject =
-                            if (it.has("customer") && it.get("customer").isJsonObject) it.getAsJsonObject(
-                                "customer"
-                            ) else null
-                        val customerId =
-                            customerJsonObject?.takeIf { it.has("id") && it.get("id").isJsonPrimitive }
-                                ?.get("id")?.asInt
-
-                        RentalModel(
-                            it.get("id").asInt,
-                            it.get("code").asString,
-                            it.get("longitude").asFloat,
-                            it.get("latitude").asFloat,
-                            it.get("fromDate").asString,
-                            it.get("toDate").asString,
-                            RentalState.fromString(it.get("state").asString),
-                            null,
-                            customerId,
-                            carId
-                        )
-                    }
-
-
-                    val rentalModel = RentalModel(
-                        localRental.id,
-                        localRental.code,
-                        localRental.longitude,
-                        localRental.latitude,
-                        localRental.fromDate,
-                        localRental.toDate,
-                        localRental.state,
-                        null,
-                        localRental.customerId,
-                        localRental.carId
-                    )
-
-                    val rentalWithCarWithCustomer =
-                        rentalRepository.getRentalsWithCarAndCustomerByRentalAsync(rentalModel.id)
-
-                    if (deserializedRental == null) {
-                        //rental was not found on server, create it
-                        Rentals().addRental(rentalWithCarWithCustomer)
-
-                        Log.i("CHECK_RESPONSE", "Rental created: $rentalModel")
-                    } else {
-                        //rental is already on server, check if there is a conflict
-                        if (isConflict(localRental, rentalModel)) {
-                            rentalWithCarWithCustomer.rental?.let {
-                                println("Conflict detected")
-                                resolveConflict(
-                                    localRental,
-                                    it
-                                )
-                            }
-                        } else {
-                            Rentals().updateRental(rentalWithCarWithCustomer)
-                            notifyCustomerSuccess(localRental)
-                            Log.i("CHECK_RESPONSE", "Rental updated: $rentalModel")
-                        }
-                    }
-                }
+                syncRemoteRentalsToLocal()
+                syncLocalRentalsToServer()
             }
         }
     }
@@ -170,6 +32,9 @@ class RentalSyncManager(private val rentalRepository: RentalRepository) : ISyncM
 
     private suspend fun resolveConflict(localRental: RentalModel, remoteRental: RentalModel) {
         notifyCustomerConflict(localRental)
+        println(localRental.id)
+        println(remoteRental.id)
+        println("Conflict resolved")
 
         rentalRepository.updateRental(remoteRental)
     }
@@ -180,5 +45,115 @@ class RentalSyncManager(private val rentalRepository: RentalRepository) : ISyncM
 
     private fun notifyCustomerSuccess(rental: RentalModel) {
         //TODO implement
+    }
+
+    suspend fun syncRemoteRentalsToLocal() {
+        val remoteRentals = Rentals().getAllRentals() ?: return
+
+        for (rental in remoteRentals) {
+            var remoteRental = parseJsonToRentalModel(rental as JsonObject)
+
+            val carsFromLocalDatabase = rentalRepository.getByCarId(remoteRental.carId!!)
+
+            var localRental: RentalModel? = null
+            if (carsFromLocalDatabase.isNotEmpty()) {
+                localRental = carsFromLocalDatabase[0]
+            }
+
+            if (localRental != null) {
+                if (isConflict(localRental, remoteRental)) {
+                    println("1111")
+                    resolveConflict(localRental, remoteRental)
+                } else {
+                    println("2222")
+                    updateLocalDatabase(remoteRental)
+                }
+            } else if (isRentalRelevant(remoteRental)) {
+                println("3333")
+                addRentalToLocalDatabase(remoteRental)
+            }
+        }
+    }
+
+    suspend fun addRentalToLocalDatabase(rental: RentalModel) {
+        rentalRepository.addRental(rental)
+    }
+
+    fun isRentalRelevant(rental: RentalModel): Boolean {
+        return rental.carId != null
+    }
+
+    suspend fun updateLocalDatabase(rental: RentalModel) {
+        rentalRepository.updateRental(rental)
+    }
+
+    fun parseJsonToRentalModel(json: JsonObject): RentalModel {
+        val customerObj = json.get("customer")?.takeIf { it.isJsonObject }?.asJsonObject
+        val carObj = json.get("car")?.takeIf { it.isJsonObject }?.asJsonObject
+        val carId = carObj?.get("id")?.asInt
+        val customerId = customerObj?.get("id")?.asInt
+
+        var r = RentalModel(
+            id = json.get("id").asInt,
+            code = json.get("code").asString,
+            longitude = json.get("longitude").asFloat,
+            latitude = json.get("latitude").asFloat,
+            fromDate = json.get("fromDate").asString,
+            toDate = json.get("toDate").asString,
+            state = RentalState.valueOf(json.get("state").asString),
+            inspections = null,
+            customerId = customerId,
+            carId = carId
+        )
+
+        return r
+    }
+
+    suspend fun createRentalOnServer(rental: RentalModel) {
+        val localRentalWithCarWithCustomer =
+            rentalRepository.getRentalsWithCarAndCustomerByRentalAsync(rental.id)
+
+        Rentals().addRental(localRentalWithCarWithCustomer)
+    }
+
+    suspend fun updateRentalOnServer(rental: RentalModel) {
+        val localRentalWithCarWithCustomer =
+            rentalRepository.getRentalsWithCarAndCustomerByRentalAsync(rental.id)
+
+        Rentals().updateRental(localRentalWithCarWithCustomer)
+    }
+
+    fun getRentalFromServerByCarId(carId: Int, remoteRentals: JsonArray): RentalModel? {
+        for (rental in remoteRentals) {
+            if (rental.asJsonObject.get("car")?.asJsonObject?.get("id")?.asInt == carId) {
+                return parseJsonToRentalModel(rental.asJsonObject)
+            }
+        }
+        return null
+    }
+
+    suspend fun syncLocalRentalsToServer() {
+        val allLocalRentals = rentalRepository.getAll()
+        val allRemoteRentals = Rentals().getAllRentals()
+
+        for (rental in allLocalRentals) {
+            if (!isRentalRelevant(rental)) {
+                continue
+            }
+
+            val serverRental = getRentalFromServerByCarId(rental.carId!!, allRemoteRentals!!)
+
+            if (serverRental == null) {
+                createRentalOnServer(rental)
+                notifyCustomerSuccess(rental)
+            } else {
+                if (isConflict(rental, serverRental)) {
+                    resolveConflict(rental, serverRental)
+                } else {
+                    updateRentalOnServer(rental)
+                    notifyCustomerSuccess(rental)
+                }
+            }
+        }
     }
 }

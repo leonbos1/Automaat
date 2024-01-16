@@ -50,7 +50,7 @@ class CarDetailsFragment : Fragment() {
         availableSinceTextView = view.findViewById(R.id.availableSinceContentTextView)
         reserveButton = view.findViewById(R.id.reserveButton)
 
-        if (car?.rental?.state == RentalState.RESERVED) {
+        if (car?.rental?.state == RentalState.RESERVED && car?.rental?.customerId != null) {
             reserveButton.isEnabled = false
             reserveButton.text = "Reserved"
         }

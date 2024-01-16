@@ -22,5 +22,5 @@ data class RentalWithCarWithCustomer(
         entityColumn = "id"
     )
 
-    val customer: CustomerModel?
+    var customer: CustomerModel?
 ) : Parcelable

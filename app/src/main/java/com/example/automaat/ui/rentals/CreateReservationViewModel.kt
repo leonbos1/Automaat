@@ -11,6 +11,7 @@ import com.example.automaat.api.datamodels.Auth
 import com.example.automaat.api.endpoints.Authentication
 import com.example.automaat.api.endpoints.Rentals
 import com.example.automaat.api.synchers.RentalSyncManager
+import com.example.automaat.entities.CustomerModel
 import com.example.automaat.entities.RentalModel
 import com.example.automaat.entities.RentalState
 import com.example.automaat.entities.relations.CarWithRental
@@ -71,7 +72,7 @@ class CreateReservationViewModel(application: Application) : AndroidViewModel(ap
             viewModelScope.launch {
                 rentalRepository.insertRental(newRental)
             }
-        //car already has a rental
+            //car already has a rental
         } else {
             rental.rental.apply {
                 fromDate = startDate

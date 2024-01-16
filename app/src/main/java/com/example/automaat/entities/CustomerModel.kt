@@ -10,7 +10,7 @@ import kotlinx.android.parcel.Parcelize
 @Entity(tableName = "customers")
 data class CustomerModel (
     @PrimaryKey(autoGenerate = true)
-    val id: Int,
+    var id: Int,
     val nr: Int,
     val firstName: String,
     val lastName: String,
