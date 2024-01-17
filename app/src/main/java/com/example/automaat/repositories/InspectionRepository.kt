@@ -2,8 +2,7 @@ package com.example.automaat.repositories
 
 import androidx.lifecycle.LiveData
 import com.example.automaat.entities.InspectionModel
-import com.example.automaat.entities.RentalModel
-import com.example.automaat.entities.relations.RentalWithCarWithCustomer
+import com.example.automaat.entities.relations.InspectionWithCarWithRental
 
 class InspectionRepository(private val inspectionDao: InspectionDao) {
     val readAllData: LiveData<List<InspectionModel>> = inspectionDao.readAllData()
@@ -22,5 +21,9 @@ class InspectionRepository(private val inspectionDao: InspectionDao) {
 
     suspend fun getInspectionById(id: Int): InspectionModel {
         return inspectionDao.getInspectionById(id)
+    }
+
+    suspend fun getInspectionWithCarWithRentalByRentalId(rentalId: Int): InspectionWithCarWithRental {
+        return inspectionDao.getInspectionWithCarWithRentalByRentalId(rentalId)
     }
 }

@@ -23,7 +23,10 @@ class RentalRepository(private val rentalDao: RentalDao) {
         return rentalDao.getRentalById(id)
     }
 
-    suspend fun getByCarId(carId: Int): List<RentalModel> {
+    suspend fun getByCarId(carId: Int?): List<RentalModel> {
+        if (carId == null) {
+            return emptyList()
+        }
         return rentalDao.getByCarId(carId)
     }
 
@@ -31,7 +34,8 @@ class RentalRepository(private val rentalDao: RentalDao) {
         println("updateRental")
         rental.customerId?.let {
             rental.carId?.let { it1 ->
-                rentalDao.updateRental(rental.id, rental.fromDate, rental.toDate, rental.state,
+                rentalDao.updateRental(
+                    rental.id, rental.fromDate, rental.toDate, rental.state,
                     it, it1
                 )
             }

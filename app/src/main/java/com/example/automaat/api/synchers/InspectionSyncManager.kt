@@ -23,28 +23,38 @@ class InspectionSyncManager(private val inspectionRepository: InspectionReposito
                 if (jsonArray != null) {
                     jsonArray.forEach { jsonElement ->
                         jsonElement.asJsonObject.let {
-                            val carObj = it.get("car")?.takeIf { it.isJsonObject }?.asJsonObject
-                            val carId = carObj?.get("id")?.asInt
-                            val rentalObj = it.get("rental")?.takeIf { it.isJsonObject }?.asJsonObject
-                            val rentalId = rentalObj?.get("id")?.asInt
-
-                            val inspectionModel = InspectionModel(
-                                it.get("id").asInt,
-                                it.get("code").asString,
-                                it.get("odometer").asInt,
-                                it.get("result").asString,
-                                it.get("photo").asString,
-                                it.get("photoContentType").asString,
-                                it.get("completed").asString,
-                                null,
-                                carId,
-                                null,
-                                rentalId
-                            )
                             try {
-                                inspectionRepository.addInspection(inspectionModel)
+                                val carObj = it.get("car")?.takeIf { it.isJsonObject }?.asJsonObject
+                                val carId = carObj?.get("id")?.asInt
+                                val rentalObj =
+                                    it.get("rental")?.takeIf { it.isJsonObject }?.asJsonObject
+                                val rentalId = rentalObj?.get("id")?.asInt
+
+                                val inspectionModel = InspectionModel(
+                                    it.get("id").asInt,
+                                    it.get("code").asString,
+                                    it.get("odometer").asInt,
+                                    it.get("result").asString,
+                                    it.get("photo").asString,
+                                    it.get("photoContentType").asString,
+                                    it.get("completed").asString,
+                                    null,
+                                    carId,
+                                    null,
+                                    rentalId
+                                )
+                                try {
+                                    Log.d("CHECK_RESPONSE", "Adding inspection: $inspectionModel")
+                                    inspectionRepository.addInspection(inspectionModel)
+                                } catch (e: Exception) {
+                                    Log.e(
+                                        "CHECK_RESPONSE",
+                                        "Error while adding inspection: $inspectionModel",
+                                        e
+                                    )
+                                }
                             } catch (e: Exception) {
-                                Log.e("CHECK_RESPONSE", "Error while adding inspection: $inspectionModel", e)
+                                Log.e("CHECK_RESPONSE", "Error while adding inspection: $it", e)
                             }
                         }
                     }

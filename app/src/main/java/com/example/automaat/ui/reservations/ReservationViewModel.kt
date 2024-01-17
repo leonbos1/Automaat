@@ -9,14 +9,21 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.viewModelScope
 import com.example.automaat.AutomaatDatabase
 import com.example.automaat.entities.RentalState
+import com.example.automaat.entities.relations.InspectionWithCarWithRental
 import com.example.automaat.entities.relations.RentalWithCarWithCustomer
+import com.example.automaat.repositories.InspectionRepository
 import com.example.automaat.repositories.RentalRepository
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class ReservationViewModel(application: Application) : AndroidViewModel(application) {
     private val rentalRepository: RentalRepository
+    private val inspectionRepository: InspectionRepository
     private lateinit var rentalsByCustomer: LiveData<List<RentalWithCarWithCustomer>>
     private val hardcodedCustomer = 1
+    val inspectionWithCarWithRental: MutableLiveData<InspectionWithCarWithRental?> =
+        MutableLiveData()
 
     //TODO add syncer stuff for reservations
     //    lateinit var carsSynchManager: CarSyncManager
@@ -24,8 +31,8 @@ class ReservationViewModel(application: Application) : AndroidViewModel(applicat
     init {
         val rentalDao = AutomaatDatabase.getDatabase(application).rentalDao()
         rentalRepository = RentalRepository(rentalDao)
-
-        //carsSynchManager = CarSyncManager(carRepository)
+        inspectionRepository =
+            InspectionRepository(AutomaatDatabase.getDatabase(application).inspectionDao())
 
         viewModelScope.launch {
             rentalsByCustomer =
@@ -74,5 +81,19 @@ class ReservationViewModel(application: Application) : AndroidViewModel(applicat
         })
 
         return historicRentals
+    }
+
+    fun fetchInspectionWithCustomerWithRental(rental: RentalWithCarWithCustomer) {
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                val inspectionData =
+                    inspectionRepository.getInspectionWithCarWithRentalByRentalId(rental.rental!!.id)
+                println("INSPECTION DATA: $inspectionData")
+                withContext(Dispatchers.Main) {
+                    inspectionWithCarWithRental.postValue(inspectionData)
+                }
+            } catch (e: Exception) {
+            }
+        }
     }
 }

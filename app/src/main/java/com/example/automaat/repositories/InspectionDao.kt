@@ -7,9 +7,7 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Transaction
 import com.example.automaat.entities.InspectionModel
-import com.example.automaat.entities.RentalModel
-import com.example.automaat.entities.RentalState
-import com.example.automaat.entities.relations.RentalWithCarWithCustomer
+import com.example.automaat.entities.relations.InspectionWithCarWithRental
 
 @Dao
 interface InspectionDao {
@@ -27,4 +25,12 @@ interface InspectionDao {
 
     @Query("DELETE FROM inspections")
     suspend fun deleteAllInspections()
+
+    //getInspectionWithCustomerWithRentalByRentalId
+    @Transaction
+    @Query("SELECT * FROM inspections" +
+            " LEFT JOIN rentals ON inspections.rentalId = rentals.id" +
+            " LEFT JOIN cars ON inspections.carId = cars.id" +
+            " WHERE inspections.rentalId = :rentalId")
+    fun getInspectionWithCarWithRentalByRentalId(rentalId: Int): InspectionWithCarWithRental
 }

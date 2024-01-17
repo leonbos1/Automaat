@@ -49,6 +49,12 @@
         android:name="com.example.automaat.ui.reservations.ReservationFragment"
         android:label="@string/title_reservations"
         tools:layout="@layout/fragment_reservations">
+        <action
+            android:id="@+id/action_navigation_reservations_to_inspection"
+            app:destination="@id/inspection" />
+        <argument
+            android:name="inspectionWithCarWithRental"
+            app:argType="com.example.automaat.entities.relations.InspectionWithCarWithRental" />
     </fragment>
 
     <fragment
@@ -111,6 +117,11 @@
             android:id="@+id/action_create_reservation_to_reservations"
             app:destination="@id/navigation_reservations" />
     </fragment>
+    <fragment
+        android:id="@+id/inspection"
+        android:name="com.example.automaat.ui.inspections.InspectionFragment"
+        android:label="Inspection fragment"
+        tools:layout="@layout/fragment_inspection"></fragment>
 
 
 </navigation>

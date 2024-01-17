@@ -1,5 +1,6 @@
 package com.example.automaat.api.synchers
 
+import android.util.Log
 import com.example.automaat.api.endpoints.Authentication
 import com.example.automaat.api.endpoints.Rentals
 import com.example.automaat.entities.RentalModel
@@ -15,8 +16,12 @@ class RentalSyncManager(private val rentalRepository: RentalRepository) : ISyncM
     override fun syncEntities() {
         Authentication().authenticate {
             CoroutineScope(Dispatchers.IO).launch {
-                syncRemoteRentalsToLocal()
-                syncLocalRentalsToServer()
+                try {
+                    syncRemoteRentalsToLocal()
+                    syncLocalRentalsToServer()
+                } catch (e: Exception) {
+                    Log.e("CHECK_RESPONSE", "Error while syncing rentals", e)
+                }
             }
         }
     }
@@ -60,7 +65,7 @@ class RentalSyncManager(private val rentalRepository: RentalRepository) : ISyncM
         for (rental in remoteRentals) {
             var remoteRental = parseJsonToRentalModel(rental as JsonObject)
 
-            val carsFromLocalDatabase = rentalRepository.getByCarId(remoteRental.carId!!)
+            val carsFromLocalDatabase = rentalRepository.getByCarId(remoteRental.carId)
 
             var localRental: RentalModel? = null
             if (carsFromLocalDatabase.isNotEmpty()) {
@@ -140,8 +145,20 @@ class RentalSyncManager(private val rentalRepository: RentalRepository) : ISyncM
 
     fun getRentalFromServerByCarId(carId: Int, remoteRentals: JsonArray): RentalModel? {
         for (rental in remoteRentals) {
-            if (rental.asJsonObject.get("car")?.asJsonObject?.get("id")?.asInt == carId) {
-                return parseJsonToRentalModel(rental.asJsonObject)
+            try {
+                if (rental != null && rental.isJsonObject) {
+                    val rentalObj = rental.asJsonObject
+                    val carObj = rentalObj.get("car")
+                    if (carObj != null && carObj.isJsonObject) {
+                        val carIdObj = carObj.asJsonObject.get("id")
+                        if (carIdObj != null && carIdObj.isJsonPrimitive && carIdObj.asInt == carId) {
+                            return parseJsonToRentalModel(rentalObj)
+                        }
+                    }
+                }
+            } catch (e: Exception) {
+                // Log the exception for debugging purposes
+                e.printStackTrace()
             }
         }
         return null
