@@ -9,5 +9,9 @@ data class Inspection(
     val result: String,
     val photo: String,
     val photoContentType: String,
-    val completed: String
+    val completed: String,
+    val photos: String?, //won't use as it will increase complexity
+    val car: Car?,
+    val employee: Employee?,
+    val rental: Rental?
 )
