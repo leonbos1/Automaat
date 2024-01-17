@@ -93,9 +93,13 @@ class RentalSyncManager(private val rentalRepository: RentalRepository) : ISyncM
 
     fun parseJsonToRentalModel(json: JsonObject): RentalModel {
         val customerObj = json.get("customer")?.takeIf { it.isJsonObject }?.asJsonObject
+        val customerId = customerObj?.get("id")?.asInt
+
         val carObj = json.get("car")?.takeIf { it.isJsonObject }?.asJsonObject
         val carId = carObj?.get("id")?.asInt
-        val customerId = customerObj?.get("id")?.asInt
+
+        val inspectionObj = json.get("inspection")?.takeIf { it.isJsonObject }?.asJsonObject
+        val inspectionId = inspectionObj?.get("id")?.asInt
 
         var r = RentalModel(
             id = json.get("id").asInt,
@@ -105,7 +109,7 @@ class RentalSyncManager(private val rentalRepository: RentalRepository) : ISyncM
             fromDate = json.get("fromDate").asString,
             toDate = json.get("toDate").asString,
             state = RentalState.valueOf(json.get("state").asString),
-            inspections = null,
+            inspectionId = inspectionId,
             customerId = customerId,
             carId = carId
         )
