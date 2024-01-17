@@ -17,6 +17,6 @@ data class RentalModel (
     var toDate: String,
     var state: RentalState,
     val inspections: Int?,
-    val customerId: Int?,
+    var customerId: Int?,
     val carId: Int?
 ): Parcelable

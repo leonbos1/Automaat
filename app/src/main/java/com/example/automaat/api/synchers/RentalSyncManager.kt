@@ -35,7 +35,14 @@ class RentalSyncManager(private val rentalRepository: RentalRepository) : ISyncM
         println(localRental.id)
         println(remoteRental.id)
 
-        rentalRepository.updateRental(remoteRental)
+        localRental.state = remoteRental.state
+        localRental.customerId = remoteRental.customerId
+        localRental.fromDate = remoteRental.fromDate
+        localRental.toDate = remoteRental.toDate
+        localRental.longitude = remoteRental.longitude
+        localRental.latitude = remoteRental.latitude
+
+        rentalRepository.updateRental(localRental)
     }
 
     private fun notifyCustomerConflict(rental: RentalModel) {
