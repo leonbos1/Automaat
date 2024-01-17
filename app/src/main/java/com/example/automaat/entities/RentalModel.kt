@@ -11,8 +11,8 @@ data class RentalModel (
     @PrimaryKey(autoGenerate = true)
     val id: Int,
     val code: String,
-    val longitude: Float,
-    val latitude: Float,
+    var longitude: Float,
+    var latitude: Float,
     var fromDate: String,
     var toDate: String,
     var state: RentalState,

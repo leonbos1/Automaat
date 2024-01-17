@@ -34,13 +34,13 @@ class RentalSyncManager(private val rentalRepository: RentalRepository) : ISyncM
         notifyCustomerConflict(localRental)
         println(localRental.id)
         println(remoteRental.id)
-        println("Conflict resolved")
 
         rentalRepository.updateRental(remoteRental)
     }
 
     private fun notifyCustomerConflict(rental: RentalModel) {
         //TODO implement
+        println("CONFLICT!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
     }
 
     private fun notifyCustomerSuccess(rental: RentalModel) {
@@ -62,14 +62,11 @@ class RentalSyncManager(private val rentalRepository: RentalRepository) : ISyncM
 
             if (localRental != null) {
                 if (isConflict(localRental, remoteRental)) {
-                    println("1111")
                     resolveConflict(localRental, remoteRental)
                 } else {
-                    println("2222")
                     updateLocalDatabase(remoteRental)
                 }
             } else if (isRentalRelevant(remoteRental)) {
-                println("3333")
                 addRentalToLocalDatabase(remoteRental)
             }
         }
@@ -96,8 +93,8 @@ class RentalSyncManager(private val rentalRepository: RentalRepository) : ISyncM
         var r = RentalModel(
             id = json.get("id").asInt,
             code = json.get("code").asString,
-            longitude = json.get("longitude").asFloat,
-            latitude = json.get("latitude").asFloat,
+            0.0f,
+            0.0f,
             fromDate = json.get("fromDate").asString,
             toDate = json.get("toDate").asString,
             state = RentalState.valueOf(json.get("state").asString),
@@ -105,6 +102,13 @@ class RentalSyncManager(private val rentalRepository: RentalRepository) : ISyncM
             customerId = customerId,
             carId = carId
         )
+
+        if (json.get("longitude") != null && !json.get("longitude").isJsonNull()) {
+            r.longitude = json.get("longitude").getAsFloat();
+        }
+        if (json.get("latitude") != null && !json.get("latitude").isJsonNull()) {
+            r.latitude = json.get("latitude").getAsFloat();
+        }
 
         return r
     }
