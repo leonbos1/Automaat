@@ -10,6 +10,7 @@ import com.example.automaat.AutomaatDatabase
 import com.example.automaat.entities.CarModel
 import com.example.automaat.repositories.CarRepository
 import com.example.automaat.repositories.CustomerRepository
+import com.example.automaat.repositories.InspectionRepository
 import com.example.automaat.repositories.RentalRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -19,15 +20,18 @@ class FilterViewModel(application: Application) : AndroidViewModel(application) 
     val carRepository: CarRepository
     val rentalRepository: RentalRepository
     val customerRepository: CustomerRepository
+    val inspectionRepository: InspectionRepository
     private val _availableModels = MutableLiveData<List<String>>()
 
     init {
         val carDao = AutomaatDatabase.getDatabase(application).carDao()
         val rentalDao = AutomaatDatabase.getDatabase(application).rentalDao()
         val customerDao = AutomaatDatabase.getDatabase(application).customerDao()
+        val inspectionDao = AutomaatDatabase.getDatabase(application).inspectionDao()
         carRepository = CarRepository(carDao)
         rentalRepository = RentalRepository(rentalDao)
         customerRepository = CustomerRepository(customerDao)
+        inspectionRepository = InspectionRepository(inspectionDao)
         readAllData = carRepository.readAllData
     }
 
@@ -36,6 +40,7 @@ class FilterViewModel(application: Application) : AndroidViewModel(application) 
             carRepository.deleteAllCars()
             rentalRepository.deleteAllRentals()
             customerRepository.deleteAllCustomers()
+            inspectionRepository.deleteAllInspections()
         }
     }
 

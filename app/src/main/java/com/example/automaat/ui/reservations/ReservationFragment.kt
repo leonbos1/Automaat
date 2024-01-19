@@ -60,15 +60,15 @@ class ReservationFragment : Fragment() {
     }
 
     private fun navigateToInspection(rental: RentalWithCarWithCustomer) {
-        println("NAVIGATING TO INSPECITO NAPGE")
+
         reservationViewModel?.fetchInspectionWithCustomerWithRental(rental)
 
         reservationViewModel?.inspectionWithCarWithRental?.observe(viewLifecycleOwner) { inspection ->
-            println("INSPECTION OBSERVED")
             inspection?.let {
                 val bundle = Bundle()
 
-                println("INSPECTION OBSERVED NOT NULL")
+                println("INSPECTION ID: ${inspection.inspection?.id}")
+                println("INSPECTION RESULT: ${inspection.inspection?.result}")
 
                 bundle.putParcelable("inspectionWithCarWithRental", inspection)
 

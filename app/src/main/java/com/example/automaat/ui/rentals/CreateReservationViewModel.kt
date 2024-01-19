@@ -7,15 +7,18 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import androidx.lifecycle.viewModelScope
+import com.example.automaat.AutomaatDatabase
 import com.example.automaat.api.datamodels.Auth
 import com.example.automaat.api.endpoints.Authentication
 import com.example.automaat.api.endpoints.Rentals
 import com.example.automaat.api.synchers.RentalSyncManager
 import com.example.automaat.entities.CustomerModel
+import com.example.automaat.entities.InspectionModel
 import com.example.automaat.entities.RentalModel
 import com.example.automaat.entities.RentalState
 import com.example.automaat.entities.relations.CarWithRental
 import com.example.automaat.entities.relations.RentalWithCarWithCustomer
+import com.example.automaat.repositories.InspectionRepository
 import com.example.automaat.repositories.RentalRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
@@ -25,6 +28,7 @@ class CreateReservationViewModel(application: Application) : AndroidViewModel(ap
     var testRentalWithCarWithCustomer: RentalWithCarWithCustomer? = null
     val rentalWithCarWithCustomer: LiveData<RentalWithCarWithCustomer> = _rentalWithCarWithCustomer
     val rentalRepository: RentalRepository
+    val inspectionRepository: InspectionRepository
     private val hardcodedCustomer = 1
     private val _addRentalResult = MutableLiveData<Boolean>()
     val addRentalResult: LiveData<Boolean> = _addRentalResult
@@ -32,8 +36,10 @@ class CreateReservationViewModel(application: Application) : AndroidViewModel(ap
     var rentalSyncManager: RentalSyncManager? = null
 
     init {
-        val rentalDao = com.example.automaat.AutomaatDatabase.getDatabase(application).rentalDao()
+        val rentalDao = AutomaatDatabase.getDatabase(application).rentalDao()
         rentalRepository = RentalRepository(rentalDao)
+        val inspectionDao = AutomaatDatabase.getDatabase(application).inspectionDao()
+        inspectionRepository = InspectionRepository(inspectionDao)
         rentalSyncManager = RentalSyncManager(rentalRepository)
     }
 
@@ -61,7 +67,6 @@ class CreateReservationViewModel(application: Application) : AndroidViewModel(ap
         endDate: String,
         lifecycleOwner: LifecycleOwner
     ) {
-        //car doesnt have a rental yet
         if (rental.rental == null) {
             val newRental = getNewRental(rental.car!!.id)
 
@@ -71,8 +76,11 @@ class CreateReservationViewModel(application: Application) : AndroidViewModel(ap
 
             viewModelScope.launch {
                 rentalRepository.insertRental(newRental)
+                val inspectionId = generateId()
+                inspectionRepository.createNewInspection(inspectionId, newRental.id, newRental.carId!!)
+                newRental.inspectionId = inspectionId
+                rentalRepository.updateRental(newRental)
             }
-            //car already has a rental
         } else {
             rental.rental.apply {
                 fromDate = startDate
@@ -82,13 +90,17 @@ class CreateReservationViewModel(application: Application) : AndroidViewModel(ap
 
             viewModelScope.launch {
                 rentalRepository.updateRental(rental.rental)
+                val inspectionId = generateId()
+                inspectionRepository.createNewInspection(inspectionId, rental.rental.id, rental.car!!.id)
+                rental.rental.inspectionId = inspectionId
+                rentalRepository.updateRental(rental.rental)
             }
         }
 
     }
 
     fun generateId(): Int {
-        return (100000..999999).random()
+        return (2000..999999).random()
     }
 
     fun getNewRental(carId: Int): RentalModel {

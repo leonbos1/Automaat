@@ -10,13 +10,13 @@ import kotlinx.android.parcel.Parcelize
 data class RentalModel (
     @PrimaryKey(autoGenerate = true)
     val id: Int,
-    val code: String,
+    val code: String?,
     var longitude: Float,
     var latitude: Float,
     var fromDate: String,
     var toDate: String,
     var state: RentalState,
-    val inspectionId: Int?,
+    var inspectionId: Int?,
     var customerId: Int?,
     val carId: Int?
 ): Parcelable

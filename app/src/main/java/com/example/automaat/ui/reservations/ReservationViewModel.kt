@@ -85,14 +85,17 @@ class ReservationViewModel(application: Application) : AndroidViewModel(applicat
 
     fun fetchInspectionWithCustomerWithRental(rental: RentalWithCarWithCustomer) {
         viewModelScope.launch(Dispatchers.IO) {
-            try {
-                val inspectionData =
-                    inspectionRepository.getInspectionWithCarWithRentalByRentalId(rental.rental!!.id)
-                println("INSPECTION DATA: $inspectionData")
-                withContext(Dispatchers.Main) {
-                    inspectionWithCarWithRental.postValue(inspectionData)
-                }
-            } catch (e: Exception) {
+            val inspectionData =
+                inspectionRepository.getInspectionWithCarWithRentalByCarId(rental.car!!.id)
+            if (inspectionData != null) {
+                println("INSPECTION ID: ${inspectionData.inspection?.id}")
+                println("INSPECTION RESULT: ${inspectionData.inspection?.result}")
+                println("INSPECTION RENTALID: ${inspectionData.inspection?.rentalId}")
+                println("INSPECTION CARID: ${inspectionData.inspection?.carId}")
+            }
+
+            withContext(Dispatchers.Main) {
+                inspectionWithCarWithRental.postValue(inspectionData)
             }
         }
     }

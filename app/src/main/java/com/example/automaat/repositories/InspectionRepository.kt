@@ -7,12 +7,32 @@ import com.example.automaat.entities.relations.InspectionWithCarWithRental
 class InspectionRepository(private val inspectionDao: InspectionDao) {
     val readAllData: LiveData<List<InspectionModel>> = inspectionDao.readAllData()
 
-    suspend fun addInspection(inspection: InspectionModel) {
-        inspectionDao.addInspection(inspection)
+    suspend fun insertInspection(inspection: InspectionModel) {
+        inspectionDao.insertInspection(inspection)
+    }
+
+    suspend fun createNewInspection(inspectionId:Int, rentalId: Int, carId: Int) {
+        inspectionDao.createNewInspection(
+            inspectionId,
+            rentalId,
+            carId,
+            0,
+            "",
+            "",
+            "",
+            "",
+            "",
+            0
+        )
     }
 
     suspend fun deleteAllInspections() {
         inspectionDao.deleteAllInspections()
+    }
+
+    suspend fun updateInspection(inspection: InspectionModel) {
+        println("UPDATING INSPECTION WITH ID: ${inspection.id} TO RESULT: ${inspection.result} AND PHOTO: ${inspection.photo}")
+        inspectionDao.updateInspection(inspection)
     }
 
     suspend fun getAll(): List<InspectionModel> {
@@ -23,7 +43,7 @@ class InspectionRepository(private val inspectionDao: InspectionDao) {
         return inspectionDao.getInspectionById(id)
     }
 
-    suspend fun getInspectionWithCarWithRentalByRentalId(rentalId: Int): InspectionWithCarWithRental {
-        return inspectionDao.getInspectionWithCarWithRentalByRentalId(rentalId)
+    suspend fun getInspectionWithCarWithRentalByCarId(carId: Int): InspectionWithCarWithRental {
+        return inspectionDao.getInspectionWithCarWithRentalByCarId(carId)
     }
 }

@@ -10,11 +10,11 @@ import kotlinx.android.parcel.Parcelize
 @Entity(tableName = "inspections")
 data class InspectionModel (
     @PrimaryKey(autoGenerate = true)
-    val id: Int,
-    val code: String,
+    var id: Int,
+    val code: String?,
     val odometer: Int,
-    val result: String,
-    val photo: String,
+    var result: String,
+    var photo: String,
     val photoContentType: String,
     val completed: String,
     val photos: String?, //won't use as it will increase complexity

@@ -13,15 +13,15 @@ data class InspectionWithCarWithRental(
     @Embedded val inspection: InspectionModel?,
 
     @Relation(
-        parentColumn = "rentalId",
-        entityColumn = "id"
-    )
-    val rental: RentalModel?,
-
-    @Relation(
         parentColumn = "carId",
         entityColumn = "id"
     )
 
-    var car: CarModel?
+    var car: CarModel?,
+
+    @Relation(
+        parentColumn = "rentalId",
+        entityColumn = "id"
+    )
+    val rental: RentalModel?
 ) : Parcelable
