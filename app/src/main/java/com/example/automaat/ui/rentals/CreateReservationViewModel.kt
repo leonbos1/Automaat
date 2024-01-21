@@ -1,23 +1,19 @@
 package com.example.automaat.ui.rentals
 
 import android.app.Application
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Observer
 import androidx.lifecycle.viewModelScope
-import com.example.automaat.api.datamodels.Auth
-import com.example.automaat.api.endpoints.Authentication
-import com.example.automaat.api.endpoints.Rentals
 import com.example.automaat.api.synchers.RentalSyncManager
-import com.example.automaat.entities.CustomerModel
 import com.example.automaat.entities.RentalModel
 import com.example.automaat.entities.RentalState
 import com.example.automaat.entities.relations.CarWithRental
 import com.example.automaat.entities.relations.RentalWithCarWithCustomer
 import com.example.automaat.repositories.RentalRepository
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
 class CreateReservationViewModel(application: Application) : AndroidViewModel(application) {
@@ -34,7 +30,7 @@ class CreateReservationViewModel(application: Application) : AndroidViewModel(ap
     init {
         val rentalDao = com.example.automaat.AutomaatDatabase.getDatabase(application).rentalDao()
         rentalRepository = RentalRepository(rentalDao)
-        rentalSyncManager = RentalSyncManager(rentalRepository)
+        rentalSyncManager = RentalSyncManager(rentalRepository, application)
     }
 
     fun fetchRentalWithCarWithCustomer(carWithRental: CarWithRental) {
@@ -55,6 +51,7 @@ class CreateReservationViewModel(application: Application) : AndroidViewModel(ap
         }
     }
 
+    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     fun createReservation(
         rental: RentalWithCarWithCustomer,
         startDate: String,

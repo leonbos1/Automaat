@@ -1,5 +1,6 @@
 package com.example.automaat.ui.filters
 
+import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -8,6 +9,7 @@ import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.Spinner
+import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
@@ -34,6 +36,7 @@ class FiltersFragment() : Fragment() {
     private lateinit var rentalSyncManager: RentalSyncManager
     private lateinit var customerSyncManager: CustomerSyncManager
 
+    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -74,7 +77,7 @@ class FiltersFragment() : Fragment() {
         getAllCarsButton = view.findViewById(R.id.getAllCarsButton)
 
         carSyncManager = CarSyncManager(filterViewModel.carRepository)
-        rentalSyncManager = RentalSyncManager(filterViewModel.rentalRepository)
+//        rentalSyncManager = RentalSyncManager(filterViewModel.rentalRepositor, application)
         customerSyncManager = CustomerSyncManager(filterViewModel.customerRepository)
 
         getAllCarsButton.setOnClickListener {

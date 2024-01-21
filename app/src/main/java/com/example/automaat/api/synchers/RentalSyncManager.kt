@@ -1,17 +1,23 @@
 package com.example.automaat.api.synchers
 
+import android.app.Application
+import android.os.Build
+import androidx.annotation.RequiresApi
 import com.example.automaat.api.endpoints.Authentication
 import com.example.automaat.api.endpoints.Rentals
 import com.example.automaat.entities.RentalModel
 import com.example.automaat.entities.RentalState
 import com.example.automaat.repositories.RentalRepository
+import com.example.automaat.utils.NotificationManager
 import com.google.gson.JsonArray
 import com.google.gson.JsonObject
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-class RentalSyncManager(private val rentalRepository: RentalRepository) : ISyncManager {
+class RentalSyncManager(private val rentalRepository: RentalRepository, application: Application) : ISyncManager {
+    private val notificationManager = NotificationManager(application)
+    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     override fun syncEntities() {
         Authentication().authenticate {
             CoroutineScope(Dispatchers.IO).launch {
@@ -50,8 +56,17 @@ class RentalSyncManager(private val rentalRepository: RentalRepository) : ISyncM
         println("CONFLICT!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
     }
 
+    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     private fun notifyCustomerSuccess(rental: RentalModel) {
-        //TODO implement
+        val state = rental.state
+        println("LogNotification Send notification. Rental state: $state")
+        notificationManager.sendNotification(
+            channelId = "rental_updates",
+            title = "Rental Update",
+            message = "Rental state changed to: $state",
+            icon = 1,
+            notificationId = (100000..999999).random()
+        )
     }
 
     suspend fun syncRemoteRentalsToLocal() {
@@ -143,6 +158,7 @@ class RentalSyncManager(private val rentalRepository: RentalRepository) : ISyncM
         return null
     }
 
+    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     suspend fun syncLocalRentalsToServer() {
         val allLocalRentals = rentalRepository.getAll()
         val allRemoteRentals = Rentals().getAllRentals()

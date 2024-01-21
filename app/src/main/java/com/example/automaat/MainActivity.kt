@@ -1,8 +1,12 @@
 package com.example.automaat
 
+import android.Manifest
+import android.os.Build
 import android.os.Bundle
 import android.view.View
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
@@ -18,6 +22,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var networkMonitor: NetworkMonitor
 
     companion object {
+        const val REQUEST_CODE_POST_NOTIFICATIONS = 1
         private var rootView: View? = null
         fun getRootView(): View? = rootView
     }
@@ -55,7 +60,8 @@ class MainActivity : AppCompatActivity() {
         networkMonitor.stopNetworkCallback()
     }
 
-    private fun log(message: String) {
-        println("MainActivity: $message")
+    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
+    fun requestNotificationPermission() {
+        ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.POST_NOTIFICATIONS), REQUEST_CODE_POST_NOTIFICATIONS)
     }
 }

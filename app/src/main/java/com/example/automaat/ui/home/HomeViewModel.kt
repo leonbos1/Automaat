@@ -1,13 +1,13 @@
 package com.example.automaat.ui.home
 
 import android.app.Application
-import android.os.Debug
+import android.os.Build
 import android.util.Log
+import androidx.annotation.RequiresApi
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.viewModelScope
 import com.example.automaat.AutomaatDatabase
-import com.example.automaat.api.endpoints.Cars
 import com.example.automaat.api.synchers.CarSyncManager
 import com.example.automaat.api.synchers.CustomerSyncManager
 import com.example.automaat.api.synchers.RentalSyncManager
@@ -17,7 +17,6 @@ import com.example.automaat.repositories.CarRepository
 import com.example.automaat.repositories.CustomerRepository
 import com.example.automaat.repositories.RentalRepository
 import kotlinx.coroutines.launch
-import java.io.Console
 
 class HomeViewModel(application: Application) : AndroidViewModel(application) {
 
@@ -42,10 +41,11 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
         carsWithRentals = carRepository.getCarsWithRentals()
 
         carsSyncManager = CarSyncManager(carRepository)
-        rentalSyncManager = RentalSyncManager(rentalRepository)
+        rentalSyncManager = RentalSyncManager(rentalRepository, application)
         customerSyncManager = CustomerSyncManager(customerRepository)
     }
 
+    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     fun refreshCars() {
         viewModelScope.launch {
             try {

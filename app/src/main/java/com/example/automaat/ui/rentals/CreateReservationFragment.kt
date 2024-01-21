@@ -1,5 +1,6 @@
 package com.example.automaat.ui.rentals
 
+import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -9,20 +10,16 @@ import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.Spinner
 import android.widget.TextView
+import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.example.automaat.R
-import com.example.automaat.api.endpoints.Authentication
-import com.example.automaat.api.synchers.RentalSyncManager
 import com.example.automaat.entities.RentalState
 import com.example.automaat.entities.relations.CarWithRental
-import com.example.automaat.entities.relations.RentalWithCarWithCustomer
 import com.example.automaat.entities.toReadableString
 import com.example.automaat.helpers.DateHelper
-import com.example.automaat.utils.SnackbarManager
 
 class CreateReservationFragment : Fragment() {
     private var reservationViewModel: CreateReservationViewModel? = null
@@ -35,6 +32,7 @@ class CreateReservationFragment : Fragment() {
     private var reserveButton: Button? = null
     private var carWithRental: CarWithRental? = null
 
+    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
