@@ -56,15 +56,15 @@ class RentalRepository(private val rentalDao: RentalDao) {
 
     }
 
-    fun getRentalsWithCarAndCustomerByCustomer(customerId: Int): LiveData<List<RentalWithCarWithCustomer>> {
+    suspend fun getRentalsWithCarAndCustomerByCustomer(customerId: Int): List<RentalWithCarWithCustomer> {
         return rentalDao.getRentalsWithCarAndCustomerByCustomer(customerId)
     }
 
-    fun getRentalsWithCarAndCustomerByRental(rentalId: Int): LiveData<List<RentalWithCarWithCustomer>> {
+    suspend fun getRentalsWithCarAndCustomerByRental(rentalId: Int): LiveData<List<RentalWithCarWithCustomer>> {
         return rentalDao.getRentalsWithCarAndCustomerByRental(rentalId)
     }
 
-    fun getRentalsWithCarAndCustomerByRentalAsync(rentalId: Int): RentalWithCarWithCustomer {
+    suspend fun getRentalsWithCarAndCustomerByRentalAsync(rentalId: Int): RentalWithCarWithCustomer {
         return rentalDao.getRentalsWithCarAndCustomerByRentalAsync(rentalId)
     }
 }
