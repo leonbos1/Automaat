@@ -40,7 +40,7 @@ interface InspectionDao {
     }
 
     @Query("SELECT * FROM inspections WHERE id = :id")
-    suspend fun getInspectionById(id: Int): InspectionModel
+    fun getInspectionById(id: Int): LiveData<InspectionModel>
 
     @Query("DELETE FROM inspections")
     suspend fun deleteAllInspections()
@@ -57,5 +57,5 @@ interface InspectionDao {
                 " LEFT JOIN cars ON inspections.carId = cars.id" +
                 " WHERE inspections.carId = :carId"
     )
-    suspend fun getInspectionWithCarWithRentalByCarId(carId: Int): InspectionWithCarWithRental
+    fun getInspectionWithCarWithRentalByCarId(carId: Int): LiveData<InspectionWithCarWithRental>
 }

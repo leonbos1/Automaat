@@ -10,6 +10,8 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.automaat.R
+import com.example.automaat.entities.RentalModel
+import com.example.automaat.entities.relations.InspectionWithCarWithRental
 import com.example.automaat.entities.relations.RentalWithCarWithCustomer
 
 class ReservationFragment : Fragment() {
@@ -22,17 +24,17 @@ class ReservationFragment : Fragment() {
     ): View {
         val view = inflater.inflate(R.layout.fragment_reservations, container, false)
 
-        val futureAdapter = ReservationAdapter { rental -> navigateToInspection() }
+        val futureAdapter = ReservationAdapter { rental -> navigateToInspection(rental.rental?.inspectionId, rental.rental) }
         val futureRecyclerView = view.findViewById<RecyclerView>(R.id.futureRecyclerView)
         futureRecyclerView.adapter = futureAdapter
         futureRecyclerView.layoutManager = LinearLayoutManager(requireContext())
 
-        val currentAdapter = ReservationAdapter { rental -> navigateToInspection() }
+        val currentAdapter = ReservationAdapter { rental -> navigateToInspection(rental.rental?.inspectionId, rental.rental) }
         val currentRecyclerView = view.findViewById<RecyclerView>(R.id.currentRecyclerView)
         currentRecyclerView.adapter = currentAdapter
         currentRecyclerView.layoutManager = LinearLayoutManager(requireContext())
 
-        val historicAdapter = ReservationAdapter { rental -> navigateToInspection() }
+        val historicAdapter = ReservationAdapter { rental -> navigateToInspection(rental.rental?.inspectionId, rental.rental) }
         val historicRecyclerView = view.findViewById<RecyclerView>(R.id.historicRecyclerView)
         historicRecyclerView.adapter = historicAdapter
         historicRecyclerView.layoutManager = LinearLayoutManager(requireContext())
@@ -59,16 +61,30 @@ class ReservationFragment : Fragment() {
         return view
     }
 
-    private fun navigateToInspection() {
+    private fun navigateToInspection(inspectionId: Int?, rental: RentalModel?) {
         val bundle = Bundle()
-        bundle.putParcelable("inspectionWithCarWithRental", reservationViewModel?.inspection)
+        if (inspectionId == null) {
+            reservationViewModel?.createInspection(rental!!)
+            reservationViewModel?.inspection?.observe(viewLifecycleOwner) { inspection ->
+                println("HERE")
+                bundle.putParcelable("inspection", inspection)
+                findNavController().navigate(
+                    R.id.action_navigation_reservations_to_inspection,
+                    bundle
+                )
+            }
+            return
+        }
 
-        findNavController().navigate(
-            R.id.action_navigation_reservations_to_inspection, bundle
-        )
-
-        reservationViewModel?.inspectionWithCarWithRental?.removeObservers(
-            viewLifecycleOwner
-        )
+        reservationViewModel?.getInspectionById(inspectionId)
+        reservationViewModel?.inspection?.observe(viewLifecycleOwner) { inspection ->
+            bundle.putParcelable("inspection", inspection)
+            if (inspection != null) {
+                findNavController().navigate(
+                    R.id.action_navigation_reservations_to_inspection,
+                    bundle
+                )
+            }
+        }
     }
 }

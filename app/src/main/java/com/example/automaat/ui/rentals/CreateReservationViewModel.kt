@@ -80,7 +80,6 @@ class CreateReservationViewModel(application: Application) : AndroidViewModel(ap
                 inspectionRepository.createNewInspection(inspectionId, newRental.id, newRental.carId!!)
                 newRental.inspectionId = inspectionId
                 rentalRepository.updateRental(newRental)
-                println("INSPECTION ID: $inspectionId")
             }
         } else {
             rental.rental.apply {

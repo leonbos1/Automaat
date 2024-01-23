@@ -6,308 +6,314 @@
     android:layout_height="match_parent"
     tools:context=".ui.cars.CarDetailsFragment">
 
-    <LinearLayout
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
-
-        <RelativeLayout
-            android:id="@+id/relativeLayout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            app:layout_constraintBottom_toTopOf="@+id/linearLayout2"
-            app:layout_constraintTop_toTopOf="parent">
-
-            <ImageView
-                android:id="@+id/carImage"
-                android:layout_width="wrap_content"
-                android:layout_height="168dp"
-                android:contentDescription="x5"
-                android:scaleType="centerCrop"
-                android:src="@drawable/bmw_x5" />
-        </RelativeLayout>
+        android:layout_height="match_parent">
 
         <LinearLayout
-            android:id="@+id/container"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:padding="16dp">
+            android:orientation="vertical">
+
+            <RelativeLayout
+                android:id="@+id/relativeLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintBottom_toTopOf="@+id/linearLayout2"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <ImageView
+                    android:id="@+id/carImage"
+                    android:layout_width="wrap_content"
+                    android:layout_height="168dp"
+                    android:contentDescription="x5"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/bmw_x5" />
+            </RelativeLayout>
 
             <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
-
-                <RelativeLayout
-                    android:id="@+id/relativeLayout2"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent">
-
-                    <RelativeLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:padding="8dp">
-
-                        <TextView
-                            android:id="@+id/brandTextView"
-                            style="@style/textViewTitleStyle"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginEnd="6dp"
-                            android:text="@string/brand" />
-
-                        <TextView
-                            android:id="@+id/modelTextView"
-                            style="@style/textViewTitleStyle"
-                            android:layout_width="200dp"
-                            android:layout_height="wrap_content"
-                            android:layout_toEndOf="@id/brandTextView"
-                            android:text="@string/model" />
-                    </RelativeLayout>
-
-                    <RelativeLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="36dp"
-                        android:padding="8dp">
-
-                        <TextView
-                            android:id="@+id/engineTypeTextView"
-                            style="@style/textViewStyle"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:text="@string/engine" />
-
-                    </RelativeLayout>
-
-                    <RelativeLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="64dp"
-                        android:padding="8dp">
-
-                        <TextView
-                            android:id="@+id/optionsTextView"
-                            style="@style/textViewStyle"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:text="@string/options" />
-
-                    </RelativeLayout>
-
-                </RelativeLayout>
+                android:id="@+id/container"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:padding="16dp">
 
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:orientation="vertical">
 
-                    <View
+                    <RelativeLayout
+                        android:id="@+id/relativeLayout2"
                         android:layout_width="match_parent"
-                        android:layout_height="1dp"
-                        android:layout_marginTop="8dp"
-                        android:background="@android:color/darker_gray" />
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:padding="8dp">
+                        android:layout_height="match_parent">
 
                         <RelativeLayout
-                            android:layout_width="0dp"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_weight="1">
+                            android:padding="8dp">
 
                             <TextView
-                                android:id="@+id/locationTitleTextView"
-                                style="@style/textViewMediumStyle"
-                                android:layout_width="wrap_content"
-                                android:layout_height="17dp"
-                                android:layout_marginLeft="24dp"
-                                android:text="@string/locationTitle" />
-
-                            <ImageView
-                                android:id="@+id/locationIconImageView"
+                                android:id="@+id/brandTextView"
+                                style="@style/textViewTitleStyle"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_below="@+id/locationTitleTextView"
-                                android:layout_marginTop="0dp"
-                                android:contentDescription="@string/locationIcon"
-                                android:src="@drawable/baseline_shopping_cart_24" />
+                                android:layout_marginEnd="6dp"
+                                android:text="@string/brand" />
 
                             <TextView
-                                android:id="@+id/locationContentTextView"
-                                style="@style/textViewMediumBoldStyle"
-                                android:layout_width="wrap_content"
+                                android:id="@+id/modelTextView"
+                                style="@style/textViewTitleStyle"
+                                android:layout_width="200dp"
                                 android:layout_height="wrap_content"
-                                android:layout_below="@+id/locationTitleTextView"
-                                android:layout_toEndOf="@+id/locationIconImageView"
-                                android:text="Groningen, NL" />
-
+                                android:layout_toEndOf="@id/brandTextView"
+                                android:text="@string/model" />
                         </RelativeLayout>
 
                         <RelativeLayout
-                            android:layout_width="0dp"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_weight="1">
+                            android:layout_marginTop="36dp"
+                            android:padding="8dp">
 
                             <TextView
-                                android:id="@+id/engineTitleTextView"
-                                style="@style/textViewMediumStyle"
-                                android:layout_width="wrap_content"
-                                android:layout_height="17dp"
-                                android:layout_marginLeft="24dp"
-                                android:text="@string/engineTitle" />
-
-                            <ImageView
-                                android:id="@+id/engineIconImageView"
-                                android:layout_width="wrap_content"
+                                android:id="@+id/engineTypeTextView"
+                                style="@style/textViewStyle"
+                                android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:layout_below="@+id/engineTitleTextView"
-                                android:layout_marginTop="0dp"
-                                android:contentDescription="@string/engineIcon"
-                                android:src="@drawable/baseline_shopping_cart_24" />
-
-                            <TextView
-                                android:id="@+id/engineContentTextView"
-                                style="@style/textViewMediumBoldStyle"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_below="@+id/engineTitleTextView"
-                                android:layout_toEndOf="@+id/engineIconImageView"
                                 android:text="@string/engine" />
 
                         </RelativeLayout>
 
-                    </LinearLayout>
+                        <RelativeLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="64dp"
+                            android:padding="8dp">
+
+                            <TextView
+                                android:id="@+id/optionsTextView"
+                                style="@style/textViewStyle"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="@string/options" />
+
+                        </RelativeLayout>
+
+                    </RelativeLayout>
 
                     <LinearLayout
-                        android:layout_width="match_parent"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="30dp"
-                        android:orientation="horizontal"
-                        android:padding="8dp">
+                        android:orientation="vertical">
 
-                        <RelativeLayout
-                            android:layout_width="0dp"
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:layout_marginTop="8dp"
+                            android:background="@android:color/darker_gray" />
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_weight="1">
+                            android:orientation="horizontal"
+                            android:padding="8dp">
 
-                            <TextView
-                                android:id="@+id/modelYearTitleTextView"
-                                style="@style/textViewMediumStyle"
-                                android:layout_width="wrap_content"
-                                android:layout_height="17dp"
-                                android:layout_marginLeft="24dp"
-                                android:text="@string/modelYearTitle" />
-
-                            <ImageView
-                                android:id="@+id/modelYearIconImageView"
-                                android:layout_width="wrap_content"
+                            <RelativeLayout
+                                android:layout_width="0dp"
                                 android:layout_height="wrap_content"
-                                android:layout_below="@+id/modelYearTitleTextView"
-                                android:layout_marginTop="0dp"
-                                android:contentDescription="@string/modelYearIcon"
-                                android:src="@drawable/baseline_shopping_cart_24" />
+                                android:layout_weight="1">
 
-                            <TextView
-                                android:id="@+id/modelYearContentTextView"
-                                style="@style/textViewMediumBoldStyle"
-                                android:layout_width="wrap_content"
+                                <TextView
+                                    android:id="@+id/locationTitleTextView"
+                                    style="@style/textViewMediumStyle"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="17dp"
+                                    android:layout_marginLeft="24dp"
+                                    android:text="@string/locationTitle" />
+
+                                <ImageView
+                                    android:id="@+id/locationIconImageView"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_below="@+id/locationTitleTextView"
+                                    android:layout_marginTop="0dp"
+                                    android:contentDescription="@string/locationIcon"
+                                    android:src="@drawable/baseline_shopping_cart_24" />
+
+                                <TextView
+                                    android:id="@+id/locationContentTextView"
+                                    style="@style/textViewMediumBoldStyle"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_below="@+id/locationTitleTextView"
+                                    android:layout_toEndOf="@+id/locationIconImageView"
+                                    android:text="Groningen, NL" />
+
+                            </RelativeLayout>
+
+                            <RelativeLayout
+                                android:layout_width="0dp"
                                 android:layout_height="wrap_content"
-                                android:layout_below="@+id/modelYearTitleTextView"
-                                android:layout_toEndOf="@+id/modelYearIconImageView"
-                                android:text="01/2023" />
+                                android:layout_weight="1">
 
-                        </RelativeLayout>
+                                <TextView
+                                    android:id="@+id/engineTitleTextView"
+                                    style="@style/textViewMediumStyle"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="17dp"
+                                    android:layout_marginLeft="24dp"
+                                    android:text="@string/engineTitle" />
 
-                        <RelativeLayout
-                            android:layout_width="0dp"
+                                <ImageView
+                                    android:id="@+id/engineIconImageView"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_below="@+id/engineTitleTextView"
+                                    android:layout_marginTop="0dp"
+                                    android:contentDescription="@string/engineIcon"
+                                    android:src="@drawable/baseline_shopping_cart_24" />
+
+                                <TextView
+                                    android:id="@+id/engineContentTextView"
+                                    style="@style/textViewMediumBoldStyle"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_below="@+id/engineTitleTextView"
+                                    android:layout_toEndOf="@+id/engineIconImageView"
+                                    android:text="@string/engine" />
+
+                            </RelativeLayout>
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_weight="1">
+                            android:layout_marginTop="30dp"
+                            android:orientation="horizontal"
+                            android:padding="8dp">
 
-                            <TextView
-                                android:id="@+id/fuelTitleTextView"
-                                style="@style/textViewMediumStyle"
-                                android:layout_width="wrap_content"
-                                android:layout_height="17dp"
-                                android:layout_marginLeft="24dp"
-                                android:text="@string/fuelTitle" />
-
-                            <ImageView
-                                android:id="@+id/fuelIconImageView"
-                                android:layout_width="wrap_content"
+                            <RelativeLayout
+                                android:layout_width="0dp"
                                 android:layout_height="wrap_content"
-                                android:layout_below="@+id/fuelTitleTextView"
-                                android:layout_marginTop="0dp"
-                                android:contentDescription="@string/fuelIcon"
-                                android:src="@drawable/baseline_shopping_cart_24" />
+                                android:layout_weight="1">
 
-                            <TextView
-                                android:id="@+id/fuelContentTextView"
-                                style="@style/textViewMediumBoldStyle"
-                                android:layout_width="wrap_content"
+                                <TextView
+                                    android:id="@+id/modelYearTitleTextView"
+                                    style="@style/textViewMediumStyle"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="17dp"
+                                    android:layout_marginLeft="24dp"
+                                    android:text="@string/modelYearTitle" />
+
+                                <ImageView
+                                    android:id="@+id/modelYearIconImageView"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_below="@+id/modelYearTitleTextView"
+                                    android:layout_marginTop="0dp"
+                                    android:contentDescription="@string/modelYearIcon"
+                                    android:src="@drawable/baseline_shopping_cart_24" />
+
+                                <TextView
+                                    android:id="@+id/modelYearContentTextView"
+                                    style="@style/textViewMediumBoldStyle"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_below="@+id/modelYearTitleTextView"
+                                    android:layout_toEndOf="@+id/modelYearIconImageView"
+                                    android:text="01/2023" />
+
+                            </RelativeLayout>
+
+                            <RelativeLayout
+                                android:layout_width="0dp"
                                 android:layout_height="wrap_content"
-                                android:layout_below="@+id/fuelTitleTextView"
-                                android:layout_toEndOf="@+id/fuelIconImageView"
-                                android:text="@string/gasoline" />
+                                android:layout_weight="1">
 
-                        </RelativeLayout>
+                                <TextView
+                                    android:id="@+id/fuelTitleTextView"
+                                    style="@style/textViewMediumStyle"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="17dp"
+                                    android:layout_marginLeft="24dp"
+                                    android:text="@string/fuelTitle" />
+
+                                <ImageView
+                                    android:id="@+id/fuelIconImageView"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_below="@+id/fuelTitleTextView"
+                                    android:layout_marginTop="0dp"
+                                    android:contentDescription="@string/fuelIcon"
+                                    android:src="@drawable/baseline_shopping_cart_24" />
+
+                                <TextView
+                                    android:id="@+id/fuelContentTextView"
+                                    style="@style/textViewMediumBoldStyle"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_below="@+id/fuelTitleTextView"
+                                    android:layout_toEndOf="@+id/fuelIconImageView"
+                                    android:text="@string/gasoline" />
+
+                            </RelativeLayout>
+
+                        </LinearLayout>
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:layout_marginTop="8dp"
+                            android:background="@android:color/darker_gray" />
 
                     </LinearLayout>
-
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="1dp"
-                        android:layout_marginTop="8dp"
-                        android:background="@android:color/darker_gray" />
 
                 </LinearLayout>
 
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/bottomTextLayout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="70dp"
-                android:orientation="vertical"
-                app:layout_constraintBottom_toBottomOf="parent">
-                >
-
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-
-                    <TextView
-                        android:id="@+id/availableSinceTitleTextView"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/availableSince"
-                        android:layout_marginEnd="2dp"
-                        android:textColor="@color/black" />
-
-                    <TextView
-                        android:id="@+id/availableSinceContentTextView"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_toEndOf="@+id/availableSinceTitleTextView"
-                        android:text=" 12/2023"
-                        android:textColor="@color/black" />
-
-                </RelativeLayout>
-
-                <Button
-                    android:id="@+id/reserveButton"
+                <LinearLayout
+                    android:id="@+id/bottomTextLayout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/reserve" />
+                    android:layout_marginTop="70dp"
+                    android:orientation="vertical"
+                    app:layout_constraintBottom_toBottomOf="parent">
+                    >
 
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <TextView
+                            android:id="@+id/availableSinceTitleTextView"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="2dp"
+                            android:text="@string/availableSince"
+                            android:textColor="@color/black" />
+
+                        <TextView
+                            android:id="@+id/availableSinceContentTextView"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_toEndOf="@+id/availableSinceTitleTextView"
+                            android:text=" 12/2023"
+                            android:textColor="@color/black" />
+
+                    </RelativeLayout>
+
+                    <Button
+                        android:id="@+id/reserveButton"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/reserve" />
+
+                </LinearLayout>
             </LinearLayout>
         </LinearLayout>
-    </LinearLayout>
+
+    </ScrollView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

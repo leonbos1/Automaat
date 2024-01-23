@@ -2,9 +2,12 @@ package com.example.automaat.ui.inspections
 
 import android.Manifest
 import android.app.Activity
+import android.content.ContentResolver
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.net.Uri
 import android.os.Bundle
+import android.util.Base64
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -18,6 +21,8 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.example.automaat.R
+import java.io.ByteArrayOutputStream
+import java.io.InputStream
 
 class InspectionFragment : Fragment() {
     private var inspectionViewModel: InspectionViewModel? = null
@@ -57,14 +62,12 @@ class InspectionFragment : Fragment() {
             )
         }
 
-        inspectionViewModel!!.inspectionWithCarWithRental =
-            arguments?.getParcelable("inspectionWithCarWithRental")!!
-
-        println("THIS IS TO VERIFY. INSPECTION SHOULD NOT BE 1: ${inspectionViewModel!!.inspectionWithCarWithRental.inspection?.id}")
+        inspectionViewModel!!.inspection =
+            arguments?.getParcelable("inspection")!!
 
         setViews(
-            inspectionViewModel!!.inspectionWithCarWithRental.inspection?.photo.toString(),
-            inspectionViewModel!!.inspectionWithCarWithRental.inspection?.result.toString()
+            inspectionViewModel!!.inspection.photo,
+            inspectionViewModel!!.inspection.result
         )
 
         uploadButton?.setOnClickListener {
@@ -72,14 +75,14 @@ class InspectionFragment : Fragment() {
         }
 
         submitButton?.setOnClickListener {
-            val inspection = inspectionViewModel!!.inspectionWithCarWithRental.inspection
-            inspection?.photo = photo.toString()
-            inspection?.result = damageDescriptionInput?.text.toString()
+            val inspection = inspectionViewModel!!.inspection
+            inspection.photo = photo.toString()
+            inspection.result = damageDescriptionInput?.text.toString()
             viewDamageDescription?.text = damageDescriptionInput?.text.toString()
 
             setViews(photo.toString(), damageDescriptionInput?.text.toString())
 
-            inspectionViewModel!!.updateInspection(inspection!!)
+            inspectionViewModel!!.updateInspection(inspection)
 
             //findNavController().popBackStack()
         }
@@ -92,7 +95,7 @@ class InspectionFragment : Fragment() {
 
         if (!base64Image.isNullOrEmpty()) {
             val decodedString: ByteArray =
-                android.util.Base64.decode(base64Image, android.util.Base64.DEFAULT)
+                Base64.decode(base64Image, Base64.DEFAULT)
             val decodedByte =
                 android.graphics.BitmapFactory.decodeByteArray(decodedString, 0, decodedString.size)
             viewDamagePhoto?.setImageBitmap(decodedByte)
@@ -112,11 +115,37 @@ class InspectionFragment : Fragment() {
 
         if (requestCode == PICK_IMAGE_REQUEST && resultCode == Activity.RESULT_OK) {
             val imageUri = data?.data
-            // Use this image URI for your ImageView
             val imageView = view?.findViewById<ImageView>(R.id.viewDamagePhoto)
+
+            val base64Image = imageUri?.let { convertImageToBase64(it) }
+
             imageView?.setImageURI(imageUri)
-            photo = imageUri.toString()
+            photo = base64Image
         }
+    }
+
+    private fun convertImageToBase64(imageUri: Uri): String? {
+        try {
+            val contentResolver: ContentResolver = requireActivity().contentResolver
+            val inputStream: InputStream? = contentResolver.openInputStream(imageUri)
+
+            inputStream?.let {
+                val bytes = ByteArrayOutputStream()
+                val buffer = ByteArray(1024)
+                var len: Int
+
+                while (it.read(buffer).also { len = it } != -1) {
+                    bytes.write(buffer, 0, len)
+                }
+
+                val imageBytes: ByteArray = bytes.toByteArray()
+                return Base64.encodeToString(imageBytes, Base64.DEFAULT)
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+
+        return null
     }
 
     override fun onRequestPermissionsResult(
@@ -129,7 +158,6 @@ class InspectionFragment : Fragment() {
             if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 openImageChooser()
             }
-            // Handle the case where permission is denied
         }
     }
 }

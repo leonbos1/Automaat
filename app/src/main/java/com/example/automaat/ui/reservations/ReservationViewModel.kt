@@ -8,6 +8,8 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import androidx.lifecycle.viewModelScope
 import com.example.automaat.AutomaatDatabase
+import com.example.automaat.entities.InspectionModel
+import com.example.automaat.entities.RentalModel
 import com.example.automaat.entities.RentalState
 import com.example.automaat.entities.relations.InspectionWithCarWithRental
 import com.example.automaat.entities.relations.RentalWithCarWithCustomer
@@ -21,13 +23,9 @@ import kotlinx.coroutines.withContext
 class ReservationViewModel(application: Application) : AndroidViewModel(application) {
     private val rentalRepository: RentalRepository
     private val inspectionRepository: InspectionRepository
-    private lateinit var rentalsByCustomer: List<RentalWithCarWithCustomer>
-    private val hardcodedCustomer = 1
-    val inspectionWithCarWithRental = MutableLiveData<InspectionWithCarWithRental>()
-    lateinit var inspection: InspectionWithCarWithRental
-
-    //TODO add syncer stuff for reservations
-    //    lateinit var carsSynchManager: CarSyncManager
+    lateinit var rentalsByCustomer: LiveData<List<RentalWithCarWithCustomer>>
+    val hardcodedCustomer = 1
+    lateinit var inspection: LiveData<InspectionModel>
 
     init {
         val rentalDao = AutomaatDatabase.getDatabase(application).rentalDao()
@@ -35,36 +33,42 @@ class ReservationViewModel(application: Application) : AndroidViewModel(applicat
         inspectionRepository =
             InspectionRepository(AutomaatDatabase.getDatabase(application).inspectionDao())
 
-        viewModelScope.launch(Dispatchers.IO) {
-            val rentals = async {
-                rentalsByCustomer =
-                    rentalRepository.getRentalsWithCarAndCustomerByCustomer(hardcodedCustomer)
-            }
-
-            rentals.await()
-
-            fetchInspectionWithCustomerWithRental(rentalsByCustomer.get(0))
+        viewModelScope.launch {
+            rentalsByCustomer =
+                rentalRepository.getRentalsWithCarAndCustomerByCustomer(hardcodedCustomer)
         }
     }
 
-    fun getRentalsByCustomer(): List<RentalWithCarWithCustomer> {
-        if (::rentalsByCustomer.isInitialized) {
-            return rentalsByCustomer
-        } else {
-            // Handle the case where rentalsByCustomer is not initialized
-            // Maybe return an empty list or throw a custom exception
-            return emptyList()
+    fun createInspection(rental: RentalModel) {
+        viewModelScope.launch {
+            val newInspection = InspectionModel(
+                generateId(),
+                "",
+                1,
+                "",
+                "",
+                "",
+                "",
+                "",
+                rental.carId,
+                null,
+                rental.id
+            )
+            inspectionRepository.insertInspection(newInspection)
+
+            inspection = inspectionRepository.getInspectionById(newInspection.id)
         }
     }
 
     fun getFutureRentalsByCustomer(): MutableLiveData<List<RentalWithCarWithCustomer>> {
         val futureRentals = MutableLiveData<List<RentalWithCarWithCustomer>>()
 
-        val rentals = getRentalsByCustomer()
-        val filteredRentals = rentals.filter { rental ->
-            rental.rental?.state == RentalState.RESERVED
+        rentalsByCustomer.observeForever { rentals ->
+            val filteredRentals = rentals.filter { rental ->
+                rental.rental?.state == RentalState.RESERVED
+            }
+            futureRentals.value = filteredRentals
         }
-        futureRentals.value = filteredRentals
 
         return futureRentals
     }
@@ -72,11 +76,13 @@ class ReservationViewModel(application: Application) : AndroidViewModel(applicat
     fun getCurrentRentalsByCustomer(lifecycleOwner: LifecycleOwner): MutableLiveData<List<RentalWithCarWithCustomer>> {
         val currentRentals = MutableLiveData<List<RentalWithCarWithCustomer>>()
 
-        val rentals = getRentalsByCustomer()
-        val filteredRentals = rentals.filter { rental ->
-            rental.rental?.state == RentalState.PICKUP || rental.rental?.state == RentalState.ACTIVE
+        rentalsByCustomer.observeForever { rentals ->
+
+            val filteredRentals = rentals.filter { rental ->
+                rental.rental?.state == RentalState.PICKUP || rental.rental?.state == RentalState.ACTIVE
+            }
+            currentRentals.value = filteredRentals
         }
-        currentRentals.value = filteredRentals
 
         return currentRentals
     }
@@ -84,31 +90,20 @@ class ReservationViewModel(application: Application) : AndroidViewModel(applicat
     fun getHistoricRentalsByCustomer(lifecycleOwner: LifecycleOwner): MutableLiveData<List<RentalWithCarWithCustomer>> {
         val historicRentals = MutableLiveData<List<RentalWithCarWithCustomer>>()
 
-        val rentals = getRentalsByCustomer()
-        val filteredRentals = rentals.filter { rental ->
-            rental.rental?.state == RentalState.RETURNED
+        rentalsByCustomer.observeForever { rentals ->
+            val filteredRentals = rentals.filter { rental ->
+                rental.rental?.state == RentalState.RETURNED
+            }
+            historicRentals.value = filteredRentals
         }
-        historicRentals.value = filteredRentals
 
         return historicRentals
     }
 
-    suspend fun fetchInspectionWithCustomerWithRental(rental: RentalWithCarWithCustomer) : InspectionWithCarWithRental {
-        var inspectionData =
-            inspectionRepository.getInspectionWithCarWithRentalByCarId(rental.car!!.id)
-
-        if (inspectionData == null) {
-            inspectionRepository.createNewInspection(
-                generateId(),
-                rental.rental!!.id,
-                rental.car.id
-            )
-
-            inspectionData =
-                inspectionRepository.getInspectionWithCarWithRentalByCarId(rental.car.id)
+    fun getInspectionById(id: Int) {
+        viewModelScope.launch {
+            inspection = inspectionRepository.getInspectionById(id)
         }
-
-        return inspectionData
     }
 
     private fun generateId(): Int {

@@ -1,6 +1,7 @@
 package com.example.automaat.repositories
 
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
@@ -41,7 +42,7 @@ interface RentalDao {
             " LEFT JOIN cars ON rentals.carId = cars.id" +
             " LEFT JOIN customers ON rentals.customerId = customers.id" +
             " WHERE rentals.customerId = :customerId")
-    fun getRentalsWithCarAndCustomerByCustomer(customerId: Int): List<RentalWithCarWithCustomer>
+    fun getRentalsWithCarAndCustomerByCustomer(customerId: Int): LiveData<List<RentalWithCarWithCustomer>>
 
     @Transaction
     @Query("SELECT * FROM rentals" +

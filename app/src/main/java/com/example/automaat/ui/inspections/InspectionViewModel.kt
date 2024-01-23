@@ -20,7 +20,7 @@ import kotlinx.coroutines.launch
 class InspectionViewModel(application: Application) : AndroidViewModel(application) {
     private val inspectionRepository: InspectionRepository
     private val hardcodedCustomer = 1
-    lateinit var inspectionWithCarWithRental: InspectionWithCarWithRental
+    lateinit var inspection: InspectionModel
 
 
     init {

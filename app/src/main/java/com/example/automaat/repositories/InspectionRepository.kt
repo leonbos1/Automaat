@@ -31,7 +31,6 @@ class InspectionRepository(private val inspectionDao: InspectionDao) {
     }
 
     suspend fun updateInspection(inspection: InspectionModel) {
-        println("UPDATING INSPECTION WITH ID: ${inspection.id} TO RESULT: ${inspection.result} AND PHOTO: ${inspection.photo}")
         inspectionDao.updateInspection(inspection)
     }
 
@@ -39,11 +38,11 @@ class InspectionRepository(private val inspectionDao: InspectionDao) {
         return inspectionDao.getAll()
     }
 
-    suspend fun getInspectionById(id: Int): InspectionModel {
+    fun getInspectionById(id: Int): LiveData<InspectionModel> {
         return inspectionDao.getInspectionById(id)
     }
 
-    suspend fun getInspectionWithCarWithRentalByCarId(carId: Int): InspectionWithCarWithRental {
+    fun getInspectionWithCarWithRentalByCarId(carId: Int): LiveData<InspectionWithCarWithRental> {
         return inspectionDao.getInspectionWithCarWithRentalByCarId(carId)
     }
 }

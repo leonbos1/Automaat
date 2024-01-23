@@ -1,6 +1,7 @@
 package com.example.automaat.repositories
 
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import com.example.automaat.entities.RentalModel
 import com.example.automaat.entities.relations.RentalWithCarWithCustomer
 
@@ -36,7 +37,7 @@ class RentalRepository(private val rentalDao: RentalDao) {
             rental.carId?.let { it1 ->
                 rentalDao.updateRental(
                     rental.id, rental.fromDate, rental.toDate, rental.state,
-                    it, it1, rental.inspectionId ?: 69
+                    it, it1, rental.inspectionId ?: 0
                 )
             }
         }
@@ -51,12 +52,9 @@ class RentalRepository(private val rentalDao: RentalDao) {
 
     suspend fun createRental(rental: RentalModel) {
         rentalDao.insertRental(rental)
-
-        //sync with server
-
     }
 
-    suspend fun getRentalsWithCarAndCustomerByCustomer(customerId: Int): List<RentalWithCarWithCustomer> {
+    suspend fun getRentalsWithCarAndCustomerByCustomer(customerId: Int): LiveData<List<RentalWithCarWithCustomer>> {
         return rentalDao.getRentalsWithCarAndCustomerByCustomer(customerId)
     }
 
