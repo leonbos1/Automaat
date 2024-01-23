@@ -36,7 +36,7 @@ class RentalRepository(private val rentalDao: RentalDao) {
             rental.carId?.let { it1 ->
                 rentalDao.updateRental(
                     rental.id, rental.fromDate, rental.toDate, rental.state,
-                    it, it1
+                    it, it1, rental.inspectionId ?: 69
                 )
             }
         }

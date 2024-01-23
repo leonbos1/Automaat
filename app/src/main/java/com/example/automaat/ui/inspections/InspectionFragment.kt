@@ -60,6 +60,8 @@ class InspectionFragment : Fragment() {
         inspectionViewModel!!.inspectionWithCarWithRental =
             arguments?.getParcelable("inspectionWithCarWithRental")!!
 
+        println("THIS IS TO VERIFY. INSPECTION SHOULD NOT BE 1: ${inspectionViewModel!!.inspectionWithCarWithRental.inspection?.id}")
+
         setViews(
             inspectionViewModel!!.inspectionWithCarWithRental.inspection?.photo.toString(),
             inspectionViewModel!!.inspectionWithCarWithRental.inspection?.result.toString()

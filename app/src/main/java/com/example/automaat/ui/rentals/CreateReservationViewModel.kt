@@ -80,6 +80,7 @@ class CreateReservationViewModel(application: Application) : AndroidViewModel(ap
                 inspectionRepository.createNewInspection(inspectionId, newRental.id, newRental.carId!!)
                 newRental.inspectionId = inspectionId
                 rentalRepository.updateRental(newRental)
+                println("INSPECTION ID: $inspectionId")
             }
         } else {
             rental.rental.apply {
@@ -89,7 +90,6 @@ class CreateReservationViewModel(application: Application) : AndroidViewModel(ap
             }
 
             viewModelScope.launch {
-                rentalRepository.updateRental(rental.rental)
                 val inspectionId = generateId()
                 inspectionRepository.createNewInspection(inspectionId, rental.rental.id, rental.car!!.id)
                 rental.rental.inspectionId = inspectionId

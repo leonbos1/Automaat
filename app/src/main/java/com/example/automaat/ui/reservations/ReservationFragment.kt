@@ -63,12 +63,17 @@ class ReservationFragment : Fragment() {
 
         reservationViewModel?.fetchInspectionWithCustomerWithRental(rental)
 
+        println("TESTIN INSPECTION VIEW MODEL: ${reservationViewModel?.inspectionWithCarWithRental?.value}")
+
         reservationViewModel?.inspectionWithCarWithRental?.observe(viewLifecycleOwner) { inspection ->
             inspection?.let {
                 val bundle = Bundle()
 
-                println("INSPECTION ID: ${inspection.inspection?.id}")
+                println("INSPECTION IDeeee: ${inspection.inspection?.id}")
                 println("INSPECTION RESULT: ${inspection.inspection?.result}")
+                println("INSPECTION CAR ID: ${inspection.car?.id}")
+                println("INSPECTION rental ID: ${inspection.rental?.id}")
+                println("INSPECTION inspeciton rental ID: ${inspection.inspection?.rentalId}")
 
                 bundle.putParcelable("inspectionWithCarWithRental", inspection)
 

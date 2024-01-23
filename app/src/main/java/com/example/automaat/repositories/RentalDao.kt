@@ -30,8 +30,8 @@ interface RentalDao {
     @Query("DELETE FROM rentals")
     suspend fun deleteAllRentals()
 
-    @Query("UPDATE rentals SET fromDate = :fromDate, toDate = :toDate, state = :state, customerId = :customerId, carId = :carId WHERE id = :id")
-    suspend fun updateRental(id: Int, fromDate: String, toDate: String, state: RentalState, customerId: Int, carId: Int)
+    @Query("UPDATE rentals SET fromDate = :fromDate, toDate = :toDate, state = :state, customerId = :customerId, carId = :carId, inspectionId = :inspectionId WHERE id = :id")
+    suspend fun updateRental(id: Int, fromDate: String, toDate: String, state: RentalState, customerId: Int, carId: Int, inspectionId: Int)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertRental(rental: RentalModel)

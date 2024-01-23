@@ -22,8 +22,7 @@ class ReservationViewModel(application: Application) : AndroidViewModel(applicat
     private val inspectionRepository: InspectionRepository
     private lateinit var rentalsByCustomer: LiveData<List<RentalWithCarWithCustomer>>
     private val hardcodedCustomer = 1
-    val inspectionWithCarWithRental: MutableLiveData<InspectionWithCarWithRental?> =
-        MutableLiveData()
+    val inspectionWithCarWithRental = MutableLiveData<InspectionWithCarWithRental>()
 
     //TODO add syncer stuff for reservations
     //    lateinit var carsSynchManager: CarSyncManager
@@ -84,19 +83,28 @@ class ReservationViewModel(application: Application) : AndroidViewModel(applicat
     }
 
     fun fetchInspectionWithCustomerWithRental(rental: RentalWithCarWithCustomer) {
-        viewModelScope.launch(Dispatchers.IO) {
-            val inspectionData =
+        viewModelScope.launch {
+            var inspectionData =
                 inspectionRepository.getInspectionWithCarWithRentalByCarId(rental.car!!.id)
-            if (inspectionData != null) {
-                println("INSPECTION ID: ${inspectionData.inspection?.id}")
-                println("INSPECTION RESULT: ${inspectionData.inspection?.result}")
-                println("INSPECTION RENTALID: ${inspectionData.inspection?.rentalId}")
-                println("INSPECTION CARID: ${inspectionData.inspection?.carId}")
+
+            if (inspectionData == null) {
+                inspectionRepository.createNewInspection(
+                    generateId(),
+                    rental.rental!!.id,
+                    rental.car.id
+                )
+
+                inspectionData =
+                    inspectionRepository.getInspectionWithCarWithRentalByCarId(rental.car.id)
             }
 
             withContext(Dispatchers.Main) {
                 inspectionWithCarWithRental.postValue(inspectionData)
             }
         }
+    }
+
+    private fun generateId(): Int {
+        return (2000..999999).random()
     }
 }
