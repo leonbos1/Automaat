@@ -12,15 +12,11 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.example.automaat.R
-import com.example.automaat.api.datamodels.Rental
 import com.example.automaat.api.endpoints.Authentication
-import com.example.automaat.api.endpoints.Cars
-import com.example.automaat.api.endpoints.Rentals
 import com.example.automaat.api.synchers.CarSyncManager
 import com.example.automaat.api.synchers.CustomerSyncManager
 import com.example.automaat.api.synchers.RentalSyncManager
 import com.example.automaat.entities.FilterModel
-import com.example.automaat.ui.home.HomeAdapter
 
 class FiltersFragment() : Fragment() {
     private lateinit var initCarsButton: Button
@@ -78,7 +74,7 @@ class FiltersFragment() : Fragment() {
         customerSyncManager = CustomerSyncManager(filterViewModel.customerRepository)
 
         getAllCarsButton.setOnClickListener {
-            Authentication().authenticate {
+            Authentication().authenticateApi {
                 carSyncManager.syncEntities()
                 rentalSyncManager.syncEntities()
 

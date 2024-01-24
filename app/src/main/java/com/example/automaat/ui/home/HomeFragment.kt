@@ -1,7 +1,6 @@
 package com.example.automaat.ui.home
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,6 +13,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.automaat.R
+import com.example.automaat.api.endpoints.Authentication
 import com.example.automaat.entities.FilterModel
 import com.example.automaat.entities.RentalState
 import com.example.automaat.entities.relations.CarWithRental
@@ -46,6 +46,13 @@ class HomeFragment() : Fragment() {
         val filterButton = view.findViewById<View>(R.id.filterButton)
 
         val navigationController = findNavController()
+
+        if (context?.let { Authentication().isUserAuthenticated(it) } == true) {
+            println("User: User is authenticated")
+        } else {
+            println("User: User is not authenticated")
+            navigationController.navigate(R.id.action_homeFragment_to_loginFragment)
+        }
 
         filterButton.setOnClickListener {
             navigationController.navigate(R.id.action_navigation_home_to_filtersFragment)

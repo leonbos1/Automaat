@@ -13,12 +13,12 @@ class NetworkMonitor(private val context: Context) {
     private val networkCallback = object : ConnectivityManager.NetworkCallback() {
         override fun onAvailable(network: Network) {
             // Network is available
-            SnackbarManager.showOnlineSnackbar(context)
+            SnackbarManager.showSuccessSnackbar(context, "You are online")
         }
 
         override fun onLost(network: Network) {
             // Network is lost
-            SnackbarManager.showOfflineSnackbar(context)
+            SnackbarManager.showErrorSnackbar(context, "You are offline")
         }
     }
 

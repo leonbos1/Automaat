@@ -13,7 +13,7 @@ import kotlinx.coroutines.launch
 
 class RentalSyncManager(private val rentalRepository: RentalRepository) : ISyncManager {
     override fun syncEntities() {
-        Authentication().authenticate {
+        Authentication().authenticateApi {
             CoroutineScope(Dispatchers.IO).launch {
                 syncRemoteRentalsToLocal()
                 syncLocalRentalsToServer()

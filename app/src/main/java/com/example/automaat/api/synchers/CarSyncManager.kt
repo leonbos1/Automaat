@@ -13,7 +13,7 @@ import kotlinx.coroutines.launch
 
 class CarSyncManager(private val carRepository: CarRepository) : ISyncManager {
     override fun syncEntities() {
-        Authentication().authenticate {
+        Authentication().authenticateApi {
             CoroutineScope(Dispatchers.IO).launch {
                 val jsonArray = Cars().getAllCars()
                 //TODO dont make new instance of Cars() here, use the one from the constructor

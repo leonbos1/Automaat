@@ -25,6 +25,7 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         rootView = binding.root
@@ -53,9 +54,5 @@ class MainActivity : AppCompatActivity() {
     override fun onDestroy() {
         super.onDestroy()
         networkMonitor.stopNetworkCallback()
-    }
-
-    private fun log(message: String) {
-        println("MainActivity: $message")
     }
 }

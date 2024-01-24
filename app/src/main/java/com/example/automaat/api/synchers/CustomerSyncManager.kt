@@ -1,21 +1,16 @@
 package com.example.automaat.api.synchers
 
-import android.util.Log
 import com.example.automaat.api.endpoints.Authentication
 import com.example.automaat.api.endpoints.Customers
-import com.example.automaat.api.endpoints.Rentals
 import com.example.automaat.entities.CustomerModel
-import com.example.automaat.entities.RentalModel
-import com.example.automaat.entities.RentalState
 import com.example.automaat.repositories.CustomerRepository
-import com.example.automaat.repositories.RentalRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class CustomerSyncManager(private val customerRepository: CustomerRepository) : ISyncManager {
     override fun syncEntities() {
-        Authentication().authenticate {
+        Authentication().authenticateApi {
             CoroutineScope(Dispatchers.IO).launch {
                 val jsonArray = Customers().getAllCustomers()
                                 //TODO dont make new instance of Customers() here, use the one from the constructor

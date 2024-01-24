@@ -29,4 +29,8 @@
     <string name="reservation_details">Reservation details\n</string>
     <string name="euro">€</string>
     <string name="costs">Costs: €</string>
+    <string name="username_hint">Enter your username here</string>
+    <string name="password_hint">Enter your password here</string>
+    <string name="loginButton">Login</string>
+    <string name="remember_me">Remember me</string>
 </resources>
