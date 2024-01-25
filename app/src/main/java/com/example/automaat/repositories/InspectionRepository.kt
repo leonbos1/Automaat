@@ -34,12 +34,20 @@ class InspectionRepository(private val inspectionDao: InspectionDao) {
         inspectionDao.updateInspection(inspection)
     }
 
+    suspend fun getInspectionByRentalId(rentalId: Int): LiveData<InspectionModel> {
+        return inspectionDao.getInspectionByRentalId(rentalId)
+    }
+
     suspend fun getAll(): List<InspectionModel> {
         return inspectionDao.getAll()
     }
 
     fun getInspectionById(id: Int): LiveData<InspectionModel> {
         return inspectionDao.getInspectionById(id)
+    }
+
+    fun getInspectionByIdAsync(id: Int): InspectionModel {
+        return inspectionDao.getInspectionByIdAsync(id)
     }
 
     fun getInspectionWithCarWithRentalByCarId(carId: Int): LiveData<InspectionWithCarWithRental> {

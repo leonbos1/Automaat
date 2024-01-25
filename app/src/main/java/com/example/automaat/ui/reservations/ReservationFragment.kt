@@ -24,17 +24,17 @@ class ReservationFragment : Fragment() {
     ): View {
         val view = inflater.inflate(R.layout.fragment_reservations, container, false)
 
-        val futureAdapter = ReservationAdapter { rental -> navigateToInspection(rental.rental?.inspectionId, rental.rental) }
+        val futureAdapter = ReservationAdapter { rental -> navigateToInspection(rental.rental) }
         val futureRecyclerView = view.findViewById<RecyclerView>(R.id.futureRecyclerView)
         futureRecyclerView.adapter = futureAdapter
         futureRecyclerView.layoutManager = LinearLayoutManager(requireContext())
 
-        val currentAdapter = ReservationAdapter { rental -> navigateToInspection(rental.rental?.inspectionId, rental.rental) }
+        val currentAdapter = ReservationAdapter { rental -> navigateToInspection(rental.rental) }
         val currentRecyclerView = view.findViewById<RecyclerView>(R.id.currentRecyclerView)
         currentRecyclerView.adapter = currentAdapter
         currentRecyclerView.layoutManager = LinearLayoutManager(requireContext())
 
-        val historicAdapter = ReservationAdapter { rental -> navigateToInspection(rental.rental?.inspectionId, rental.rental) }
+        val historicAdapter = ReservationAdapter { rental -> navigateToInspection(rental.rental) }
         val historicRecyclerView = view.findViewById<RecyclerView>(R.id.historicRecyclerView)
         historicRecyclerView.adapter = historicAdapter
         historicRecyclerView.layoutManager = LinearLayoutManager(requireContext())
@@ -61,22 +61,16 @@ class ReservationFragment : Fragment() {
         return view
     }
 
-    private fun navigateToInspection(inspectionId: Int?, rental: RentalModel?) {
+    private fun navigateToInspection(rental: RentalModel?) {
         val bundle = Bundle()
-        if (inspectionId == null) {
-            reservationViewModel?.createInspection(rental!!)
-            reservationViewModel?.inspection?.observe(viewLifecycleOwner) { inspection ->
-                println("HERE")
-                bundle.putParcelable("inspection", inspection)
-                findNavController().navigate(
-                    R.id.action_navigation_reservations_to_inspection,
-                    bundle
-                )
-            }
+
+        if (rental == null) {
+            println("Rental is null")
             return
         }
 
-        reservationViewModel?.getInspectionById(inspectionId)
+        reservationViewModel?.getInspectionByRentalId(rental.id)
+
         reservationViewModel?.inspection?.observe(viewLifecycleOwner) { inspection ->
             bundle.putParcelable("inspection", inspection)
             if (inspection != null) {

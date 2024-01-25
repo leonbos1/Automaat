@@ -12,11 +12,11 @@ data class InspectionModel (
     @PrimaryKey(autoGenerate = true)
     var id: Int,
     val code: String?,
-    val odometer: Int,
-    var result: String,
-    var photo: String,
-    val photoContentType: String,
-    val completed: String,
+    val odometer: Int?,
+    var result: String?,
+    var photo: String?,
+    val photoContentType: String?,
+    val completed: String?,
     val photos: String?, //won't use as it will increase complexity
     val carId: Int?,
     val employeeId: Int?,

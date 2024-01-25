@@ -33,19 +33,19 @@ interface InspectionDao {
     )
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertInspection(inspection: InspectionModel) {
-        println("THIS IS THE INSPECTION: ${inspection.photo}")
-        println("THIS IS THE INSPECTION: ${inspection.result}")
-        println("THIS IS THE INSPECTION: ${inspection.id}")
-    }
+    suspend fun insertInspection(inspection: InspectionModel)
+
+    @Query("SELECT * FROM inspections WHERE rentalId = :rentalId")
+    fun getInspectionByRentalId(rentalId: Int): LiveData<InspectionModel>
 
     @Query("SELECT * FROM inspections WHERE id = :id")
     fun getInspectionById(id: Int): LiveData<InspectionModel>
 
+    @Query("SELECT * FROM inspections WHERE id = :id")
+    fun getInspectionByIdAsync(id: Int): InspectionModel
+
     @Query("DELETE FROM inspections")
     suspend fun deleteAllInspections()
-
-    //doesnt work for some reason
 
     @Update(onConflict = OnConflictStrategy.REPLACE)
     suspend fun updateInspection(inspection: InspectionModel)

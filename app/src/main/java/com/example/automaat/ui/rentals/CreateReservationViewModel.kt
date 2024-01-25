@@ -79,6 +79,7 @@ class CreateReservationViewModel(application: Application) : AndroidViewModel(ap
                 val inspectionId = generateId()
                 inspectionRepository.createNewInspection(inspectionId, newRental.id, newRental.carId!!)
                 newRental.inspectionId = inspectionId
+                newRental.customerId = hardcodedCustomer
                 rentalRepository.updateRental(newRental)
             }
         } else {
@@ -86,6 +87,7 @@ class CreateReservationViewModel(application: Application) : AndroidViewModel(ap
                 fromDate = startDate
                 toDate = endDate
                 state = RentalState.RESERVED
+                customerId = hardcodedCustomer
             }
 
             viewModelScope.launch {

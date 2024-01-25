@@ -36,17 +36,20 @@ class Inspections {
         }
     }
 
-    fun getInspectionById(id: Int) {
-        api.getInspectionById(id).enqueue(object: Callback<JsonObject> {
-            override fun onResponse(call: Call<JsonObject>, response: Response<JsonObject>) {
-                if (response.isSuccessful) {
-                    Log.i(TAG, "onResponse InspectionById: ${response.body()}")
+    fun updateInspection(inspection: JsonObject) {
+        api.updateInspection(inspection, inspection.get("id").asInt)
+            .enqueue(object : Callback<JsonObject> {
+                override fun onResponse(call: Call<JsonObject>, response: Response<JsonObject>) {
+                    if (response.isSuccessful) {
+                        Log.d(TAG, "Inspection updated")
+                    } else {
+                        Log.d(TAG, "Inspection update failed")
+                    }
                 }
-            }
 
-            override fun onFailure(call: Call<JsonObject>, t: Throwable) {
-                Log.i(TAG, "onFailure InspectionById: ${t.message}")
-            }
-        })
+                override fun onFailure(call: Call<JsonObject>, t: Throwable) {
+                    Log.d(TAG, "Inspection update failed")
+                }
+            })
     }
 }

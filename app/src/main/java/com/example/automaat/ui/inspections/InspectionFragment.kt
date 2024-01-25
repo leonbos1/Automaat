@@ -66,8 +66,8 @@ class InspectionFragment : Fragment() {
             arguments?.getParcelable("inspection")!!
 
         setViews(
-            inspectionViewModel!!.inspection.photo,
-            inspectionViewModel!!.inspection.result
+            inspectionViewModel!!.inspection.photo ?: "",
+            inspectionViewModel!!.inspection.result ?: ""
         )
 
         uploadButton?.setOnClickListener {

@@ -39,27 +39,6 @@ class ReservationViewModel(application: Application) : AndroidViewModel(applicat
         }
     }
 
-    fun createInspection(rental: RentalModel) {
-        viewModelScope.launch {
-            val newInspection = InspectionModel(
-                generateId(),
-                "",
-                1,
-                "",
-                "",
-                "",
-                "",
-                "",
-                rental.carId,
-                null,
-                rental.id
-            )
-            inspectionRepository.insertInspection(newInspection)
-
-            inspection = inspectionRepository.getInspectionById(newInspection.id)
-        }
-    }
-
     fun getFutureRentalsByCustomer(): MutableLiveData<List<RentalWithCarWithCustomer>> {
         val futureRentals = MutableLiveData<List<RentalWithCarWithCustomer>>()
 
@@ -100,9 +79,11 @@ class ReservationViewModel(application: Application) : AndroidViewModel(applicat
         return historicRentals
     }
 
-    fun getInspectionById(id: Int) {
+    fun getInspectionByRentalId(rentalId: Int) {
         viewModelScope.launch {
-            inspection = inspectionRepository.getInspectionById(id)
+            inspection = inspectionRepository.getInspectionByRentalId(rentalId)
+            println("FOUND INSPECTION WITH RENTALID $rentalId")
+            println(inspection.value)
         }
     }
 

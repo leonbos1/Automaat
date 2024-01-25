@@ -32,22 +32,14 @@ class RentalRepository(private val rentalDao: RentalDao) {
     }
 
     suspend fun updateRental(rental: RentalModel) {
-        println("updateRental")
-        rental.customerId?.let {
-            rental.carId?.let { it1 ->
-                rentalDao.updateRental(
-                    rental.id, rental.fromDate, rental.toDate, rental.state,
-                    it, it1, rental.inspectionId ?: 0
-                )
-            }
-        }
+        rentalDao.updateRental(
+            rental.id, rental.fromDate, rental.toDate, rental.state,
+            rental.customerId, rental.carId, rental.inspectionId
+        )
     }
 
     suspend fun insertRental(rental: RentalModel) {
         rentalDao.insertRental(rental)
-
-        //sync with server
-
     }
 
     suspend fun createRental(rental: RentalModel) {

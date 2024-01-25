@@ -29,8 +29,17 @@ class InspectionSyncManager(private val inspectionRepository: InspectionReposito
         }
     }
 
-    private fun syncLocalInspectionsToServer() {
+    private suspend fun syncLocalInspectionsToServer() {
+        val localInspections = inspectionRepository.getAll()
 
+        for (inspection in localInspections) {
+            try {
+                val remoteInspection = parseInspectionModelToJson(inspection)
+                Inspections().updateInspection(remoteInspection)
+            } catch (e: Exception) {
+                Log.e("CHECK_RESPONSE", "Error while syncing inspection", e)
+            }
+        }
     }
 
     private suspend fun syncRemoteInspectionsToLocal() {
@@ -38,10 +47,12 @@ class InspectionSyncManager(private val inspectionRepository: InspectionReposito
 
         for (inspection in remoteInspections) {
             val remoteInspection = parseJsonToInspectionModel(inspection as JsonObject)
+            val inspectionId = remoteInspection.id
+            val localInspection = inspectionRepository.getInspectionByIdAsync(inspectionId)
 
-            println("ADDING INSPECTION WITH ID: ${remoteInspection.id} TO RESULT: ${remoteInspection.result} AND rentalid: ${remoteInspection.rentalId}")
-
-            inspectionRepository.insertInspection(remoteInspection)
+            if (localInspection == null || (localInspection.result == "" && localInspection.photo == "")) {
+                inspectionRepository.insertInspection(remoteInspection)
+            }
         }
     }
 
@@ -51,18 +62,48 @@ class InspectionSyncManager(private val inspectionRepository: InspectionReposito
         val rentalObj = json.get("rental")?.takeIf { it.isJsonObject }?.asJsonObject
         val rentalId = rentalObj?.get("id")?.asInt
 
+        val id = json.get("id")?.takeIf { it.isJsonPrimitive }?.asInt ?: 0
+        val code = json.get("code")?.takeIf { it.isJsonPrimitive }?.asString ?: ""
+        val odometer = json.get("odometer")?.takeIf { it.isJsonPrimitive }?.asInt ?: 0
+        val result = json.get("result")?.takeIf { it.isJsonPrimitive }?.asString ?: ""
+        val photo = json.get("photo")?.takeIf { it.isJsonPrimitive }?.asString ?: ""
+        val photoContentType =
+            json.get("photoContentType")?.takeIf { it.isJsonPrimitive }?.asString ?: ""
+        val completed = json.get("completed")?.takeIf { it.isJsonPrimitive }?.asString ?: ""
+
         return InspectionModel(
-            json.get("id").asInt,
-            json.get("code").asString,
-            json.get("odometer").asInt,
-            json.get("result").asString,
-            json.get("photo").asString,
-            json.get("photoContentType").asString,
-            json.get("completed").asString,
+            id,
+            code,
+            odometer,
+            result,
+            photo,
+            photoContentType,
+            completed,
             null,
             carId,
             null,
             rentalId
         )
+    }
+
+    private fun parseInspectionModelToJson(inspection: InspectionModel): JsonObject {
+        val carObj = JsonObject()
+        carObj.addProperty("id", inspection.carId)
+
+        val rentalObj = JsonObject()
+        rentalObj.addProperty("id", inspection.rentalId)
+
+        val inspectionObj = JsonObject()
+        inspectionObj.addProperty("id", inspection.id)
+        inspectionObj.addProperty("code", inspection.code)
+        inspectionObj.addProperty("odometer", inspection.odometer)
+        inspectionObj.addProperty("result", inspection.result)
+        inspectionObj.addProperty("photo", inspection.photo)
+        inspectionObj.addProperty("photoContentType", inspection.photoContentType)
+        inspectionObj.addProperty("completed", inspection.completed)
+        inspectionObj.add("car", carObj)
+        inspectionObj.add("rental", rentalObj)
+
+        return inspectionObj
     }
 }
