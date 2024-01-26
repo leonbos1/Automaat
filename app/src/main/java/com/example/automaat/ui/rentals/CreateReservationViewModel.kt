@@ -20,6 +20,7 @@ import com.example.automaat.entities.relations.CarWithRental
 import com.example.automaat.entities.relations.RentalWithCarWithCustomer
 import com.example.automaat.repositories.InspectionRepository
 import com.example.automaat.repositories.RentalRepository
+import com.example.automaat.utils.NetworkMonitor
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
@@ -43,9 +44,6 @@ class CreateReservationViewModel(application: Application) : AndroidViewModel(ap
         viewModelScope.launch {
             val fetchedData =
                 rentalRepository.getRentalsWithCarAndCustomerByCarId(carWithRental.car.id)
-
-            for (rental in fetchedData) {
-            }
 
             if (fetchedData.isNotEmpty()) {
                 rentalWithCarWithCustomer.value = fetchedData[0]
@@ -89,6 +87,10 @@ class CreateReservationViewModel(application: Application) : AndroidViewModel(ap
             viewModelScope.launch {
                 rentalRepository.updateRental(rental.rental)
             }
+        }
+
+        if (NetworkMonitor.isConnected) {
+            rentalSyncManager?.syncEntities()
         }
 
     }

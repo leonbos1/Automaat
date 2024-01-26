@@ -59,6 +59,6 @@ class RentalRepository(private val rentalDao: RentalDao) {
     }
 
     suspend fun getRentalsWithCarAndCustomerByRentalAsync(rentalId: Int): RentalWithCarWithCustomer {
-        return rentalDao.getRentalsWithCarAndCustomerByRentalAsync(rentalId)
+        return rentalDao.getRentalsWithCarAndCustomerByRentalAsync(rentalId)[0]
     }
 }

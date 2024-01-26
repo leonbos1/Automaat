@@ -44,7 +44,7 @@ interface InterfaceApi {
     fun getRentalById(@Path("id") id: Int): Call<JsonObject>
 
     //update rental
-    @PATCH("rentals/{id}")
+    @PUT("rentals/{id}")
     fun updateRental(@Path("id") id: Int, @Body rental: Rental): Call<RentalWithCarWithCustomer>
 
     @POST("rentals")
