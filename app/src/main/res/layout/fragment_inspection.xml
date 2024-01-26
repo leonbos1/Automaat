@@ -34,7 +34,13 @@
                 android:id="@+id/uploadImageButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Upload Image" />
+                android:text="Upload Photo" />
+
+            <Button
+                android:id="@+id/takeImageButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Take photo" />
 
             <TextView
                 android:id="@+id/viewDamageDescription"

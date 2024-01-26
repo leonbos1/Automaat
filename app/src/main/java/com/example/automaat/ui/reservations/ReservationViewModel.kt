@@ -54,9 +54,7 @@ class ReservationViewModel(application: Application) : AndroidViewModel(applicat
 
     fun getCurrentRentalsByCustomer(lifecycleOwner: LifecycleOwner): MutableLiveData<List<RentalWithCarWithCustomer>> {
         val currentRentals = MutableLiveData<List<RentalWithCarWithCustomer>>()
-
         rentalsByCustomer.observeForever { rentals ->
-
             val filteredRentals = rentals.filter { rental ->
                 rental.rental?.state == RentalState.PICKUP || rental.rental?.state == RentalState.ACTIVE
             }

@@ -5,8 +5,10 @@ import android.app.Activity
 import android.content.ContentResolver
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Bundle
+import android.provider.MediaStore
 import android.util.Base64
 import android.view.LayoutInflater
 import android.view.View
@@ -15,6 +17,8 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
@@ -26,14 +30,54 @@ import java.io.InputStream
 
 class InspectionFragment : Fragment() {
     private var inspectionViewModel: InspectionViewModel? = null
-    private val PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE = 1
-    private val PICK_IMAGE_REQUEST = 2
     private var viewDamageDescription: TextView? = null
     private var viewDamagePhoto: ImageView? = null
     private var submitButton: Button? = null
     private var uploadButton: Button? = null
+    private var photoButton: Button? = null
     private var photo: String? = null
     private var damageDescriptionInput: EditText? = null
+
+    // Define ActivityResultLaunchers for camera and image picker
+    private lateinit var startCamera: ActivityResultLauncher<Intent>
+    private lateinit var pickImageLauncher: ActivityResultLauncher<Intent>
+    private lateinit var requestPermissionLauncher: ActivityResultLauncher<Array<String>>
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        // Initialize ActivityResultLaunchers
+        startCamera =
+            registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+                if (result.resultCode == Activity.RESULT_OK) {
+                    val imageBitmap = result.data?.extras?.get("data") as Bitmap
+                    viewDamagePhoto?.setImageBitmap(imageBitmap)
+                    val byteArrayOutputStream = ByteArrayOutputStream()
+                    imageBitmap.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream)
+                    val byteArray = byteArrayOutputStream.toByteArray()
+                    val base64String = Base64.encodeToString(byteArray, Base64.DEFAULT)
+                    photo = base64String
+                }
+            }
+
+        pickImageLauncher =
+            registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+                if (result.resultCode == Activity.RESULT_OK) {
+                    val imageUri = result.data?.data
+                    viewDamagePhoto?.setImageURI(imageUri)
+                    photo = imageUri?.let { convertImageToBase64(it) }
+                }
+            }
+
+        requestPermissionLauncher =
+            registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { permissions ->
+                val granted = permissions.entries.all { it.value }
+                if (granted) {
+                    openCamera()
+                } else {
+                }
+            }
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -46,21 +90,10 @@ class InspectionFragment : Fragment() {
         viewDamagePhoto = view.findViewById(R.id.viewDamagePhoto)
         submitButton = view.findViewById(R.id.submitDamageButton)
         uploadButton = view.findViewById(R.id.uploadImageButton)
+        photoButton = view.findViewById(R.id.takeImageButton)
         damageDescriptionInput = view.findViewById(R.id.damageDescriptionInput)
 
         inspectionViewModel = ViewModelProvider(this).get(InspectionViewModel::class.java)
-
-        if (ContextCompat.checkSelfPermission(
-                requireContext(),
-                Manifest.permission.READ_EXTERNAL_STORAGE
-            )
-            != PackageManager.PERMISSION_GRANTED
-        ) {
-            requestPermissions(
-                arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE),
-                PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE
-            )
-        }
 
         inspectionViewModel!!.inspection =
             arguments?.getParcelable("inspection")!!
@@ -72,6 +105,19 @@ class InspectionFragment : Fragment() {
 
         uploadButton?.setOnClickListener {
             openImageChooser()
+        }
+
+        photoButton?.setOnClickListener {
+            if (hasCameraPermission()) {
+                openCamera()
+            } else {
+                requestPermissionLauncher.launch(
+                    arrayOf(
+                        Manifest.permission.CAMERA,
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE
+                    )
+                )
+            }
         }
 
         submitButton?.setOnClickListener {
@@ -90,6 +136,18 @@ class InspectionFragment : Fragment() {
         return view
     }
 
+    private fun hasCameraPermission(): Boolean {
+        return ContextCompat.checkSelfPermission(
+            requireContext(),
+            Manifest.permission.CAMERA
+        ) == PackageManager.PERMISSION_GRANTED
+    }
+
+    private fun openCamera() {
+        val cameraIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+        startCamera.launch(cameraIntent)
+    }
+
     fun setViews(photo: String, description: String) {
         val base64Image = photo
 
@@ -104,24 +162,9 @@ class InspectionFragment : Fragment() {
         viewDamageDescription?.text = description
     }
 
-    fun openImageChooser() {
-        val intent = Intent(Intent.ACTION_PICK)
-        intent.type = "image/*"
-        startActivityForResult(intent, PICK_IMAGE_REQUEST)
-    }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-
-        if (requestCode == PICK_IMAGE_REQUEST && resultCode == Activity.RESULT_OK) {
-            val imageUri = data?.data
-            val imageView = view?.findViewById<ImageView>(R.id.viewDamagePhoto)
-
-            val base64Image = imageUri?.let { convertImageToBase64(it) }
-
-            imageView?.setImageURI(imageUri)
-            photo = base64Image
-        }
+    private fun openImageChooser() {
+        val intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
+        pickImageLauncher.launch(intent)
     }
 
     private fun convertImageToBase64(imageUri: Uri): String? {
@@ -146,18 +189,5 @@ class InspectionFragment : Fragment() {
         }
 
         return null
-    }
-
-    override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<out String>,
-        grantResults: IntArray
-    ) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        if (requestCode == PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE) {
-            if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                openImageChooser()
-            }
-        }
     }
 }
