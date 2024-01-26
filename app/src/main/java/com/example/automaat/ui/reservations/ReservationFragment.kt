@@ -43,6 +43,7 @@ class ReservationFragment : Fragment() {
 
         reservationViewModel!!.getFutureRentalsByCustomer()
             .observe(viewLifecycleOwner) { futureRentals ->
+                println("future rentals: $futureRentals")
                 futureAdapter.setData(futureRentals)
             }
 
@@ -65,9 +66,10 @@ class ReservationFragment : Fragment() {
         val bundle = Bundle()
 
         if (rental == null) {
-            println("Rental is null")
             return
         }
+
+        println("rental id: ${rental.id}")
 
         reservationViewModel?.getInspectionByRentalId(rental.id)
 

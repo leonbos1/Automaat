@@ -50,7 +50,7 @@ class RentalRepository(private val rentalDao: RentalDao) {
         rentalDao.insertRental(rental)
     }
 
-    suspend fun getRentalsWithCarAndCustomerByCustomer(customerId: Int): LiveData<List<RentalWithCarWithCustomer>> {
+    fun getRentalsWithCarAndCustomerByCustomer(customerId: Int): LiveData<List<RentalWithCarWithCustomer>> {
         return rentalDao.getRentalsWithCarAndCustomerByCustomer(customerId)
     }
 

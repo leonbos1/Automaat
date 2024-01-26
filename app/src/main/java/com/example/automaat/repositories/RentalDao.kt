@@ -38,10 +38,7 @@ interface RentalDao {
     suspend fun insertRental(rental: RentalModel)
 
     @Transaction
-    @Query("SELECT * FROM rentals" +
-            " LEFT JOIN cars ON rentals.carId = cars.id" +
-            " LEFT JOIN customers ON rentals.customerId = customers.id" +
-            " WHERE rentals.customerId = :customerId")
+    @Query("SELECT * FROM rentals WHERE customerId = :customerId")
     fun getRentalsWithCarAndCustomerByCustomer(customerId: Int): LiveData<List<RentalWithCarWithCustomer>>
 
     @Transaction
