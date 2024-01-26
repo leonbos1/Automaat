@@ -28,7 +28,7 @@ class RentalSyncManager(private val rentalRepository: RentalRepository) : ISyncM
 
     private fun isConflict(localRental: RentalModel, remoteRental: RentalModel): Boolean {
         if (localRental.state == RentalState.RESERVED && remoteRental.state == RentalState.RESERVED) {
-            if (localRental.customerId != remoteRental.customerId) {
+            if (localRental.customerId != remoteRental.customerId && remoteRental.customerId != null) {
                 return true
             }
         }
@@ -37,8 +37,6 @@ class RentalSyncManager(private val rentalRepository: RentalRepository) : ISyncM
 
     private suspend fun resolveConflict(localRental: RentalModel, remoteRental: RentalModel) {
         notifyCustomerConflict(localRental)
-        println(localRental.id)
-        println(remoteRental.id)
 
         localRental.state = remoteRental.state
         localRental.customerId = remoteRental.customerId
@@ -64,17 +62,17 @@ class RentalSyncManager(private val rentalRepository: RentalRepository) : ISyncM
         for (rental in remoteRentals) {
             var remoteRental = parseJsonToRentalModel(rental as JsonObject)
 
-            val carsFromLocalDatabase = rentalRepository.getByCarId(remoteRental.carId)
+            val carFromLocalDatabase = rentalRepository.getByCarId(remoteRental.carId)
 
             var localRental: RentalModel? = null
-            if (carsFromLocalDatabase.isNotEmpty()) {
-                localRental = carsFromLocalDatabase[0]
+            if (carFromLocalDatabase.isNotEmpty()) {
+                localRental = carFromLocalDatabase[0]
             }
 
             if (localRental != null) {
                 if (isConflict(localRental, remoteRental)) {
                     resolveConflict(localRental, remoteRental)
-                } else {
+                } else if (localRental.state != remoteRental.state && localRental.state == RentalState.RETURNED || localRental.state == null) {
                     updateLocalDatabase(remoteRental)
                 }
             } else if (isRentalRelevant(remoteRental)) {

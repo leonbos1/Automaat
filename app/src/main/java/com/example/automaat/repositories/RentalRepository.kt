@@ -24,6 +24,10 @@ class RentalRepository(private val rentalDao: RentalDao) {
         return rentalDao.getRentalById(id)
     }
 
+    suspend fun getRentalsWithCarAndCustomerByCarId(carId: Int): List<RentalWithCarWithCustomer> {
+        return rentalDao.getRentalsWithCarAndCustomerByCarId(carId)
+    }
+
     suspend fun getByCarId(carId: Int?): List<RentalModel> {
         if (carId == null) {
             return emptyList()
@@ -50,7 +54,7 @@ class RentalRepository(private val rentalDao: RentalDao) {
         return rentalDao.getRentalsWithCarAndCustomerByCustomer(customerId)
     }
 
-    suspend fun getRentalsWithCarAndCustomerByRental(rentalId: Int): LiveData<List<RentalWithCarWithCustomer>> {
+    suspend fun getRentalsWithCarAndCustomerByRental(rentalId: Int): List<RentalWithCarWithCustomer> {
         return rentalDao.getRentalsWithCarAndCustomerByRental(rentalId)
     }
 

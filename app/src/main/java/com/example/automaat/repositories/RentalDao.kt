@@ -49,11 +49,16 @@ interface RentalDao {
             " LEFT JOIN cars ON rentals.carId = cars.id" +
             " LEFT JOIN customers ON rentals.customerId = customers.id" +
             " WHERE rentals.id = :rentalId")
-    fun getRentalsWithCarAndCustomerByRental(rentalId: Int): LiveData<List<RentalWithCarWithCustomer>>
+    suspend fun getRentalsWithCarAndCustomerByRental(rentalId: Int): List<RentalWithCarWithCustomer>
 
     @Query("SELECT * FROM rentals" +
             " LEFT JOIN cars ON rentals.carId = cars.id" +
             " LEFT JOIN customers ON rentals.customerId = customers.id" +
             " WHERE rentals.id = :rentalId")
     fun getRentalsWithCarAndCustomerByRentalAsync(rentalId: Int): RentalWithCarWithCustomer
+
+    @Transaction
+    @Query("SELECT * FROM rentals WHERE carId = :carId")
+    suspend fun getRentalsWithCarAndCustomerByCarId(carId: Int): List<RentalWithCarWithCustomer>
+
 }

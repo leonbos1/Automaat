@@ -21,19 +21,15 @@ import com.example.automaat.entities.relations.RentalWithCarWithCustomer
 import com.example.automaat.repositories.InspectionRepository
 import com.example.automaat.repositories.RentalRepository
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 
 class CreateReservationViewModel(application: Application) : AndroidViewModel(application) {
-    private val _rentalWithCarWithCustomer = MutableLiveData<RentalWithCarWithCustomer>()
-    var testRentalWithCarWithCustomer: RentalWithCarWithCustomer? = null
-    val rentalWithCarWithCustomer: LiveData<RentalWithCarWithCustomer> = _rentalWithCarWithCustomer
-    val rentalRepository: RentalRepository
-    val inspectionRepository: InspectionRepository
+    val rentalWithCarWithCustomer: MutableLiveData<RentalWithCarWithCustomer> = MutableLiveData()
+    private val rentalRepository: RentalRepository
+    private val inspectionRepository: InspectionRepository
     private val hardcodedCustomer = 1
-    private val _addRentalResult = MutableLiveData<Boolean>()
-    val addRentalResult: LiveData<Boolean> = _addRentalResult
-    var latestRentalWithCarWithCustomer: RentalWithCarWithCustomer? = null
-    var rentalSyncManager: RentalSyncManager? = null
+    private var rentalSyncManager: RentalSyncManager? = null
 
     init {
         val rentalDao = AutomaatDatabase.getDatabase(application).rentalDao()
@@ -45,18 +41,20 @@ class CreateReservationViewModel(application: Application) : AndroidViewModel(ap
 
     fun fetchRentalWithCarWithCustomer(carWithRental: CarWithRental) {
         viewModelScope.launch {
-            val rentalId = carWithRental.rental?.id ?: 0
-            val fetchedData = rentalRepository.getRentalsWithCarAndCustomerByRental(rentalId)
-            fetchedData.observeForever { rentalList ->
-                if (rentalList.isNotEmpty()) {
-                    _rentalWithCarWithCustomer.value = rentalList[0]
-                } else {
-                    _rentalWithCarWithCustomer.value = RentalWithCarWithCustomer(
-                        null,
-                        carWithRental.car,
-                        null
-                    )
-                }
+            val fetchedData =
+                rentalRepository.getRentalsWithCarAndCustomerByCarId(carWithRental.car.id)
+
+            for (rental in fetchedData) {
+            }
+
+            if (fetchedData.isNotEmpty()) {
+                rentalWithCarWithCustomer.value = fetchedData[0]
+            } else {
+                rentalWithCarWithCustomer.value = RentalWithCarWithCustomer(
+                    null,
+                    carWithRental.car,
+                    null
+                )
             }
         }
     }
@@ -73,12 +71,10 @@ class CreateReservationViewModel(application: Application) : AndroidViewModel(ap
             newRental.fromDate = startDate
             newRental.toDate = endDate
             newRental.state = RentalState.RESERVED
+            newRental.customerId = hardcodedCustomer
 
             viewModelScope.launch {
                 rentalRepository.insertRental(newRental)
-                val inspectionId = generateId()
-                inspectionRepository.createNewInspection(inspectionId, newRental.id, newRental.carId!!)
-                newRental.inspectionId = inspectionId
                 newRental.customerId = hardcodedCustomer
                 rentalRepository.updateRental(newRental)
             }
@@ -91,9 +87,6 @@ class CreateReservationViewModel(application: Application) : AndroidViewModel(ap
             }
 
             viewModelScope.launch {
-                val inspectionId = generateId()
-                inspectionRepository.createNewInspection(inspectionId, rental.rental.id, rental.car!!.id)
-                rental.rental.inspectionId = inspectionId
                 rentalRepository.updateRental(rental.rental)
             }
         }

@@ -28,7 +28,7 @@ class HomeFragment() : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        val view =  inflater.inflate(R.layout.fragment_home, container, false)
+        val view = inflater.inflate(R.layout.fragment_home, container, false)
         val adapter = HomeAdapter()
 
         val recyclerView = view.findViewById<RecyclerView>(R.id.carsRecyclerView)
@@ -61,10 +61,13 @@ class HomeFragment() : Fragment() {
         adapter.onItemClick = { car ->
             val bundle = Bundle()
 
-            val carWithRental = homeViewModel.carsWithRentals.value?.find { it.car.id == car.id }
+            homeViewModel.carsWithRentals.observe(viewLifecycleOwner) {
+                val foundCar =
+                    homeViewModel.carsWithRentals.value?.find { it.car.id == car.id }
 
-            bundle.putParcelable("car", carWithRental)
-            navigationController.navigate(R.id.action_navigation_home_to_car_details, bundle)
+                bundle.putParcelable("car", foundCar)
+                navigationController.navigate(R.id.action_navigation_home_to_car_details, bundle)
+            }
         }
 
         val filterContainer = view.findViewById<LinearLayout>(R.id.filtersContainer)
@@ -105,17 +108,22 @@ class HomeFragment() : Fragment() {
     }
 
     fun setCars(filterModel: FilterModel?, adapter: HomeAdapter) {
-        val availableCars = homeViewModel.carsWithRentals.value?.filter { it.rental?.state == RentalState.ACTIVE || it.rental?.state == null || it.rental.customerId == null }
+        val availableCars =
+            homeViewModel.carsWithRentals.value?.filter { it.rental?.state == RentalState.ACTIVE || it.rental?.state == null || it.rental.customerId == null }
 
         if (filterModel == null) {
             adapter.setData(availableCars ?: emptyList())
         } else if (filterModel.brand == "All" && filterModel.model == "All") {
             adapter.setData(availableCars ?: emptyList())
         } else if (filterModel.brand == "All") {
-            val filteredCars = availableCars?.filter { it.car.model == filterModel.model && carIsAvailable(it) } ?: emptyList()
+            val filteredCars =
+                availableCars?.filter { it.car.model == filterModel.model && carIsAvailable(it) }
+                    ?: emptyList()
             adapter.setData(filteredCars)
         } else if (filterModel.model == "All") {
-            val filteredCars = availableCars?.filter { it.car.brand == filterModel.brand && carIsAvailable(it)} ?: emptyList()
+            val filteredCars =
+                availableCars?.filter { it.car.brand == filterModel.brand && carIsAvailable(it) }
+                    ?: emptyList()
             adapter.setData(filteredCars)
         } else {
             val filteredCars = availableCars?.filter {
@@ -125,8 +133,8 @@ class HomeFragment() : Fragment() {
         }
     }
 
-    fun carIsAvailable(car: CarWithRental): Boolean {
-        return car.rental?.state == null || car.rental.customerId == null
+    private fun carIsAvailable(car: CarWithRental): Boolean {
+        return (car.rental?.state == null || car.rental.customerId == null) && (car.rental?.state == RentalState.RETURNED || car.rental?.state == null)
     }
 
     override fun onDestroyView() {

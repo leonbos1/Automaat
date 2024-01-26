@@ -9,7 +9,7 @@ import kotlinx.android.parcel.Parcelize
 @Entity(tableName = "rentals")
 data class RentalModel (
     @PrimaryKey(autoGenerate = true)
-    val id: Int,
+    var id: Int,
     val code: String?,
     var longitude: Float,
     var latitude: Float,
