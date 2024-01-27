@@ -19,6 +19,9 @@ interface RentalDao {
     @Query("SELECT * FROM rentals ORDER BY id ASC")
     suspend fun getAll(): List<RentalModel>
 
+    @Query("SELECT * FROM rentals ORDER BY id ASC")
+    suspend fun readAllDataAsync(): List<RentalModel>
+
     @Query("SELECT * FROM rentals WHERE carId = :carId")
     suspend fun getByCarId(carId: Int): List<RentalModel>
 

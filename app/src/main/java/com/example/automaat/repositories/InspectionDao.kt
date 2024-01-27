@@ -50,6 +50,9 @@ interface InspectionDao {
     @Update(onConflict = OnConflictStrategy.REPLACE)
     suspend fun updateInspection(inspection: InspectionModel)
 
+    @Query("DELETE FROM inspections WHERE id = :id")
+    suspend fun deleteInspection(id: Int)
+
     @Transaction
     @Query(
         "SELECT * FROM inspections" +
