@@ -86,7 +86,8 @@ class HomeFragment() : Fragment() {
             val brandButton = Button(requireContext())
             brandButton.text = filterModel.brand
             brandButton.setOnClickListener {
-                val newFilterModel = FilterModel("All", filterModel.model)
+                val newFilterModel =
+                    FilterModel("All", filterModel.model, filterModel.price, filterModel.sorting)
                 val bundle = Bundle()
                 bundle.putParcelable("appliedFilters", newFilterModel)
                 findNavController().navigate(R.id.action_navigation_home_to_home, bundle)
@@ -98,18 +99,74 @@ class HomeFragment() : Fragment() {
             val modelButton = Button(requireContext())
             modelButton.text = filterModel.model
             modelButton.setOnClickListener {
-                val newFilterModel = FilterModel(filterModel.brand, "All")
+                val newFilterModel =
+                    FilterModel(filterModel.brand, "All", filterModel.price, filterModel.sorting)
                 val bundle = Bundle()
                 bundle.putParcelable("appliedFilters", newFilterModel)
                 findNavController().navigate(R.id.action_navigation_home_to_home, bundle)
             }
             filterContainer.addView(modelButton)
         }
+
+        if (filterModel.price != 0) {
+            val priceButton = Button(requireContext())
+            priceButton.text = "€${filterModel.price}"
+            priceButton.setOnClickListener {
+                val newFilterModel =
+                    FilterModel(filterModel.brand, filterModel.model, 0, filterModel.sorting)
+                val bundle = Bundle()
+                bundle.putParcelable("appliedFilters", newFilterModel)
+                findNavController().navigate(R.id.action_navigation_home_to_home, bundle)
+            }
+            filterContainer.addView(priceButton)
+        }
+
+        if (filterModel.sorting != "None") {
+            val sortingButton = Button(requireContext())
+            sortingButton.text = filterModel.sorting
+            sortingButton.setOnClickListener {
+                val newFilterModel =
+                    FilterModel(filterModel.brand, filterModel.model, filterModel.price, "None")
+                val bundle = Bundle()
+                bundle.putParcelable("appliedFilters", newFilterModel)
+                findNavController().navigate(R.id.action_navigation_home_to_home, bundle)
+            }
+            filterContainer.addView(sortingButton)
+        }
+    }
+
+    fun applySorting(
+        filterModel: FilterModel?,
+        availableCars: List<CarWithRental>?
+    ): List<CarWithRental>? {
+        if (filterModel == null) {
+            return availableCars
+        }
+
+        if (filterModel.sorting == "None") {
+            return availableCars
+        } else if (filterModel.sorting == "Alphabetical") {
+            return availableCars?.sortedBy { it.car.brand }
+        } else if (filterModel.sorting == "Alphabetical (reversed)") {
+            return availableCars?.sortedByDescending { it.car.brand }
+        } else if (filterModel.sorting == "Price (low to high)") {
+            return availableCars?.sortedBy { it.car.price }
+        } else if (filterModel.sorting == "Price (high to low)") {
+            return availableCars?.sortedByDescending { it.car.price }
+        }
+
+        return availableCars
     }
 
     fun setCars(filterModel: FilterModel?, adapter: HomeAdapter) {
-        val availableCars =
+        var availableCars =
             homeViewModel.carsWithRentals.value?.filter { it.rental?.state == RentalState.ACTIVE || it.rental?.state == null || it.rental.customerId == null }
+
+        availableCars = applySorting(filterModel, availableCars)
+
+        if (filterModel?.price != null && filterModel.price!! > 0) {
+            availableCars = availableCars?.filter { it.car.price <= (filterModel.price ?: 10000) }
+        }
 
         if (filterModel == null) {
             adapter.setData(availableCars ?: emptyList())

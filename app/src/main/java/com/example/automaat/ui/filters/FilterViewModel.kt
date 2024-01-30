@@ -20,7 +20,7 @@ class FilterViewModel(application: Application) : AndroidViewModel(application) 
     val carRepository: CarRepository
     val rentalRepository: RentalRepository
     val customerRepository: CustomerRepository
-    val inspectionRepository: InspectionRepository
+    private val inspectionRepository: InspectionRepository
     private val _availableModels = MutableLiveData<List<String>>()
 
     init {
@@ -44,26 +44,27 @@ class FilterViewModel(application: Application) : AndroidViewModel(application) 
         }
     }
 
-    fun insertDummyCars() {
-        carRepository.insertDummyCars()
-    }
-
     val availableBrands: LiveData<List<String>> = carRepository.readAllData.map { cars ->
         val brands = cars.mapNotNull { it.brand }.distinct().sorted()
         listOf("All") + brands  // Prepend "All" to the list
     }
 
     val availableModels: LiveData<List<String>> = _availableModels.map { models ->
-        listOf("All") + models.distinct().sorted()
+        var distinctModels = models.distinct().sorted()
+
+        if (distinctModels.isNotEmpty()) {
+            listOf("All") + distinctModels
+        }
+        else {
+            listOf()
+        }
     }
 
     fun loadModelsForBrand(brand: String) {
         viewModelScope.launch {
             val models = if (brand == "All") {
-                // If "All" is selected, get all models
                 carRepository.readAllData.value?.mapNotNull { it.model } ?: emptyList()
             } else {
-                // Otherwise, filter models by the selected brand
                 carRepository.getModelsByBrand(brand)
             }
             _availableModels.postValue(models)

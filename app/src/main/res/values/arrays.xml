@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="sorting_options">
+        <item>None</item>
+        <item>Alphabetical</item>
+        <item>Alphabetical (reversed)</item>
+        <item>Price (low to high)</item>
+        <item>Price (high to low)</item>
+    </string-array>
+</resources>

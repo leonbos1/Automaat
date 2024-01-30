@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
+import android.widget.AutoCompleteTextView
 import android.widget.Button
 import android.widget.Spinner
 import androidx.fragment.app.Fragment
@@ -21,14 +22,16 @@ import com.example.automaat.api.synchers.CustomerSyncManager
 import com.example.automaat.api.synchers.RentalSyncManager
 import com.example.automaat.entities.FilterModel
 import com.example.automaat.ui.home.HomeAdapter
+import com.google.android.material.slider.Slider
 
 class FiltersFragment() : Fragment() {
-    private lateinit var initCarsButton: Button
     private lateinit var deleteCarsButton: Button
     private lateinit var filterViewModel: FilterViewModel
     private lateinit var resultsBtn: Button
-    private lateinit var brandSpinner: Spinner
-    private lateinit var modelSpinner: Spinner
+    private lateinit var sortingAutoCompleteTextView: AutoCompleteTextView
+    private lateinit var brandAutoCompleteTextView: AutoCompleteTextView
+    private lateinit var modelAutoCompleteTextView: AutoCompleteTextView
+    private lateinit var priceSlider: Slider
     private lateinit var getAllCarsButton: Button
     private lateinit var carSyncManager: CarSyncManager
     private lateinit var rentalSyncManager: RentalSyncManager
@@ -45,12 +48,6 @@ class FiltersFragment() : Fragment() {
 
         filterViewModel = ViewModelProvider(this).get(FilterViewModel::class.java)
 
-        initCarsButton = view.findViewById(R.id.initCarsButton)
-
-        initCarsButton.setOnClickListener {
-            initDummyCars()
-        }
-
         deleteCarsButton = view.findViewById(R.id.deleteCarsButton)
 
         deleteCarsButton.setOnClickListener {
@@ -60,10 +57,14 @@ class FiltersFragment() : Fragment() {
         resultsBtn = view.findViewById(R.id.resultsButton)
 
         resultsBtn.setOnClickListener {
-            val brand = brandSpinner.selectedItem.toString()
-            val model = modelSpinner.selectedItem.toString()
+            val sorting = sortingAutoCompleteTextView.text.toString()
+            val brand = brandAutoCompleteTextView.text.toString()
+            val model = modelAutoCompleteTextView.text.toString()
+            val price = priceSlider.value.toInt()
 
-            val filterModel = FilterModel(brand, model)
+            println("Sorting: $sorting")
+
+            val filterModel = FilterModel(brand, model, price, sorting)
 
             val bundle = Bundle()
             bundle.putParcelable("appliedFilters", filterModel)
@@ -81,55 +82,51 @@ class FiltersFragment() : Fragment() {
             Authentication().authenticate {
                 carSyncManager.syncEntities()
                 rentalSyncManager.syncEntities()
-
             }
         }
 
-        brandSpinner = view.findViewById(R.id.brandSpinner)
+        sortingAutoCompleteTextView = view.findViewById(R.id.sortingDropdown)
+        brandAutoCompleteTextView = view.findViewById(R.id.brandDropdown)
+        modelAutoCompleteTextView = view.findViewById(R.id.modelDropdown)
+        priceSlider = view.findViewById(R.id.priceSlider)
 
-        modelSpinner = view.findViewById(R.id.modelSpinner)
-
-        setupBrandSpinner()
-
-        setupModelSpinner()
+        setupSortingDropdown()
+        setupBrandDropdown()
+        setupModelDropdown()
 
         return view
     }
 
-    private fun setupBrandSpinner() {
+    private fun setupSortingDropdown() {
+        val sortingOptions = resources.getStringArray(R.array.sorting_options)
+
+        val adapter = ArrayAdapter(requireContext(), R.layout.dropdown_item, sortingOptions)
+        sortingAutoCompleteTextView.setAdapter(adapter)
+
+        sortingAutoCompleteTextView.setText("None", false)
+    }
+
+    private fun setupBrandDropdown() {
         filterViewModel.availableBrands.observe(viewLifecycleOwner) { brands ->
-            val adapter =
-                ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, brands)
-            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-            brandSpinner.adapter = adapter
+            val adapter = ArrayAdapter(requireContext(), R.layout.dropdown_item, brands)
+            brandAutoCompleteTextView.setAdapter(adapter)
+
+            brandAutoCompleteTextView.setText("All", false)
         }
 
-        brandSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
-                val selectedBrand = parent.getItemAtPosition(position) as String
-                filterViewModel.loadModelsForBrand(selectedBrand)
-            }
+        modelAutoCompleteTextView.setText("All", false)
 
-            override fun onNothingSelected(parent: AdapterView<*>) {
-                // Handle case where no brand selection is made
-            }
+        brandAutoCompleteTextView.setOnItemClickListener { parent, view, position, id ->
+            val selectedBrand = parent.getItemAtPosition(position) as String
+            filterViewModel.loadModelsForBrand(selectedBrand)
         }
     }
 
-    private fun setupModelSpinner() {
+    private fun setupModelDropdown() {
         filterViewModel.availableModels.observe(viewLifecycleOwner) { models ->
-            val adapter =
-                ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, models)
-            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-            modelSpinner.adapter = adapter
+            val adapter = ArrayAdapter(requireContext(), R.layout.dropdown_item, models)
+            modelAutoCompleteTextView.setAdapter(adapter)
         }
-    }
-
-    //TODO: Remove this function
-    private fun initDummyCars() {
-        filterViewModel.insertDummyCars()
-
-        findNavController().navigate(R.id.action_navigation_filters_to_navigation_home)
     }
 
     private fun deleteAllData() {

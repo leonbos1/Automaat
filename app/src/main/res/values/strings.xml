@@ -29,4 +29,8 @@
     <string name="reservation_details">Reservation details\n</string>
     <string name="euro">€</string>
     <string name="costs">Costs: €</string>
+    <string name="priceTitle">Maximum Price</string>
+    <string name="sorting_title">Sorting</string>
+    <string name="select_start_date">Start date</string>
+    <string name="select_end_date">End date</string>
 </resources>
