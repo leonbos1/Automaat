@@ -1,5 +1,6 @@
 package com.example.automaat.ui.home
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -44,6 +45,7 @@ class HomeFragment() : Fragment() {
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
 
         val filterButton = view.findViewById<View>(R.id.filterButton)
+        val logoutButton = view.findViewById<View>(R.id.logoutButton)
 
         val navigationController = findNavController()
 
@@ -53,10 +55,19 @@ class HomeFragment() : Fragment() {
             println("User: User is not authenticated")
             navigationController.navigate(R.id.action_homeFragment_to_loginFragment)
         }
+        
+        logoutButton.setOnClickListener {
+            val sharedPreferences = context?.getSharedPreferences("userToken", Context.MODE_PRIVATE)
+            val editor = sharedPreferences?.edit()
+            editor?.remove("id_token")
+            editor?.apply()
+            navigationController.navigate(R.id.action_homeFragment_to_loginFragment)
+        }
 
         filterButton.setOnClickListener {
             navigationController.navigate(R.id.action_navigation_home_to_filtersFragment)
         }
+
 
         swipeContainer = view.findViewById(R.id.swipeRefreshLayout)
 

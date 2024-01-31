@@ -31,6 +31,24 @@
             tools:layout_editor_absoluteX="16dp"
             tools:layout_editor_absoluteY="16dp" />
 
+
+        <Button
+            android:id="@+id/logoutButton"
+            android:layout_width="147dp"
+            android:layout_height="40dp"
+            android:background="@drawable/rounded_button_background"
+            android:drawableStart="@drawable/ic_logout_black"
+            android:paddingStart="8dp"
+            android:paddingTop="8dp"
+            android:paddingEnd="8dp"
+            android:paddingBottom="8dp"
+            android:text="@string/logout"
+            android:textColor="@color/white"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            tools:layout_editor_absoluteX="16dp"
+            tools:layout_editor_absoluteY="16dp" />
+
         <HorizontalScrollView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

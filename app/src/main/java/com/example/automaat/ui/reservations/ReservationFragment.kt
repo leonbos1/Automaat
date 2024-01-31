@@ -6,10 +6,11 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.automaat.R
-import com.example.automaat.entities.relations.RentalWithCarWithCustomer
+import com.example.automaat.api.endpoints.Authentication
 
 class ReservationFragment : Fragment() {
     private var reservationViewModel: ReservationViewModel? = null
@@ -20,6 +21,14 @@ class ReservationFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         val view = inflater.inflate(R.layout.fragment_reservations, container, false)
+
+        val navigationController = findNavController()
+        if (context?.let { Authentication().isUserAuthenticated(it) } == true) {
+            println("User: User is authenticated")
+        } else {
+            println("User: User is not authenticated")
+            navigationController.navigate(R.id.action_navigation_reservations_to_loginFragment)
+        }
 
         val futureAdapter = ReservationAdapter()
         val futureRecyclerView = view.findViewById<RecyclerView>(R.id.futureRecyclerView)

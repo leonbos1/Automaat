@@ -53,6 +53,9 @@
         android:name="com.example.automaat.ui.reservations.ReservationFragment"
         android:label="@string/title_reservations"
         tools:layout="@layout/fragment_reservations">
+        <action
+            android:id="@+id/action_navigation_reservations_to_loginFragment"
+            app:destination="@id/loginFragment" />
     </fragment>
 
     <fragment
@@ -63,6 +66,9 @@
         <action
             android:id="@+id/action_navigation_notifications_to_navigation_home"
             app:destination="@id/navigation_home" />
+        <action
+            android:id="@+id/action_navigation_notifications_to_loginFragment"
+            app:destination="@id/loginFragment" />
     </fragment>
 
     <fragment
@@ -124,7 +130,7 @@
 
         <action
             android:id="@+id/action_loginFragment_to_homeFragment"
-            app:destination="@id/navigation_home" />
+            app:destination="@id/navigation_home"
+            app:popUpTo="@id/loginFragment" />
     </fragment>
-
 </navigation>
