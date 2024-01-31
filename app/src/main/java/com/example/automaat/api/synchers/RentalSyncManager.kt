@@ -1,6 +1,7 @@
 package com.example.automaat.api.synchers
 
 import android.app.Application
+import android.content.Context
 import android.os.Build
 import androidx.annotation.RequiresApi
 import android.util.Log
@@ -9,22 +10,26 @@ import com.example.automaat.api.endpoints.Rentals
 import com.example.automaat.entities.RentalModel
 import com.example.automaat.entities.RentalState
 import com.example.automaat.repositories.RentalRepository
-import com.example.automaat.utils.NotificationManager
+import com.example.automaat.utils.AutomaatNotificationManager
+import com.example.automaat.utils.NotificationScheduler
 import com.google.gson.JsonArray
 import com.google.gson.JsonObject
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-class RentalSyncManager(private val rentalRepository: RentalRepository, application: Application) : ISyncManager {
-    private val notificationManager = NotificationManager(application)
+class RentalSyncManager(private val rentalRepository: RentalRepository, application: Application) :
+    ISyncManager {
+    private val automaatNotificationManager = AutomaatNotificationManager()
+    private val notificationScheduler = NotificationScheduler()
+
     @RequiresApi(Build.VERSION_CODES.TIRAMISU)
-    override fun syncEntities() {
+    override fun syncEntities(context: Context) {
         Authentication().authenticate {
             CoroutineScope(Dispatchers.IO).launch {
                 try {
-                    syncRemoteRentalsToLocal()
-                    syncLocalRentalsToServer()
+                    syncRemoteRentalsToLocal(context)
+                    syncLocalRentalsToServer(context)
                 } catch (e: Exception) {
                     Log.e("CHECK_RESPONSE", "Error while syncing rentals", e)
                 }
@@ -41,8 +46,13 @@ class RentalSyncManager(private val rentalRepository: RentalRepository, applicat
         return false
     }
 
-    private suspend fun resolveConflict(localRental: RentalModel, remoteRental: RentalModel) {
-        notifyCustomerConflict(localRental)
+    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
+    private suspend fun resolveConflict(
+        localRental: RentalModel,
+        remoteRental: RentalModel,
+        context: Context
+    ) {
+        notifyCustomerConflict(localRental, context)
 
         localRental.state = remoteRental.state
         localRental.customerId = remoteRental.customerId
@@ -54,24 +64,35 @@ class RentalSyncManager(private val rentalRepository: RentalRepository, applicat
         rentalRepository.updateRental(localRental)
     }
 
-    private fun notifyCustomerConflict(rental: RentalModel) {
-        //TODO implement
-    }
-
     @RequiresApi(Build.VERSION_CODES.TIRAMISU)
-    private fun notifyCustomerSuccess(rental: RentalModel) {
-        val state = rental.state
-        println("LogNotification Send notification. Rental state: $state")
-        notificationManager.sendNotification(
-            channelId = "rental_updates",
-            title = "Rental Update",
-            message = "Rental state changed to: $state",
-            icon = 1,
-            notificationId = (100000..999999).random()
+    private fun notifyCustomerConflict(rental: RentalModel, context: Context) {
+        println("notifyCustomerConflict called!!!")
+
+        automaatNotificationManager.createNotificationChannel(context, "Automaat", "Description")
+
+        automaatNotificationManager.sendNotification(
+            context,
+            "Reservation conflict",
+            "Your reservation has been cancelled!"
         )
     }
 
-    suspend fun syncRemoteRentalsToLocal() {
+
+    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
+    private fun notifyCustomerSuccess(rental: RentalModel, context: Context) {
+        println("notifyCustomerSuccess called!!!")
+
+        automaatNotificationManager.createNotificationChannel(context, "Automaat", "Description")
+
+        automaatNotificationManager.sendNotification(
+            context,
+            "Reservation success",
+            "Your reservation has been confirmed!"
+        )
+    }
+
+    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
+    suspend fun syncRemoteRentalsToLocal(context: Context) {
         val remoteRentals = Rentals().getAllRentals() ?: return
 
         for (rental in remoteRentals) {
@@ -86,7 +107,7 @@ class RentalSyncManager(private val rentalRepository: RentalRepository, applicat
 
             if (localRental != null) {
                 if (isConflict(localRental, remoteRental)) {
-                    resolveConflict(localRental, remoteRental)
+                    resolveConflict(localRental, remoteRental, context)
                 } else if (localRental.state != remoteRental.state && localRental.state == RentalState.RETURNED || localRental.state == null) {
                     updateLocalDatabase(remoteRental)
                 }
@@ -179,7 +200,7 @@ class RentalSyncManager(private val rentalRepository: RentalRepository, applicat
     }
 
     @RequiresApi(Build.VERSION_CODES.TIRAMISU)
-    suspend fun syncLocalRentalsToServer() {
+    suspend fun syncLocalRentalsToServer(context: Context) {
         val allLocalRentals = rentalRepository.getAll()
         val allRemoteRentals = Rentals().getAllRentals()
 
@@ -192,13 +213,18 @@ class RentalSyncManager(private val rentalRepository: RentalRepository, applicat
 
             if (serverRental == null) {
                 createRentalOnServer(rental)
-                notifyCustomerSuccess(rental)
+                notifyCustomerSuccess(rental, context)
+                notificationScheduler.scheduleRentalNotifications(context, rental)
             } else {
                 if (isConflict(rental, serverRental)) {
-                    resolveConflict(rental, serverRental)
+                    resolveConflict(rental, serverRental, context)
                 } else {
+                    if (rental.state == serverRental.state && rental.customerId == serverRental.customerId) {
+                        continue
+                    }
                     updateRentalOnServer(rental)
-                    notifyCustomerSuccess(rental)
+                    notifyCustomerSuccess(rental, context)
+                    notificationScheduler.scheduleRentalNotifications(context, rental)
                 }
             }
         }

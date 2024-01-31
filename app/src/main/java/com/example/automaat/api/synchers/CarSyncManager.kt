@@ -1,5 +1,6 @@
 package com.example.automaat.api.synchers
 
+import android.content.Context
 import android.util.Log
 import com.example.automaat.api.endpoints.Authentication
 import com.example.automaat.api.endpoints.Cars
@@ -12,7 +13,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class CarSyncManager(private val carRepository: CarRepository) : ISyncManager {
-    override fun syncEntities() {
+    override fun syncEntities(context: Context) {
         Authentication().authenticate {
             CoroutineScope(Dispatchers.IO).launch {
                 val jsonArray = Cars().getAllCars()

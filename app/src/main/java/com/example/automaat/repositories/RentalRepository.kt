@@ -61,4 +61,8 @@ class RentalRepository(private val rentalDao: RentalDao) {
     suspend fun getRentalsWithCarAndCustomerByRentalAsync(rentalId: Int): RentalWithCarWithCustomer {
         return rentalDao.getRentalsWithCarAndCustomerByRentalAsync(rentalId)[0]
     }
+
+    suspend fun getRentalsWithCarAndCustomerByCustomerAsync(customerId: Int): List<RentalWithCarWithCustomer> {
+        return rentalDao.getRentalsWithCarAndCustomerByCustomerAsync(customerId)
+    }
 }

@@ -19,6 +19,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 
 class ReservationViewModel(application: Application) : AndroidViewModel(application) {
     private val rentalRepository: RentalRepository
@@ -33,9 +35,37 @@ class ReservationViewModel(application: Application) : AndroidViewModel(applicat
         inspectionRepository =
             InspectionRepository(AutomaatDatabase.getDatabase(application).inspectionDao())
 
+        updateRentalStateBasedOnDates()
+
         viewModelScope.launch {
             rentalsByCustomer =
                 rentalRepository.getRentalsWithCarAndCustomerByCustomer(hardcodedCustomer)
+        }
+    }
+
+    fun updateRentalStateBasedOnDates() {
+        viewModelScope.launch {
+            val rentals = rentalRepository.getRentalsWithCarAndCustomerByCustomerAsync(hardcodedCustomer)
+            val currentDate = LocalDate.now()
+
+            rentals.forEach { rentalWithCarWithCustomer ->
+                rentalWithCarWithCustomer.rental?.let { rental ->
+                    val fromDate = LocalDate.parse(rental.fromDate, DateTimeFormatter.ofPattern("yyyy-MM-dd"))
+                    val toDate = LocalDate.parse(rental.toDate, DateTimeFormatter.ofPattern("yyyy-MM-dd"))
+
+                    val newState = when {
+                        currentDate.isBefore(fromDate) -> RentalState.RESERVED
+                        currentDate.isEqual(fromDate) || (currentDate.isAfter(fromDate) && currentDate.isBefore(toDate)) -> RentalState.ACTIVE
+                        currentDate.isEqual(toDate) || currentDate.isAfter(toDate) -> RentalState.RETURNED
+                        else -> rental.state
+                    }
+
+                    if (newState != rental.state) {
+                        rental.state = newState
+                        rentalRepository.updateRental(rental)
+                    }
+                }
+            }
         }
     }
 

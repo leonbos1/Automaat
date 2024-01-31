@@ -1,6 +1,7 @@
 package com.example.automaat.ui.home
 
 import android.app.Application
+import android.content.Context
 import android.os.Build
 import android.util.Log
 import androidx.annotation.RequiresApi
@@ -52,13 +53,13 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     @RequiresApi(Build.VERSION_CODES.TIRAMISU)
-    fun refreshCars() {
+    fun refreshCars(context: Context) {
         viewModelScope.launch {
             try {
-                carsSyncManager.syncEntities()
-                rentalSyncManager.syncEntities()
-                customerSyncManager.syncEntities()
-                inspectionSyncManager.syncEntities()
+                carsSyncManager.syncEntities(context)
+                rentalSyncManager.syncEntities(context)
+                customerSyncManager.syncEntities(context)
+                inspectionSyncManager.syncEntities(context)
             } catch (e: Exception) {
                 Log.e("HomeViewModel", "Error while syncing", e)
             }

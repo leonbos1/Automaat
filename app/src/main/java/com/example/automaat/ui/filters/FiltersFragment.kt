@@ -83,8 +83,8 @@ class FiltersFragment() : Fragment() {
 
         getAllCarsButton.setOnClickListener {
             Authentication().authenticate {
-                carSyncManager.syncEntities()
-                rentalSyncManager.syncEntities()
+                carSyncManager.syncEntities(requireContext())
+                rentalSyncManager.syncEntities(requireContext())
             }
         }
 

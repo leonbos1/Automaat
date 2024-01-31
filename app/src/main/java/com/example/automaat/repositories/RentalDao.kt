@@ -59,4 +59,7 @@ interface RentalDao {
     @Query("SELECT * FROM rentals WHERE carId = :carId")
     suspend fun getRentalsWithCarAndCustomerByCarId(carId: Int): List<RentalWithCarWithCustomer>
 
+    @Transaction
+    @Query("SELECT * FROM rentals WHERE customerId = :customerId")
+    suspend fun getRentalsWithCarAndCustomerByCustomerAsync(customerId: Int): List<RentalWithCarWithCustomer>
 }

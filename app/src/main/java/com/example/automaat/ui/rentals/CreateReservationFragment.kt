@@ -97,7 +97,7 @@ class CreateReservationFragment : Fragment() {
                     rentalWithCarWithCustomer,
                     startDate,
                     endDate,
-                    viewLifecycleOwner
+                    requireContext()
                 )
 
                 rentalTextView?.text = RentalState.RESERVED.toReadableString()

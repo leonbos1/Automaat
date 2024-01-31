@@ -43,7 +43,6 @@ class ReservationFragment : Fragment() {
 
         reservationViewModel!!.getFutureRentalsByCustomer()
             .observe(viewLifecycleOwner) { futureRentals ->
-                println("future rentals: $futureRentals")
                 futureAdapter.setData(futureRentals)
             }
 
