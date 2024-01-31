@@ -23,4 +23,18 @@
         style="@style/reservationText"
         android:text="Reservation ID: 123456789" />
 
+    <Button
+        android:id="@+id/damageButton"
+        android:layout_width="132dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end"
+        android:layout_marginTop="50dp"
+        android:layout_marginEnd="8dp"
+        android:width="70dp"
+        android:height="10dp"
+        android:padding="8dp"
+        android:text="Report damage"
+        android:textColor="@color/white"
+        android:textSize="12dp" />
+
 </androidx.cardview.widget.CardView>

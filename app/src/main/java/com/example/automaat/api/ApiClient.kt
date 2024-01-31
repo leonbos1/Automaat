@@ -6,8 +6,9 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
 object ApiClient {
-    private const val BASE_URL = "https://seal-shining-hamster.ngrok-free.app/api/"
-//    private const  val BASE_URL = "http://localhost:8080/api/"
+    //private const val BASE_URL = "https://seal-shining-hamster.ngrok-free.app/api/"
+    private const val BASE_URL = "http://192.168.56.1:8080/api/"
+    //private const val BASE_URL = "http://192.168.68.138:8080/api/"
     private var token: String = ""
 
     private val authInterceptor = Interceptor { chain ->

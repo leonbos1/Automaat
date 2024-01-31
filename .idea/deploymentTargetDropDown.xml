@@ -2,8 +2,33 @@
 <project version="4">
   <component name="deploymentTargetDropDown">
     <value>
-      <entry key="app">
+      <entry key="CarUnitTest">
         <State />
+      </entry>
+      <entry key="InspectionUnitTest">
+        <State />
+      </entry>
+      <entry key="RentalUnitTest">
+        <State />
+      </entry>
+      <entry key="SimpleEntityReadWriteTest">
+        <State />
+      </entry>
+      <entry key="app">
+        <State>
+          <targetSelectedWithDropDown>
+            <Target>
+              <type value="QUICK_BOOT_TARGET" />
+              <deviceKey>
+                <Key>
+                  <type value="VIRTUAL_DEVICE_PATH" />
+                  <value value="C:\Users\ktmle\.android\avd\Small_Phone_API_34.avd" />
+                </Key>
+              </deviceKey>
+            </Target>
+          </targetSelectedWithDropDown>
+          <timeTargetWasSelectedWithDropDown value="2024-01-23T20:24:37.279203300Z" />
+        </State>
       </entry>
     </value>
   </component>

@@ -1,6 +1,8 @@
 package com.example.automaat.repositories
 
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.map
 import com.example.automaat.entities.Body
 import com.example.automaat.entities.CarModel
 import com.example.automaat.entities.relations.CarWithRental

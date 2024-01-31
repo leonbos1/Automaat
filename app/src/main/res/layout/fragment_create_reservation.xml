@@ -9,40 +9,27 @@
         android:orientation="vertical"
         android:padding="16dp">
 
-        <TextView
-            android:id="@+id/carBrandTitleTextView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/brand" />
-
-        <TextView
-            android:id="@+id/carModelTitleTextView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Active" />
-
-        <TextView
-            android:id="@+id/rentalStatus"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-
         <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:padding="16dp">
 
-            <Spinner
-                android:id="@+id/spinnerStartDate"
+            <TextView
+                android:id="@+id/textViewStartDate"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp" />
+                android:layout_marginTop="16dp"
+                android:drawableEnd="@drawable/ic_calender"
+                android:text="@string/select_start_date" />
 
-            <Spinner
-                android:id="@+id/spinnerEndDate"
+            <TextView
+                android:id="@+id/textViewEndDate"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/spinnerStartDate"
-                android:layout_marginTop="16dp" />
+                android:layout_below="@id/textViewStartDate"
+                android:layout_marginTop="16dp"
+                android:drawableEnd="@drawable/ic_calender"
+                android:text="@string/select_end_date" />
 
             <TextView
                 android:id="@+id/euroTextView"
@@ -65,7 +52,7 @@
                 android:id="@+id/buttonReserve"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/spinnerEndDate"
+                android:layout_below="@id/textViewEndDate"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="24dp"
                 android:text="@string/reserve" />

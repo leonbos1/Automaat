@@ -3,6 +3,7 @@ package com.example.automaat.helpers
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 
 class DateHelper {
     companion object {
@@ -28,9 +29,21 @@ class DateHelper {
         }
 
         fun getDaysBetween(startDate: String, endDate: String): Long {
-            val start = LocalDate.parse(startDate)
-            val end = LocalDate.parse(endDate)
-            return end.toEpochDay() - start.toEpochDay()
+            if (startDate == "" || endDate == "" || startDate == "Start date" || endDate == "End date") {
+                return 0
+            }
+
+            val formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy")
+            val start = LocalDate.parse(startDate, formatter)
+            val end = LocalDate.parse(endDate, formatter)
+
+            val daysBetween = end.toEpochDay() - start.toEpochDay()
+
+            if (daysBetween < 0) {
+                return 0
+            }
+
+            return daysBetween
         }
     }
 }

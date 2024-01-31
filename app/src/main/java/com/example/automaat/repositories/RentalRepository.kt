@@ -1,6 +1,7 @@
 package com.example.automaat.repositories
 
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import com.example.automaat.entities.RentalModel
 import com.example.automaat.entities.relations.RentalWithCarWithCustomer
 
@@ -23,44 +24,41 @@ class RentalRepository(private val rentalDao: RentalDao) {
         return rentalDao.getRentalById(id)
     }
 
-    suspend fun getByCarId(carId: Int): List<RentalModel> {
+    suspend fun getRentalsWithCarAndCustomerByCarId(carId: Int): List<RentalWithCarWithCustomer> {
+        return rentalDao.getRentalsWithCarAndCustomerByCarId(carId)
+    }
+
+    suspend fun getByCarId(carId: Int?): List<RentalModel> {
+        if (carId == null) {
+            return emptyList()
+        }
         return rentalDao.getByCarId(carId)
     }
 
     suspend fun updateRental(rental: RentalModel) {
-        println("updateRental")
-        rental.customerId?.let {
-            rental.carId?.let { it1 ->
-                rentalDao.updateRental(rental.id, rental.fromDate, rental.toDate, rental.state,
-                    it, it1
-                )
-            }
-        }
+        rentalDao.updateRental(
+            rental.id, rental.fromDate, rental.toDate, rental.state,
+            rental.customerId, rental.carId, rental.inspectionId
+        )
     }
 
     suspend fun insertRental(rental: RentalModel) {
         rentalDao.insertRental(rental)
-
-        //sync with server
-
     }
 
     suspend fun createRental(rental: RentalModel) {
         rentalDao.insertRental(rental)
-
-        //sync with server
-
     }
 
     fun getRentalsWithCarAndCustomerByCustomer(customerId: Int): LiveData<List<RentalWithCarWithCustomer>> {
         return rentalDao.getRentalsWithCarAndCustomerByCustomer(customerId)
     }
 
-    fun getRentalsWithCarAndCustomerByRental(rentalId: Int): LiveData<List<RentalWithCarWithCustomer>> {
+    suspend fun getRentalsWithCarAndCustomerByRental(rentalId: Int): List<RentalWithCarWithCustomer> {
         return rentalDao.getRentalsWithCarAndCustomerByRental(rentalId)
     }
 
-    fun getRentalsWithCarAndCustomerByRentalAsync(rentalId: Int): RentalWithCarWithCustomer {
-        return rentalDao.getRentalsWithCarAndCustomerByRentalAsync(rentalId)
+    suspend fun getRentalsWithCarAndCustomerByRentalAsync(rentalId: Int): RentalWithCarWithCustomer {
+        return rentalDao.getRentalsWithCarAndCustomerByRentalAsync(rentalId)[0]
     }
 }
