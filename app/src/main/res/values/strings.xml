@@ -34,4 +34,7 @@
     <string name="loginButton">Login</string>
     <string name="remember_me">Remember me</string>
     <string name="logout">Logout</string>
+    <string name="forgot_password">Forgot password?</string>
+    <string name="reset_password">Reset Password</string>
+    <string name="enter_your_email_here">Enter your email here</string>
 </resources>

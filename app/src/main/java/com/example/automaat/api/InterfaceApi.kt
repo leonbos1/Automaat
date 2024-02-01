@@ -2,22 +2,24 @@ package com.example.automaat.api;
 
 import com.example.automaat.api.datamodels.Auth
 import com.example.automaat.api.datamodels.Rental
-import com.example.automaat.entities.RentalModel
 import com.example.automaat.entities.relations.RentalWithCarWithCustomer
 import com.google.gson.JsonArray
 import com.google.gson.JsonObject
+import okhttp3.RequestBody
 import retrofit2.Call
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.PATCH
 import retrofit2.http.POST
-import retrofit2.http.PUT
 import retrofit2.http.Path
 
 
 interface InterfaceApi {
     @POST("authenticate")
     fun postAuthenticate(@Body user: Auth): Call<JsonObject>
+
+    @POST("account/reset-password/init")
+    fun postResetPassword(@Body emailAddress: RequestBody) : Call<JsonObject>
 
     @GET("routes")
     fun getAllRoutes(): Call<JsonArray>

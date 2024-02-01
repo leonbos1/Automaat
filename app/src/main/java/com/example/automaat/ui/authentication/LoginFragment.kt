@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.CheckBox
 import android.widget.EditText
+import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
@@ -31,6 +32,7 @@ class LoginFragment : Fragment() {
         val passwordInput = view.findViewById<EditText>(R.id.password)
         val rememberMeCheckbox = view.findViewById<CheckBox>(R.id.rememberMe)
         val loginButton = view.findViewById<Button>(R.id.loginButton)
+        val forgotPasswordLink = view.findViewById<TextView>(R.id.forgot_password)
 
         loginButton.setOnClickListener {
             val username = usernameInput.text.toString()
@@ -38,6 +40,9 @@ class LoginFragment : Fragment() {
             val rememberMe = rememberMeCheckbox.isChecked
             val user = Auth(username, password, rememberMe)
             context?.let { it1 -> viewModel.authenticateUser(user, it1) }
+        }
+        forgotPasswordLink.setOnClickListener {
+            findNavController().navigate(R.id.action_loginFragment_to_resetPasswordFragment)
         }
 
         viewModel.loginStatus.observe(viewLifecycleOwner) { isSuccess ->
