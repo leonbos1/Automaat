@@ -15,29 +15,29 @@ class InspectionSyncManager(private val inspectionRepository: InspectionReposito
     override fun syncEntities(context: Context) {
             CoroutineScope(Dispatchers.IO).launch {
                 try {
-                    syncRemoteInspectionsToLocal()
-                    syncLocalInspectionsToServer()
+                    syncRemoteInspectionsToLocal(context)
+                    syncLocalInspectionsToServer(context)
                 } catch (e: Exception) {
                     Log.e("CHECK_RESPONSE", "Error while syncing inspections", e)
                 }
         }
     }
 
-    private suspend fun syncLocalInspectionsToServer() {
+    private suspend fun syncLocalInspectionsToServer(context: Context) {
         val localInspections = inspectionRepository.getAll()
 
         for (inspection in localInspections) {
             try {
                 val remoteInspection = parseInspectionModelToJson(inspection)
-                Inspections().updateInspection(remoteInspection)
+                Inspections().updateInspection(remoteInspection, context)
             } catch (e: Exception) {
                 Log.e("CHECK_RESPONSE", "Error while syncing inspection", e)
             }
         }
     }
 
-    private suspend fun syncRemoteInspectionsToLocal() {
-        val remoteInspections = Inspections().getAllInspections() ?: return
+    private suspend fun syncRemoteInspectionsToLocal(context: Context) {
+        val remoteInspections = Inspections().getAllInspections(context) ?: return
 
         for (inspection in remoteInspections) {
             val remoteInspection = parseJsonToInspectionModel(inspection as JsonObject)

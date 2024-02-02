@@ -91,7 +91,7 @@ class RentalSyncManager(private val rentalRepository: RentalRepository, applicat
 
     @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     suspend fun syncRemoteRentalsToLocal(context: Context) {
-        val remoteRentals = Rentals().getAllRentals() ?: return
+        val remoteRentals = Rentals().getAllRentals(context) ?: return
 
         for (rental in remoteRentals) {
             var remoteRental = parseJsonToRentalModel(rental as JsonObject)
@@ -162,18 +162,18 @@ class RentalSyncManager(private val rentalRepository: RentalRepository, applicat
         return r
     }
 
-    suspend fun createRentalOnServer(rental: RentalModel) {
+    suspend fun createRentalOnServer(rental: RentalModel, context: Context) {
         val localRentalWithCarWithCustomer =
             rentalRepository.getRentalsWithCarAndCustomerByRentalAsync(rental.id)
 
-        Rentals().addRental(localRentalWithCarWithCustomer)
+        Rentals().addRental(localRentalWithCarWithCustomer, context)
     }
 
-    suspend fun updateRentalOnServer(rental: RentalModel) {
+    suspend fun updateRentalOnServer(rental: RentalModel, context: Context) {
         val localRentalWithCarWithCustomer =
             rentalRepository.getRentalsWithCarAndCustomerByRentalAsync(rental.id)
 
-        Rentals().updateRental(localRentalWithCarWithCustomer)
+        Rentals().updateRental(localRentalWithCarWithCustomer, context)
     }
 
     fun getRentalFromServerByCarId(carId: Int, remoteRentals: JsonArray): RentalModel? {
@@ -200,7 +200,7 @@ class RentalSyncManager(private val rentalRepository: RentalRepository, applicat
     @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     suspend fun syncLocalRentalsToServer(context: Context) {
         val allLocalRentals = rentalRepository.getAll()
-        val allRemoteRentals = Rentals().getAllRentals()
+        val allRemoteRentals = Rentals().getAllRentals(context)
 
         for (rental in allLocalRentals) {
             if (!isRentalRelevant(rental)) {
@@ -210,7 +210,7 @@ class RentalSyncManager(private val rentalRepository: RentalRepository, applicat
             val serverRental = getRentalFromServerByCarId(rental.carId!!, allRemoteRentals!!)
 
             if (serverRental == null) {
-                createRentalOnServer(rental)
+                createRentalOnServer(rental, context)
                 notifyCustomerSuccess(rental, context)
                 notificationScheduler.scheduleRentalNotifications(context, rental)
             } else {
@@ -220,7 +220,7 @@ class RentalSyncManager(private val rentalRepository: RentalRepository, applicat
                     if (rental.state == serverRental.state && rental.customerId == serverRental.customerId) {
                         continue
                     }
-                    updateRentalOnServer(rental)
+                    updateRentalOnServer(rental, context)
                     notifyCustomerSuccess(rental, context)
                     notificationScheduler.scheduleRentalNotifications(context, rental)
                 }

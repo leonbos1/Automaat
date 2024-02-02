@@ -12,7 +12,7 @@ import kotlinx.coroutines.launch
 class CustomerSyncManager(private val customerRepository: CustomerRepository) : ISyncManager {
     override fun syncEntities(context: Context) {
             CoroutineScope(Dispatchers.IO).launch {
-                val jsonArray = Customers().getAllCustomers()
+                val jsonArray = Customers().getAllCustomers(context)
                                 //TODO dont make new instance of Customers() here, use the one from the constructor
                 if (jsonArray != null) {
                     jsonArray.forEach { jsonElement ->

@@ -1,5 +1,6 @@
 package com.example.automaat.api.endpoints
 
+import android.content.Context
 import android.util.Log
 import com.example.automaat.api.ApiClient
 import com.example.automaat.api.InterfaceApi
@@ -33,16 +34,17 @@ class Rentals {
      *
      * @return JsonArray?
      */
-    suspend fun getAllRentals(): JsonArray? {
+    suspend fun getAllRentals(context: Context): JsonArray? {
         return suspendCancellableCoroutine { continuation ->
+            val sharedPreferences = context.getSharedPreferences("userToken", Context.MODE_PRIVATE)
+            val token = sharedPreferences.getString("id_token", null)
+            ApiClient.setToken(token)
             api.getAllRentals().enqueue(object : Callback<JsonArray> {
                 override fun onResponse(call: Call<JsonArray>, response: Response<JsonArray>) {
                     if (response.isSuccessful) {
                         continuation.resume(response.body())
                     } else {
-                        continuation.resumeWithException(
-                            RuntimeException("Failed with ${response.code()}")
-                        )
+                        continuation.resume(JsonArray())
                     }
                 }
 
@@ -53,8 +55,11 @@ class Rentals {
         }
     }
 
-    suspend fun updateRental(rentalWithCarWithCustomer: RentalWithCarWithCustomer): Boolean {
+    suspend fun updateRental(rentalWithCarWithCustomer: RentalWithCarWithCustomer, context: Context): Boolean {
         val rental = getRentalByRentalWithCarWithCustomer(rentalWithCarWithCustomer)
+        val sharedPreferences = context.getSharedPreferences("userToken", Context.MODE_PRIVATE)
+        val token = sharedPreferences.getString("id_token", null)
+        ApiClient.setToken(token)
         return suspendCancellableCoroutine { continuation ->
             rental.id?.let {
                 api.updateRental(it, rental).enqueue(object : Callback<RentalWithCarWithCustomer> {
@@ -77,7 +82,10 @@ class Rentals {
         }
     }
 
-    suspend fun addRental(rentalWithCarWithCustomer: RentalWithCarWithCustomer): Boolean {
+    suspend fun addRental(rentalWithCarWithCustomer: RentalWithCarWithCustomer, context: Context): Boolean {
+        val sharedPreferences = context.getSharedPreferences("userToken", Context.MODE_PRIVATE)
+        val token = sharedPreferences.getString("id_token", null)
+        ApiClient.setToken(token)
         return suspendCancellableCoroutine { continuation ->
             val rental = getRentalByRentalWithCarWithCustomer(rentalWithCarWithCustomer)
             rental.id = null

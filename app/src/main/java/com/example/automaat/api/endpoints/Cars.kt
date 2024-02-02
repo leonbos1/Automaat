@@ -1,5 +1,6 @@
 package com.example.automaat.api.endpoints
 
+import android.content.Context
 import android.util.Log
 import com.example.automaat.api.ApiClient
 import com.example.automaat.api.InterfaceApi
@@ -23,16 +24,17 @@ class Cars {
      *
      * @return JsonArray?
      */
-    suspend fun getAllCars(): JsonArray? {
+    suspend fun getAllCars(context: Context): JsonArray? {
         return suspendCancellableCoroutine { continuation ->
+            val sharedPreferences = context.getSharedPreferences("userToken", Context.MODE_PRIVATE)
+            val token = sharedPreferences.getString("id_token", null)
+            ApiClient.setToken(token)
             api.getAllCars().enqueue(object : Callback<JsonArray> {
                 override fun onResponse(call: Call<JsonArray>, response: Response<JsonArray>) {
                     if (response.isSuccessful) {
                         continuation.resume(response.body())
                     } else {
-                        continuation.resumeWithException(
-                            RuntimeException("Failed with ${response.code()}")
-                        )
+                        continuation.resume(JsonArray())
                     }
                 }
 

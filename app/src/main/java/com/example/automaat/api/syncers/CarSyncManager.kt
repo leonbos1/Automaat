@@ -15,7 +15,7 @@ import kotlinx.coroutines.launch
 class CarSyncManager(private val carRepository: CarRepository) : ISyncManager {
     override fun syncEntities(context: Context) {
             CoroutineScope(Dispatchers.IO).launch {
-                val jsonArray = Cars().getAllCars()
+                val jsonArray = Cars().getAllCars(context)
                 //TODO dont make new instance of Cars() here, use the one from the constructor
                 if (jsonArray != null) {
                     jsonArray.forEach { jsonElement ->

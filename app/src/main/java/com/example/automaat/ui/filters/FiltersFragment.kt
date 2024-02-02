@@ -28,7 +28,6 @@ class FiltersFragment() : Fragment() {
     private lateinit var brandAutoCompleteTextView: AutoCompleteTextView
     private lateinit var modelAutoCompleteTextView: AutoCompleteTextView
     private lateinit var priceSlider: Slider
-    private lateinit var getAllCarsButton: Button
     private lateinit var carSyncManager: CarSyncManager
     private lateinit var rentalSyncManager: RentalSyncManager
     private lateinit var customerSyncManager: CustomerSyncManager
@@ -69,16 +68,8 @@ class FiltersFragment() : Fragment() {
             navController.navigate(R.id.action_navigation_filters_to_navigation_home, bundle)
         }
 
-        getAllCarsButton = view.findViewById(R.id.getAllCarsButton)
-
         carSyncManager = CarSyncManager(filterViewModel.carRepository)
-//        rentalSyncManager = RentalSyncManager(filterViewModel.rentalRepositor, application)
         customerSyncManager = CustomerSyncManager(filterViewModel.customerRepository)
-
-        getAllCarsButton.setOnClickListener {
-                carSyncManager.syncEntities(requireContext())
-                rentalSyncManager.syncEntities(requireContext())
-        }
 
         sortingAutoCompleteTextView = view.findViewById(R.id.sortingDropdown)
         brandAutoCompleteTextView = view.findViewById(R.id.brandDropdown)
