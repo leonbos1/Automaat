@@ -47,8 +47,25 @@ class HomeFragment() : Fragment() {
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
 
         val filterButton = view.findViewById<View>(R.id.filterButton)
+        val logoutButton = view.findViewById<View>(R.id.logoutButton)
 
         val navigationController = findNavController()
+
+
+        if (context?.let { Authentication().isUserAuthenticated(it) } == true) {
+            println("User: User is authenticated")
+        } else {
+            println("User: User is not authenticated")
+            navigationController.navigate(R.id.action_homeFragment_to_loginFragment)
+        }
+        
+        logoutButton.setOnClickListener {
+            val sharedPreferences = context?.getSharedPreferences("userToken", Context.MODE_PRIVATE)
+            val editor = sharedPreferences?.edit()
+            editor?.remove("id_token")
+            editor?.apply()
+            navigationController.navigate(R.id.action_homeFragment_to_loginFragment)
+        }
 
         filterButton.setOnClickListener {
             navigationController.navigate(R.id.action_navigation_home_to_filtersFragment)

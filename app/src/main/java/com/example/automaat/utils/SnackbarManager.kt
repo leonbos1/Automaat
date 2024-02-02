@@ -9,17 +9,17 @@ import com.google.android.material.snackbar.Snackbar
 
 object SnackbarManager {
 
-    fun showOnlineSnackbar(context: Context) {
+    fun showSuccessSnackbar(context: Context, text: String) {
         getView()?.let { view ->
-            val snackbar = Snackbar.make(view, "You are online", Snackbar.LENGTH_LONG)
+            val snackbar = Snackbar.make(view, text, Snackbar.LENGTH_LONG)
             snackbar.setBackgroundTint(ContextCompat.getColor(context, R.color.green))
             snackbar.show()
         }
     }
 
-    fun showOfflineSnackbar(context: Context) {
+    fun showErrorSnackbar(context: Context, text: String) {
         getView()?.let { view ->
-            val snackbar = Snackbar.make(view, "You are offline", Snackbar.LENGTH_LONG)
+            val snackbar = Snackbar.make(view, text, Snackbar.LENGTH_LONG)
             snackbar.setBackgroundTint(ContextCompat.getColor(context, R.color.red))
             snackbar.show()
         }

@@ -24,6 +24,14 @@ class ReservationFragment : Fragment() {
     ): View {
         val view = inflater.inflate(R.layout.fragment_reservations, container, false)
 
+        val navigationController = findNavController()
+        if (context?.let { Authentication().isUserAuthenticated(it) } == true) {
+            println("User: User is authenticated")
+        } else {
+            println("User: User is not authenticated")
+            navigationController.navigate(R.id.action_navigation_reservations_to_loginFragment)
+        }
+        
         val futureAdapter = ReservationAdapter { rental -> navigateToInspection(rental.rental) }
         val futureRecyclerView = view.findViewById<RecyclerView>(R.id.futureRecyclerView)
         futureRecyclerView.adapter = futureAdapter
