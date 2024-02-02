@@ -1,4 +1,4 @@
-package com.example.automaat.api.synchers
+package com.example.automaat.api.syncers
 
 import android.app.Application
 import android.content.Context
@@ -25,7 +25,6 @@ class RentalSyncManager(private val rentalRepository: RentalRepository, applicat
 
     @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     override fun syncEntities(context: Context) {
-        Authentication().authenticate {
             CoroutineScope(Dispatchers.IO).launch {
                 try {
                     syncRemoteRentalsToLocal(context)
@@ -33,7 +32,6 @@ class RentalSyncManager(private val rentalRepository: RentalRepository, applicat
                 } catch (e: Exception) {
                     Log.e("CHECK_RESPONSE", "Error while syncing rentals", e)
                 }
-            }
         }
     }
 

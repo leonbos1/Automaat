@@ -10,6 +10,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.automaat.R
+import com.example.automaat.api.endpoints.Authentication
 import com.example.automaat.entities.RentalModel
 import com.example.automaat.entities.relations.InspectionWithCarWithRental
 import com.example.automaat.entities.relations.RentalWithCarWithCustomer

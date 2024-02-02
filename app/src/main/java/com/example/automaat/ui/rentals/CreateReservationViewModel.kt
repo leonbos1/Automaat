@@ -2,14 +2,11 @@ package com.example.automaat.ui.rentals
 
 import android.app.Application
 import android.content.Context
-import android.os.Build
-import androidx.annotation.RequiresApi
 import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.example.automaat.AutomaatDatabase
-import com.example.automaat.api.synchers.RentalSyncManager
+import com.example.automaat.api.syncers.RentalSyncManager
 import com.example.automaat.entities.RentalModel
 import com.example.automaat.entities.RentalState
 import com.example.automaat.entities.relations.CarWithRental

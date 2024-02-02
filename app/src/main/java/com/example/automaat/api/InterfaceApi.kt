@@ -11,6 +11,7 @@ import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.PATCH
 import retrofit2.http.POST
+import retrofit2.http.PUT
 import retrofit2.http.Path
 
 
@@ -45,7 +46,6 @@ interface InterfaceApi {
     @GET("rentals/{id}")
     fun getRentalById(@Path("id") id: Int): Call<JsonObject>
 
-    //update rental
     @PUT("rentals/{id}")
     fun updateRental(@Path("id") id: Int, @Body rental: Rental): Call<RentalWithCarWithCustomer>
 

@@ -5,25 +5,19 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
 import android.widget.Button
-import android.widget.Spinner
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.example.automaat.R
-import com.example.automaat.api.datamodels.Rental
 import com.example.automaat.api.endpoints.Authentication
-import com.example.automaat.api.endpoints.Cars
-import com.example.automaat.api.endpoints.Rentals
-import com.example.automaat.api.synchers.CarSyncManager
-import com.example.automaat.api.synchers.CustomerSyncManager
-import com.example.automaat.api.synchers.RentalSyncManager
+import com.example.automaat.api.syncers.CarSyncManager
+import com.example.automaat.api.syncers.CustomerSyncManager
+import com.example.automaat.api.syncers.RentalSyncManager
 import com.example.automaat.entities.FilterModel
-import com.example.automaat.ui.home.HomeAdapter
 import com.google.android.material.slider.Slider
 
 class FiltersFragment() : Fragment() {
@@ -82,10 +76,8 @@ class FiltersFragment() : Fragment() {
         customerSyncManager = CustomerSyncManager(filterViewModel.customerRepository)
 
         getAllCarsButton.setOnClickListener {
-            Authentication().authenticate {
                 carSyncManager.syncEntities(requireContext())
                 rentalSyncManager.syncEntities(requireContext())
-            }
         }
 
         sortingAutoCompleteTextView = view.findViewById(R.id.sortingDropdown)

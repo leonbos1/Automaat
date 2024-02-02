@@ -1,4 +1,4 @@
-package com.example.automaat.api.synchers
+package com.example.automaat.api.syncers
 
 import android.content.Context
 

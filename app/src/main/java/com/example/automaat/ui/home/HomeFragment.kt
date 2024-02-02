@@ -1,5 +1,6 @@
 package com.example.automaat.ui.home
 
+import android.content.Context
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
@@ -16,6 +17,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.automaat.R
+import com.example.automaat.api.endpoints.Authentication
 import com.example.automaat.entities.FilterModel
 import com.example.automaat.entities.RentalState
 import com.example.automaat.entities.relations.CarWithRental

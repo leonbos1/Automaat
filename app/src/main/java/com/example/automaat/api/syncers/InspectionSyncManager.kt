@@ -1,15 +1,10 @@
-package com.example.automaat.api.synchers
+package com.example.automaat.api.syncers
 
 import android.content.Context
 import android.util.Log
 import com.example.automaat.api.endpoints.Authentication
-import com.example.automaat.api.endpoints.Cars
 import com.example.automaat.api.endpoints.Inspections
-import com.example.automaat.entities.Body
-import com.example.automaat.entities.CarModel
-import com.example.automaat.entities.FuelType
 import com.example.automaat.entities.InspectionModel
-import com.example.automaat.repositories.CarRepository
 import com.example.automaat.repositories.InspectionRepository
 import com.google.gson.JsonObject
 import kotlinx.coroutines.CoroutineScope
@@ -18,7 +13,6 @@ import kotlinx.coroutines.launch
 
 class InspectionSyncManager(private val inspectionRepository: InspectionRepository) : ISyncManager {
     override fun syncEntities(context: Context) {
-        Authentication().authenticate {
             CoroutineScope(Dispatchers.IO).launch {
                 try {
                     syncRemoteInspectionsToLocal()
@@ -26,7 +20,6 @@ class InspectionSyncManager(private val inspectionRepository: InspectionReposito
                 } catch (e: Exception) {
                     Log.e("CHECK_RESPONSE", "Error while syncing inspections", e)
                 }
-            }
         }
     }
 

@@ -9,10 +9,10 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.viewModelScope
 import com.example.automaat.AutomaatDatabase
-import com.example.automaat.api.synchers.CarSyncManager
-import com.example.automaat.api.synchers.CustomerSyncManager
-import com.example.automaat.api.synchers.InspectionSyncManager
-import com.example.automaat.api.synchers.RentalSyncManager
+import com.example.automaat.api.syncers.CarSyncManager
+import com.example.automaat.api.syncers.CustomerSyncManager
+import com.example.automaat.api.syncers.InspectionSyncManager
+import com.example.automaat.api.syncers.RentalSyncManager
 import com.example.automaat.entities.CarModel
 import com.example.automaat.entities.relations.CarWithRental
 import com.example.automaat.repositories.CarRepository
