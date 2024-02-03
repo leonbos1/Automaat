@@ -47,6 +47,7 @@ class LoginFragment : Fragment() {
 
         viewModel.loginStatus.observe(viewLifecycleOwner) { isSuccess ->
             if (isSuccess) {
+                activity?.invalidateOptionsMenu()
                 findNavController().navigate(R.id.action_loginFragment_to_homeFragment)
             } else {
                 context?.let { SnackbarManager.showErrorSnackbar(it, "Login Failed!") }

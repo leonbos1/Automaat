@@ -1,6 +1,10 @@
 package com.example.automaat
 
+import android.content.Context
+import android.content.SharedPreferences
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuItem
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.NavController
@@ -14,7 +18,7 @@ import com.example.automaat.utils.NetworkMonitor
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenceChangeListener {
 
     private lateinit var navController: NavController
     private lateinit var binding: ActivityMainBinding
@@ -52,6 +56,39 @@ class MainActivity : AppCompatActivity() {
         )
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
+
+        getSharedPreferences("userToken", Context.MODE_PRIVATE).registerOnSharedPreferenceChangeListener(this)
+    }
+
+    override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences?, key: String?) {
+        if (key == "id_token") {
+            invalidateOptionsMenu()
+        }
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.action_logout -> {
+                val sharedPreferences = getSharedPreferences("userToken", Context.MODE_PRIVATE)
+                val editor = sharedPreferences.edit()
+                editor.remove("id_token")
+                editor.apply()
+                navController.navigate(R.id.action_homeFragment_to_loginFragment)
+                invalidateOptionsMenu()
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
+    }
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.top_action_menu, menu)
+        val logoutMenuItem = menu?.findItem(R.id.action_logout)
+        val sharedPreferences = getSharedPreferences("userToken", Context.MODE_PRIVATE)
+        val tokenExists = sharedPreferences.contains("id_token")
+        if (logoutMenuItem != null) {
+            logoutMenuItem.isVisible = tokenExists
+        }
+        return true
     }
 
     override fun onSupportNavigateUp(): Boolean {
@@ -60,6 +97,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
+        getSharedPreferences("userToken", Context.MODE_PRIVATE).unregisterOnSharedPreferenceChangeListener(this)
         networkMonitor.stopNetworkCallback()
     }
 }
