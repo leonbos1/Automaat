@@ -2,10 +2,12 @@ package com.example.automaat.ui.rentals
 
 import android.app.Application
 import android.content.Context
+import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.example.automaat.AutomaatDatabase
+import com.example.automaat.api.endpoints.Account
 import com.example.automaat.api.syncers.RentalSyncManager
 import com.example.automaat.entities.RentalModel
 import com.example.automaat.entities.RentalState
@@ -20,7 +22,7 @@ class CreateReservationViewModel(application: Application) : AndroidViewModel(ap
     val rentalWithCarWithCustomer: MutableLiveData<RentalWithCarWithCustomer> = MutableLiveData()
     private val rentalRepository: RentalRepository
     private val inspectionRepository: InspectionRepository
-    private val hardcodedCustomer = 1
+    private val customerId = Account().getUserIdFromSharedPreferences(getApplication<Application>().applicationContext)
     private var rentalSyncManager: RentalSyncManager? = null
 
     init {
@@ -60,11 +62,11 @@ class CreateReservationViewModel(application: Application) : AndroidViewModel(ap
             newRental.fromDate = startDate
             newRental.toDate = endDate
             newRental.state = RentalState.RESERVED
-            newRental.customerId = hardcodedCustomer
+            newRental.customerId = customerId
 
             viewModelScope.launch {
                 rentalRepository.insertRental(newRental)
-                newRental.customerId = hardcodedCustomer
+                newRental.customerId = customerId
                 rentalRepository.updateRental(newRental)
             }
         } else {
@@ -72,7 +74,7 @@ class CreateReservationViewModel(application: Application) : AndroidViewModel(ap
                 fromDate = startDate
                 toDate = endDate
                 state = RentalState.RESERVED
-                customerId = hardcodedCustomer
+                customerId = this@CreateReservationViewModel.customerId
             }
 
             viewModelScope.launch {
@@ -100,7 +102,7 @@ class CreateReservationViewModel(application: Application) : AndroidViewModel(ap
             "",
             RentalState.RESERVED,
             0,
-            hardcodedCustomer,
+            customerId,
             carId
         )
     }

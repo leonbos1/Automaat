@@ -22,6 +22,9 @@ interface InterfaceApi {
     @POST("account/reset-password/init")
     fun postResetPassword(@Body emailAddress: RequestBody) : Call<JsonObject>
 
+    @GET("account")
+    fun getAccount(): Call<JsonObject>
+
     @GET("routes")
     fun getAllRoutes(): Call<JsonArray>
 

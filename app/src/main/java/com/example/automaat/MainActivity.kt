@@ -69,10 +69,11 @@ class MainActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenceCh
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.action_logout -> {
-                val sharedPreferences = getSharedPreferences("userToken", Context.MODE_PRIVATE)
-                val editor = sharedPreferences.edit()
-                editor.remove("id_token")
-                editor.apply()
+                val userTokenPrefs = getSharedPreferences("userToken", Context.MODE_PRIVATE)
+                userTokenPrefs.edit().clear().apply()
+
+                val accountResponsePrefs = getSharedPreferences("AccountResponse", Context.MODE_PRIVATE)
+                accountResponsePrefs.edit().clear().apply()
                 navController.navigate(R.id.action_homeFragment_to_loginFragment)
                 invalidateOptionsMenu()
                 true

@@ -5,6 +5,7 @@ import android.content.Context
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import com.example.automaat.api.datamodels.Auth
+import com.example.automaat.api.endpoints.Account
 import com.example.automaat.api.endpoints.Authentication
 
 class LoginViewModel(application: Application) : AndroidViewModel(application) {
@@ -14,5 +15,9 @@ class LoginViewModel(application: Application) : AndroidViewModel(application) {
         Authentication().authenticateUser(user, context) { success ->
             loginStatus.value = success
         }
+    }
+
+    suspend fun getAccount(context: Context) {
+        Account().getAccount(context)
     }
 }

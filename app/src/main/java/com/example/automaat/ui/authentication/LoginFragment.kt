@@ -1,6 +1,7 @@
 package com.example.automaat.ui.authentication
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,6 +15,9 @@ import androidx.navigation.fragment.findNavController
 import com.example.automaat.R
 import com.example.automaat.api.datamodels.Auth
 import com.example.automaat.utils.SnackbarManager
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class LoginFragment : Fragment() {
     private lateinit var viewModel: LoginViewModel
@@ -47,6 +51,13 @@ class LoginFragment : Fragment() {
 
         viewModel.loginStatus.observe(viewLifecycleOwner) { isSuccess ->
             if (isSuccess) {
+                CoroutineScope(Dispatchers.IO).launch {
+                    try {
+                        context?.let { viewModel.getAccount(it) }
+                    } catch (e: Exception) {
+                        Log.e("CHECK_RESPONSE", "Error while try to get account details", e)
+                    }
+                }
                 activity?.invalidateOptionsMenu()
                 findNavController().navigate(R.id.action_loginFragment_to_homeFragment)
             } else {

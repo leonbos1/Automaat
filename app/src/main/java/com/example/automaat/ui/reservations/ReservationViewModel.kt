@@ -5,28 +5,23 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Observer
 import androidx.lifecycle.viewModelScope
 import com.example.automaat.AutomaatDatabase
+import com.example.automaat.api.endpoints.Account
 import com.example.automaat.entities.InspectionModel
-import com.example.automaat.entities.RentalModel
 import com.example.automaat.entities.RentalState
-import com.example.automaat.entities.relations.InspectionWithCarWithRental
 import com.example.automaat.entities.relations.RentalWithCarWithCustomer
 import com.example.automaat.repositories.InspectionRepository
 import com.example.automaat.repositories.RentalRepository
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
 class ReservationViewModel(application: Application) : AndroidViewModel(application) {
     private val rentalRepository: RentalRepository
     private val inspectionRepository: InspectionRepository
-    lateinit var rentalsByCustomer: LiveData<List<RentalWithCarWithCustomer>>
-    val hardcodedCustomer = 1
+    private lateinit var rentalsByCustomer: LiveData<List<RentalWithCarWithCustomer>>
+    val customerId = Account().getUserIdFromSharedPreferences(getApplication<Application>().applicationContext)
     lateinit var inspection: LiveData<InspectionModel>
 
     init {
@@ -39,23 +34,31 @@ class ReservationViewModel(application: Application) : AndroidViewModel(applicat
 
         viewModelScope.launch {
             rentalsByCustomer =
-                rentalRepository.getRentalsWithCarAndCustomerByCustomer(hardcodedCustomer)
+                customerId?.let { rentalRepository.getRentalsWithCarAndCustomerByCustomer(it) }!!
         }
     }
 
-    fun updateRentalStateBasedOnDates() {
+    private fun updateRentalStateBasedOnDates() {
         viewModelScope.launch {
-            val rentals = rentalRepository.getRentalsWithCarAndCustomerByCustomerAsync(hardcodedCustomer)
             val currentDate = LocalDate.now()
 
-            rentals.forEach { rentalWithCarWithCustomer ->
+            customerId?.let {
+                rentalRepository.getRentalsWithCarAndCustomerByCustomerAsync(
+                    it
+                )
+            }?.forEach { rentalWithCarWithCustomer ->
                 rentalWithCarWithCustomer.rental?.let { rental ->
-                    val fromDate = LocalDate.parse(rental.fromDate, DateTimeFormatter.ofPattern("yyyy-MM-dd"))
-                    val toDate = LocalDate.parse(rental.toDate, DateTimeFormatter.ofPattern("yyyy-MM-dd"))
+                    val fromDate =
+                        LocalDate.parse(rental.fromDate, DateTimeFormatter.ofPattern("yyyy-MM-dd"))
+                    val toDate =
+                        LocalDate.parse(rental.toDate, DateTimeFormatter.ofPattern("yyyy-MM-dd"))
 
                     val newState = when {
                         currentDate.isBefore(fromDate) -> RentalState.RESERVED
-                        currentDate.isEqual(fromDate) || (currentDate.isAfter(fromDate) && currentDate.isBefore(toDate)) -> RentalState.ACTIVE
+                        currentDate.isEqual(fromDate) || (currentDate.isAfter(fromDate) && currentDate.isBefore(
+                            toDate
+                        )) -> RentalState.ACTIVE
+
                         currentDate.isEqual(toDate) || currentDate.isAfter(toDate) -> RentalState.RETURNED
                         else -> rental.state
                     }
