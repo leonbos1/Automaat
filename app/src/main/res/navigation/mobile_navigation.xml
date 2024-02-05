@@ -5,6 +5,10 @@
     android:id="@+id/mobile_navigation"
     app:startDestination="@+id/navigation_home">
 
+    <action
+        android:id="@+id/action_global_to_loginFragment"
+        app:destination="@id/loginFragment" />
+
     <fragment
         android:id="@+id/navigation_home"
         android:name="com.example.automaat.ui.home.HomeFragment"
@@ -156,6 +160,16 @@
         tools:layout="@layout/fragment_reset_password" >
         <action
             android:id="@+id/action_resetPasswordFragment_to_loginFragment"
+            app:destination="@id/loginFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/profile"
+        android:name="com.example.automaat.ui.profile.ProfileFragment"
+        android:label="Profile"
+        tools:layout="@layout/fragment_profile" >
+        <action
+            android:id="@+id/action_profile_to_loginFragment"
             app:destination="@id/loginFragment" />
     </fragment>
 </navigation>

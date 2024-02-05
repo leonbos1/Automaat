@@ -41,4 +41,10 @@
     <string name="sorting_title">Sorting</string>
     <string name="select_start_date">Start date</string>
     <string name="select_end_date">End date</string>
+    <string name="profile">Profile</string>
+    <string name="name">name</string>
+    <string name="welcome">Welcome</string>
+    <string name="first_name">First name</string>
+    <string name="last_name">Last name</string>
+    <string name="email">Email</string>
 </resources>

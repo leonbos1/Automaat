@@ -55,4 +55,21 @@ class Account {
         }
         return null
     }
+
+    fun getSavedAccountData(context: Context): JSONObject? {
+        val sharedPreferences = context.getSharedPreferences("AccountResponse", Context.MODE_PRIVATE)
+        val accountDataString = sharedPreferences.getString("account_data", null)
+
+        return if (accountDataString != null) {
+            try {
+                return JSONObject(accountDataString)
+            } catch (e: JSONException) {
+                Log.e(TAG, "Error parsing saved account data: ${e.message}")
+                null
+            }
+        } else {
+            Log.i(TAG, "No account data found in SharedPreferences.")
+            null
+        }
+    }
 }

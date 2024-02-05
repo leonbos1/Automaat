@@ -51,7 +51,7 @@ class MainActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenceCh
         // menu should be considered as top level destinations.
         val appBarConfiguration = AppBarConfiguration(
             setOf(
-                R.id.navigation_home, R.id.navigation_reservations
+                R.id.navigation_home, R.id.navigation_reservations, R.id.profile
             )
         )
         setupActionBarWithNavController(navController, appBarConfiguration)
@@ -74,13 +74,16 @@ class MainActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenceCh
 
                 val accountResponsePrefs = getSharedPreferences("AccountResponse", Context.MODE_PRIVATE)
                 accountResponsePrefs.edit().clear().apply()
-                navController.navigate(R.id.action_homeFragment_to_loginFragment)
+
+                navController.navigate(R.id.action_global_to_loginFragment)
+
                 invalidateOptionsMenu()
                 true
             }
             else -> super.onOptionsItemSelected(item)
         }
     }
+
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.top_action_menu, menu)
         val logoutMenuItem = menu?.findItem(R.id.action_logout)

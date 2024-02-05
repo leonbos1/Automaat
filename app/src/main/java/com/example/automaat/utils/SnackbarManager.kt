@@ -25,22 +25,6 @@ object SnackbarManager {
         }
     }
 
-    fun showOnlineSnackbar(context: Context) {
-        getView()?.let { view ->
-            val snackbar = Snackbar.make(view, "Online", Snackbar.LENGTH_LONG)
-            snackbar.setBackgroundTint(ContextCompat.getColor(context, R.color.green))
-            snackbar.show()
-        }
-    }
-
-    fun showOfflineSnackbar(context: Context) {
-        getView()?.let { view ->
-            val snackbar = Snackbar.make(view, "Offline", Snackbar.LENGTH_LONG)
-            snackbar.setBackgroundTint(ContextCompat.getColor(context, R.color.red))
-            snackbar.show()
-        }
-    }
-
     fun showRentalAlreadyReservedSnackbar(context: Context) {
         getView()?.let { view ->
             val snackbar = Snackbar.make(view, "This car is already reserved", Snackbar.LENGTH_LONG)
