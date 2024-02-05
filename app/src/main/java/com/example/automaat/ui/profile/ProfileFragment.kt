@@ -46,8 +46,7 @@ class ProfileFragment : Fragment() {
 
         val accountData = viewModel.getAccountData()
         if (accountData != null) {
-//            val imageUrl = accountData.optString("imageUrl", "")
-            val imageUrl = "https://media.licdn.com/dms/image/D4E03AQG1gd3H6VB5mg/profile-displayphoto-shrink_200_200/0/1700856951206?e=1712793600&v=beta&t=orkhs0k7uLWeAbRlQkHBP3tzG8LKnatHU-xqDckBppM"
+            val imageUrl = accountData.optString("imageUrl", "")
             println("ImageURL = $imageUrl")
             Glide.with(this)
                 .load(imageUrl)
