@@ -70,6 +70,12 @@ class ReservationFragment : Fragment() {
         return view
     }
 
+    override fun onResume() {
+        super.onResume()
+
+        reservationViewModel?.updateRentalStateBasedOnDates()
+    }
+
     private fun navigateToInspection(rental: RentalModel?) {
         val bundle = Bundle()
 

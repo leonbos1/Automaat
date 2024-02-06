@@ -1,6 +1,7 @@
 package com.example.automaat.ui.reservations
 
 import android.app.Application
+import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LiveData
@@ -30,15 +31,13 @@ class ReservationViewModel(application: Application) : AndroidViewModel(applicat
         inspectionRepository =
             InspectionRepository(AutomaatDatabase.getDatabase(application).inspectionDao())
 
-        updateRentalStateBasedOnDates()
-
         viewModelScope.launch {
             rentalsByCustomer =
                 customerId?.let { rentalRepository.getRentalsWithCarAndCustomerByCustomer(it) }!!
         }
     }
 
-    private fun updateRentalStateBasedOnDates() {
+    fun updateRentalStateBasedOnDates() {
         viewModelScope.launch {
             val currentDate = LocalDate.now()
 

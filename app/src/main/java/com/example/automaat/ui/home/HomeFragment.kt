@@ -202,7 +202,7 @@ class HomeFragment() : Fragment() {
     }
 
     private fun carIsAvailable(car: CarWithRental): Boolean {
-        return (car.rental?.state == null || car.rental.customerId == null) && (car.rental?.state == RentalState.RETURNED || car.rental?.state == null)
+        return car.rental?.state == RentalState.RETURNED || car.rental?.state == null
     }
 
     override fun onDestroyView() {
