@@ -19,6 +19,8 @@ import com.example.automaat.repositories.CarRepository
 import com.example.automaat.repositories.CustomerRepository
 import com.example.automaat.repositories.InspectionRepository
 import com.example.automaat.repositories.RentalRepository
+import com.example.automaat.utils.NetworkMonitor
+import com.example.automaat.utils.SnackbarManager
 import kotlinx.coroutines.launch
 
 class HomeViewModel(application: Application) : AndroidViewModel(application) {
@@ -55,13 +57,17 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
     @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     fun refreshCars(context: Context) {
         viewModelScope.launch {
-            try {
-                carsSyncManager.syncEntities(context)
-                rentalSyncManager.syncEntities(context)
-                customerSyncManager.syncEntities(context)
-                inspectionSyncManager.syncEntities(context)
-            } catch (e: Exception) {
-                Log.e("HomeViewModel", "Error while syncing", e)
+            if (NetworkMonitor.isConnected) {
+                try {
+                    carsSyncManager.syncEntities(context)
+                    rentalSyncManager.syncEntities(context)
+                    customerSyncManager.syncEntities(context)
+                    inspectionSyncManager.syncEntities(context)
+                } catch (e: Exception) {
+                    Log.e("HomeViewModel", "Error while syncing", e)
+                }
+            } else {
+                SnackbarManager.showErrorSnackbar(context, "Can't sync when there is no internet connection...")
             }
         }
     }
